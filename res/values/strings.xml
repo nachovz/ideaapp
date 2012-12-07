@@ -1,5 +1,9 @@
 <resources>
 
     <string name="app_name">IDEA app</string>
-
+    <string name="cargando">Cargando</string>
+    <string name="end_cargando"/>
+    <string name="nombre_usuario">Nombre de usuario</string>
+    <string name="password">Contraseña</string>
+	<string name="ingresar">Ingresar</string>
 </resources>
