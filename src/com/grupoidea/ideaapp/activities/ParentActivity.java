@@ -3,6 +3,7 @@ package com.grupoidea.ideaapp.activities;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +32,9 @@ public abstract class ParentActivity extends Activity {
 	/** Objecto que contiene la data consultada desde el proveedor de servicios.*/
 	private Response response;
 	/** View que permite observar un mensaje mientras existe un proceso de consulta en background.*/
-	protected TextView loadingTextView; 
+	protected TextView loadingTextView;
+	/** Layout que contiene informacion sobre el estatus del request actual.*/
+	private RelativeLayout parentAvailableLayout;
 	
 	/** Constructor que define los atributos de carga automatica y almacenamiento en cache (si es requerido por las clases hijas).  
 	 *  @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
@@ -42,13 +45,18 @@ public abstract class ParentActivity extends Activity {
 		this.useCache = useCache;
 	}
 	
+	/** Permite establecer un valor de visibilidad a el layout disponible del ParentLayout*/
+	public void setParentLayoutVisibility(int visibiliy) {
+		parentAvailableLayout.setVisibility(visibiliy);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.parent_layout);
 		
 		loadingTextView = (TextView) findViewById(R.id.loading_text_view);
-		
+		parentAvailableLayout  = (RelativeLayout) findViewById(R.id.parent_available_layout);
 		if(autoLoad) {
 			loadData();
 		}
@@ -105,12 +113,14 @@ public abstract class ParentActivity extends Activity {
 		manageResponse(response, false);
 	}
 	
-	/** Se encarga de hacer persistente un response exitoso*/
+	/** Se encarga de hacer persistente un response exitoso
+	 *  @response Objeto que contiene la respoesta que se desea almacenar de forma persistente en el dispositivo*/
 	private void setCache(Object response) {
 		//TODO: Implementar almacenamiento de objetos en el cache (Implementar y utilizar PersistentStores)
 	}
 	
-	/** Se encarga de ejecutar la consulta de parse en background utilizando <code>findInBackground</code>.*/
+	/** Se encarga de ejecutar la consulta de parse en background utilizando <code>findInBackground</code>.
+	 *  @param query Objeto de tipo ParseQuery que contiene la consulta que se desea realizar (para mas info revisar documentación de Parse)*/
 	private void loadFromParse(ParseQuery query) {
 		query.findInBackground(new FindCallback(){
 			@Override
@@ -127,11 +137,22 @@ public abstract class ParentActivity extends Activity {
 						
 						loadingTextView.setText(getString(R.string.end_cargando));
 					}
-		        } else {
+		        } else { 
 		            Log.e("Exception", "Parse Exception: " + e.getMessage());
 		        }
 			}
 		});
 	}
 	
+	/** Permite despachar a un Activity nuevo.
+	 *  @param activityClass Contiene la clase del Activity que se quiere mostrar
+	 *  @param disposeCurrentActivity Boolean que determina si luego de iniciar esta nueva actividad se debe terminar la anterior*/
+	protected void dispatchActivity(Class activityClass, boolean disposeCurrentActivity) {
+		Intent intent = new Intent(this, activityClass);
+		this.startActivity(intent);
+        
+		if(disposeCurrentActivity) {
+        	this.finish();
+        }
+	}
 }

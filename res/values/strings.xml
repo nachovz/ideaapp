@@ -3,7 +3,9 @@
     <string name="app_name">IDEA app</string>
     <string name="cargando">Cargando</string>
     <string name="end_cargando"/>
-    <string name="nombre_usuario">Nombre de usuario</string>
+    <string name="nombre_usuario">Usuario</string>
     <string name="password">Contraseña</string>
 	<string name="ingresar">Ingresar</string>
+	<string name="fallo_login">Nombre de usuario y/o contraseña incorrecto</string>
+	<string name="vacio_login">Nombre de usuario y/o contraseña vacios</string>
 </resources>

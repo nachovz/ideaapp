@@ -1,7 +1,8 @@
 package com.grupoidea.ideaapp;
 
-import com.parse.Parse;
 import android.app.Application;
+
+import com.parse.Parse;
 
 /** Clase que permite inicializar y almacenar valores globales de la aplicación*/
 public class GrupoIdea extends Application {
@@ -15,5 +16,4 @@ public class GrupoIdea extends Application {
 		super.onCreate();
 		Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
 	}
-	
 }

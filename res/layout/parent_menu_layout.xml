@@ -6,14 +6,17 @@
 
     <RelativeLayout
         android:id="@+id/parent_menu_available_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dash_bkg_banner_superior" >
 
-        <TextView
-            android:id="@+id/textView1"
+        <ImageView
+            android:id="@+id/menu_icon_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Menu" />
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/dash_menu_icono_idea" />
 
     </RelativeLayout>
 

@@ -1,73 +1,63 @@
 package com.grupoidea.ideaapp.activities;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideapp.models.Request;
 import com.grupoidea.ideapp.models.Response;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 /** Activity que permite al usuario autentificarse en la aplición mediante la data obtenida de Parse*/
 public class LoginActivity extends ParentActivity {
+	private LoginActivity loginActivity;
+	
+	public LoginActivity() {
+		super(false, false);
+	}
+
 	/** View que almacena el nombre de usuario*/
 	private TextView userTextView;
 	/** View que almacena el la contraseña del usuario*/
 	private TextView passwordTextView;
 	
-	/** Constructor que establece que el Activity no consultara el proveedor de servicios al ser creada
-	 *  y no almacenara la consulta en cache.*/
-	public LoginActivity() {
-		super(false, false);
-	}
-	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Button ingresar;
+		ParseUser currentUser;
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_layout);
 		
+		loginActivity = this;
+		currentUser = ParseUser.getCurrentUser();
+		
+		if(currentUser != null) {
+			Log.d("DEBUG", "Usuario almacenado, despachando al Dashboard");
+			dispatchActivity(DashboardActivity.class, true);
+		} else {
+			Log.d("DEBUG", "Usuario no almacenado.");
+		}
+		
 		userTextView = (TextView) findViewById(R.id.username_edit_text);
 		passwordTextView = (TextView) findViewById(R.id.password_edit_text);
-		
 		ingresar = (Button) findViewById(R.id.ingresar_button);
 		ingresar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				loadData();
+				loginFromParse();
 			}
 		});
 	}
-
-	@Override
-	protected void manageResponse(Response response, boolean isLiveData) {
-		List<ParseObject> parseData = null;
-		ParseObject parseObject;
-		
-		if(response.getResponse() instanceof List<?>) {
-			parseData = (List<ParseObject>) response.getResponse();
-			
-			if(parseData != null && parseData.size() > 0) {
-				parseObject = parseData.get(0);
-				Log.d("Debug", new StringBuffer(parseObject.getString("login")).append(parseObject.getString("password")).toString());
-			} else {
-				Log.e("Error", "Nombre de usuario y/o contraseña invalidos");
-			}
-				
-		}
-	}
-
-	@Override
-	protected Request getRequest() {
-		ParseQuery query;
-		Request request = null;
+	
+	/** Metodo privado que permite autentificar las credeciales del usuario utilizando Parse*/
+	private void loginFromParse() {
 		String login = null;
 		String pass = null;
 		
@@ -75,16 +65,29 @@ public class LoginActivity extends ParentActivity {
 		pass = passwordTextView.getText().toString();
 		
 		if(login != null && !login.isEmpty() && pass != null && !pass.isEmpty()){
-			request = new Request(Request.PARSE_REQUEST);
-			query = new ParseQuery("Usuario");
-			
-			query.whereEqualTo("login", login);
-			query.whereEqualTo("password", pass);
-			request.setRequest(query);
+			ParseUser.logInInBackground(login, pass, new LogInCallback() {
+				public void done(ParseUser user, ParseException e) {
+				    if (user != null) {
+				    	Log.d("DEBUG", "Usuario autentificado correctamente");
+				    	loginActivity.dispatchActivity(DashboardActivity.class, true);
+				    } else {
+				    	Log.e("EXCEPTION", "Error al autentificar el usuario: "+e.getMessage());
+				    	Toast.makeText(getApplicationContext(), getString(R.string.fallo_login), Toast.LENGTH_LONG).show();
+				    }
+				}
+			});
 		} else {
-			Log.e("Error", "Nombre de usuario y/o contraseña vacios");
+			Log.e("ERROR", "Nombre de usuario y/o contraseña vacios");
+			Toast.makeText(getApplicationContext(), getString(R.string.vacio_login), Toast.LENGTH_LONG).show();
 		}
-		
-		return request;
+	}
+
+	@Override
+	protected void manageResponse(Response response, boolean isLiveData) {
+	}
+
+	@Override
+	protected Request getRequest() {
+		return null;
 	}
 }

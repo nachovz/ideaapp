@@ -4,44 +4,94 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/login_form_layout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_centerInParent="true"
-        android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/username_text_view"
+        <RelativeLayout
+            android:id="@+id/login_box_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nombre_usuario" />
+            android:layout_centerInParent="true" >
 
-        <EditText
-            android:id="@+id/username_edit_text"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName" />
+            <ImageView
+                android:id="@+id/login_back_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/login_bkg" />
 
-        <TextView
-            android:id="@+id/password_text_view"
+            <TextView
+                android:id="@+id/username_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="53dp"
+                android:layout_marginTop="130dp"
+                android:background="@drawable/login_bkg_barra_1"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="@string/nombre_usuario"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/username_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/username_text_view"
+                android:layout_marginLeft="117dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/login_bkg_barra_texto_1"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="textPersonName" >
+
+                <requestFocus />
+            </EditText>
+
+            <TextView
+                android:id="@+id/password_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/username_edit_text"
+                android:layout_marginLeft="34dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/login_bkg_barra_2"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/password"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/password_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/password_text_view"
+                android:layout_marginLeft="105dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/login_bkg_barra_texto_2"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="textPassword"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/ingresar_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/password_edit_text"
+                android:layout_marginLeft="200dp"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/login_bkg_boton_inicio" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/logo_idea_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password" />
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo_idea" />
 
-        <EditText
-            android:id="@+id/password_edit_text"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/ingresar_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/ingresar" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
