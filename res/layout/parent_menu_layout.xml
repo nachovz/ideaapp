@@ -5,6 +5,13 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
+        android:id="@+id/parent_menu_inflate_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="74dp" >
+    </RelativeLayout>
+
+    <RelativeLayout
         android:id="@+id/parent_menu_available_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -18,13 +25,15 @@
             android:layout_marginTop="30dp"
             android:src="@drawable/dash_menu_icono_idea" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/parent_menu_inflate_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/parent_menu_available_layout" >
+        <TextView
+            android:id="@+id/menu_titulo_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold|italic" />
 
     </RelativeLayout>
 
