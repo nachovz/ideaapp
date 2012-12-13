@@ -12,7 +12,9 @@ import com.grupoidea.ideapp.models.Response;
 import com.parse.ParseUser;
 
 public class DashboardActivity extends ParentMenuActivity {
+	/** Elemento que contiene la sesion del usuario actual*/ 
 	private ParseUser user;
+	/** ViewGroup que contiene las filas con informacion de los clientes*/
 	private LinearLayout clienteList;
 	
 	public DashboardActivity() {

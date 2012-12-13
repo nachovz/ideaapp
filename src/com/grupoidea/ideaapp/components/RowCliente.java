@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -8,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.activities.CatalogoActivity;
+import com.grupoidea.ideaapp.activities.ParentActivity;
 
 /** Clase que permite crear una fila con el nombre y monto invertido por el cliente, esta fila permite mostrar un porcentaje de inversion del cliente
  *  por medio de un fill blanco en el fondo del mismo.*/
@@ -19,6 +22,8 @@ public class RowCliente extends RelativeLayout {
 	
 	private TextView clienteNombre;
 	private TextView clienteInversion;
+	
+	private ParentActivity parent;
 	
 	/** Permite crear una fila con el nombre y monto invertido por el cliente, esta fila permite mostrar un porcentaje de inversion del cliente
 	 *  por medio de un fill blanco en el fondo del mismo.
@@ -36,6 +41,8 @@ public class RowCliente extends RelativeLayout {
 		View view;
 		LayoutInflater inflater;
 		LinearLayout.LayoutParams params;
+		
+		parent = (ParentActivity) context;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.row_cliente_layout, this);
@@ -66,5 +73,16 @@ public class RowCliente extends RelativeLayout {
 		backgroundLayout.setBackgroundColor(0xfff0821e);
 		params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, backgroundWidth);
 		porcentajeLayout.addView(backgroundLayout, params);
+		
+		this.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Bundle bundle;
+				//TODO: Enviar idCliente mediante el bundle para que el CatalogoActivity se encargue de consultar los productos destacados del cliente
+				bundle = new Bundle();
+				bundle.putString("clienteNombre", clienteNombre.getText().toString());
+				parent.dispatchActivity(CatalogoActivity.class, bundle, false);
+			}
+		});
 	}
 }

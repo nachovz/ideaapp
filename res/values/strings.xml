@@ -6,6 +6,6 @@
     <string name="nombre_usuario">Usuario</string>
     <string name="password">Contraseña</string>
 	<string name="ingresar">Ingresar</string>
-	<string name="fallo_login">Nombre de usuario y/o contraseña incorrecto</string>
+	<string name="fallo_login">Fallo al autentificarse en el servidor, verifique conexion y datos</string>
 	<string name="vacio_login">Nombre de usuario y/o contraseña vacios</string>
 </resources>

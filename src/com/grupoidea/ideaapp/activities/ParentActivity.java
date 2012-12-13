@@ -147,8 +147,11 @@ public abstract class ParentActivity extends Activity {
 	/** Permite despachar a un Activity nuevo.
 	 *  @param activityClass Contiene la clase del Activity que se quiere mostrar
 	 *  @param disposeCurrentActivity Boolean que determina si luego de iniciar esta nueva actividad se debe terminar la anterior*/
-	protected void dispatchActivity(Class activityClass, boolean disposeCurrentActivity) {
+	public void dispatchActivity(Class activityClass, Bundle bundle, boolean disposeCurrentActivity) {
 		Intent intent = new Intent(this, activityClass);
+		if(bundle != null) {
+			intent.putExtras(bundle);
+		}
 		this.startActivity(intent);
         
 		if(disposeCurrentActivity) {
