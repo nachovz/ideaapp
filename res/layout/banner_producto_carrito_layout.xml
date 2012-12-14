@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/banner_carrito_relative_layout"
+    android:layout_width="300dp"
+    android:layout_height="270dp"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/banner_carrito_layout"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp" >
+
+        <RelativeLayout
+            android:id="@+id/banner_carrito_box"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="9dp"
+            android:background="@drawable/client_bkg_contenedor" >
+
+            <ImageView
+                android:id="@+id/banner_carrito_image_view"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pinguinos" />
+
+            <ImageView
+                android:id="@+id/banner_carrito_tittle_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/client_img_bannerproducto" />
+
+            <TextView
+                android:id="@+id/banner_carrito_titulo_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:layout_marginTop="10dp"
+                android:text="Nombre del Producto."
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/banner_carrito_precio_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/client_img_pestana" >
+
+            <TextView
+                android:id="@+id/banner_carrito_precio_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="32dp"
+                android:layout_marginLeft="50dp"
+                android:text="999.999 Bs."
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/banner_carrito_info"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/banner_carrito_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" >
+
+        <EditText
+            android:id="@+id/banner_carrito_cantidad"
+            android:layout_width="39dp"
+            android:layout_height="42dp"
+            android:layout_marginLeft="7dp"
+            android:background="@drawable/pedidos_bkg_cantidad"
+            android:ems="10"
+            android:gravity="center_vertical|center_horizontal"
+            android:inputType="number" >
+
+        </EditText>
+
+        <ImageView
+            android:id="@+id/banner_carrito_mas_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/banner_carrito_cantidad"
+            android:src="@drawable/pedidos_boton_mas" />
+
+        <ImageView
+            android:id="@+id/banner_carrito_menos_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/banner_carrito_mas_image_view"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/banner_carrito_cantidad"
+            android:src="@drawable/pedidos_boton_menos" />
+
+        <RelativeLayout
+            android:id="@+id/banner_carrito_total_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/pedidos_bkg_precio" >
+
+            <TextView
+                android:id="@+id/banner_carrito_total_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="999.999 Bs."
+                android:textColor="#ffffff"
+                android:textStyle="bold|italic" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/banner_carrito_eliminar_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/pedidos_boton_eliminar" />
+
+</RelativeLayout>

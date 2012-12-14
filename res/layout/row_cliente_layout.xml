@@ -29,7 +29,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="70dp"
         android:text="999.999 Bs."
-        android:textColor="#cccccc"
+        android:textColor="#eeeeee"
         android:textStyle="bold|italic" />
 
     <ImageView

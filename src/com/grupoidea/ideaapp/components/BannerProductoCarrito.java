@@ -2,6 +2,9 @@ package com.grupoidea.ideaapp.components;
 
 import java.util.ArrayList;
 
+import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideapp.models.Producto;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +13,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideapp.models.Producto;
-
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
-public class BannerProducto extends BaseAdapter {
+public class BannerProductoCarrito extends BaseAdapter{
 	/** Contexto actual de la aplicacion*/
 	private Context context;
 	/** Arreglo de productos.*/
@@ -23,11 +23,11 @@ public class BannerProducto extends BaseAdapter {
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
 	 *  @param productos Arreglo de productos. */
-	public BannerProducto(Context context, ArrayList<Producto> productos) {
+	public BannerProductoCarrito(Context context, ArrayList<Producto> productos) {
 		this.context = context;
 		this.productos = productos;
 	}
-	
+
 	@Override
 	public int getCount() {
 		return productos.size();
@@ -54,21 +54,21 @@ public class BannerProducto extends BaseAdapter {
 		if (convertView == null) {  
 			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			producto = (Producto) getItem(position);
-			view = inflater.inflate(R.layout.banner_producto_layout, null);
+			view = inflater.inflate(R.layout.banner_producto_carrito_layout, null);
 			
 			if(producto != null) {
 				if(producto.getNombre() != null) {
-					textView = (TextView) view.findViewById(R.id.banner_producto_titulo_text_view);
+					textView = (TextView) view.findViewById(R.id.banner_carrito_titulo_text_view);
 					textView.setText(producto.getNombre());
 				}
 				
-				if(producto.getPrecio() != null) {
-					textView = (TextView) view.findViewById(R.id.banner_producto_precio_text_view);
-					textView.setText(producto.getPrecio());
+				if(producto.getStringPrecio() != null) {
+					textView = (TextView) view.findViewById(R.id.banner_carrito_precio_text_view);
+					textView.setText(producto.getStringPrecio());
 				}
 				
 				if(producto.getImagen() != null) {
-					imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
+					imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
 					imageView.setImageBitmap(producto.getImagen());
 				}
 			}

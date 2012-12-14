@@ -18,7 +18,7 @@ public class DashboardActivity extends ParentMenuActivity {
 	private LinearLayout clienteList;
 	
 	public DashboardActivity() {
-		super(false, false); //TODO Cambiar valores a autoLoad:true y useCache:true!
+		super(false, false, false); //TODO Cambiar valores a autoLoad:true y useCache:true!
 	}
 	
 	@Override
