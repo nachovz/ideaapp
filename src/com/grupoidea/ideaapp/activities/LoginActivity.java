@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.grupoidea.ideaapp.R;
+
 import com.grupoidea.ideapp.models.Request;
 import com.grupoidea.ideapp.models.Response;
 import com.parse.LogInCallback;
@@ -40,7 +40,7 @@ public class LoginActivity extends ParentActivity {
 		
 		if(currentUser != null) {
 			Log.d("DEBUG", "Usuario almacenado, despachando al Dashboard");
-			dispatchActivity(DashboardActivity.class, true);
+			//dispatchActivity(DashboardActivity.class, true);
 		} else {
 			Log.d("DEBUG", "Usuario no almacenado.");
 		}
@@ -69,7 +69,7 @@ public class LoginActivity extends ParentActivity {
 				public void done(ParseUser user, ParseException e) {
 				    if (user != null) {
 				    	Log.d("DEBUG", "Usuario autentificado correctamente");
-				    	loginActivity.dispatchActivity(DashboardActivity.class, true);
+				    	//loginActivity.dispatchActivity(DashboardActivity.class, true);
 				    } else {
 				    	Log.e("EXCEPTION", "Error al autentificar el usuario: "+e.getMessage());
 				    	Toast.makeText(getApplicationContext(), getString(R.string.fallo_login), Toast.LENGTH_LONG).show();
