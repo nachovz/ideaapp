@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/banner_prodcuto_relative_layout"
+    android:layout_width="352dp"
+    android:layout_height="302dp"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/banner_producto_box"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginLeft="9dp"
+        android:background="@drawable/client_bkg_contenedor" >
+
+        <ImageView
+            android:id="@+id/banner_producto_image_view"
+            android:layout_width="339dp"
+            android:layout_height="298dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pinguinos" />
+
+        <ImageView
+            android:id="@+id/banner_producto_tittle_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/client_img_bannerproducto" />
+
+        <TextView
+            android:id="@+id/banner_producto_titulo_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="10dp"
+            android:text="Nombre del Producto."
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/banner_producto_precio_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/client_img_pestana" >
+
+        <TextView
+            android:id="@+id/banner_producto_precio_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="32dp"
+            android:layout_marginLeft="50dp"
+            android:text="999.999 Bs."
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/banner_producto_add_carrito_button"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/client_boton_carrito" />
+
+</RelativeLayout>

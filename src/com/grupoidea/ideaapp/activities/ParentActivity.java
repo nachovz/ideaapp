@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -147,12 +148,43 @@ public abstract class ParentActivity extends Activity {
 	/** Permite despachar a un Activity nuevo.
 	 *  @param activityClass Contiene la clase del Activity que se quiere mostrar
 	 *  @param disposeCurrentActivity Boolean que determina si luego de iniciar esta nueva actividad se debe terminar la anterior*/
-	protected void dispatchActivity(Class activityClass, boolean disposeCurrentActivity) {
+	public void dispatchActivity(Class activityClass, Bundle bundle, boolean disposeCurrentActivity) {
 		Intent intent = new Intent(this, activityClass);
+		if(bundle != null) {
+			intent.putExtras(bundle);
+		}
 		this.startActivity(intent);
         
 		if(disposeCurrentActivity) {
         	this.finish();
         }
+	}
+	
+	/** Permite a los hijos la capacidad de transformar dp a px. El editor de interfaces de Android trabaja en dp y sp como unidades
+	 *  principales pero el API aun contiene muchos metodos que utilizan pixeles.
+	 *  @param dp Entero que contiene los dp que se desean transformar
+	 *  @return Entero con la cantidad de pixeles equivalentes a los dp suministrados, si existe algun error en la transformación 
+	 *  se retornara -1*/
+	protected int dpToPx(int dp) {
+		DisplayMetrics displayMetrics;
+		int px = -1;
+		
+		displayMetrics = this.getResources().getDisplayMetrics();
+		px = (int)((dp * displayMetrics.density) + 0.5);
+		return px;
+	}
+	
+	/** Permite a los hijos la capacidad de transformar px a pd. El editor de interfaces de Android trabaja en dp y sp como unidades
+	 *  principales pero el API aun contiene muchos metodos que utilizan pixeles.
+	 *  @param px Entero que contiene los px que se desean transformar
+	 *  @return Entero con la cantidad de dp equivalentes a los pixeles suministrados, si existe algun error en la transformación 
+	 *  se retornara -1*/
+	protected int pxToDp(int px) {
+		DisplayMetrics displayMetrics;
+		int dp = -1;
+		
+		displayMetrics = this.getResources().getDisplayMetrics();
+		dp = (int) ((px/displayMetrics.density) + 0.5);
+		return dp;
 	}
 }

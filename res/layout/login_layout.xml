@@ -92,6 +92,15 @@
             android:layout_centerHorizontal="true"
             android:src="@drawable/logo_idea" />
 
+        <ProgressBar
+            android:id="@+id/login_loading_progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
 </RelativeLayout>
