@@ -18,7 +18,7 @@
             android:layout_height="298dp"
             android:layout_centerInParent="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/pinguinos" />
+            android:src="@drawable/pinguinos"/>
 
         <ImageView
             android:id="@+id/banner_producto_tittle_image_view"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
-            android:src="@drawable/client_img_bannerproducto" />
+            android:src="@drawable/client_img_bannerproducto"/>
 
         <TextView
             android:id="@+id/banner_producto_titulo_text_view"
@@ -37,7 +37,7 @@
             android:text="Nombre del Producto."
             android:textColor="#ffffff"
             android:textSize="16sp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"/>
 
     </RelativeLayout>
 
@@ -59,19 +59,19 @@
             android:text="999.999 Bs."
             android:textColor="#ffffff"
             android:textSize="16sp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold|italic"/>
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/banner_producto_add_carrito_button"
-        style="?android:attr/buttonStyleSmall"
+    <ImageView
+        android:id="@+id/banner_producto_add_carrito_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:background="@drawable/client_boton_carrito" />
+        android:src="@drawable/client_boton_carrito"
+        android:clickable="true" />
 
 </RelativeLayout>

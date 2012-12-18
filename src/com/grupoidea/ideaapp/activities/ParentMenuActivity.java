@@ -120,26 +120,27 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	}
 	
 	/** Permite mostrar/ocultar el menu que se encuentra a la derecha del aplicativo.*/
-	protected void toggleRightMenu() {
+	public void toggleRightMenu() {
 		if(!menuRightShowed) {
 			showRightMenu();
 		} else {
 			hideMenuRight();
 		}
-		menuRightShowed = !menuRightShowed;
 	}
 	
 	/** Permite mostrar el menu que se encuentra a la derecha del aplicativo.*/
-	protected void showRightMenu() {
+	public void showRightMenu() {
 		if(frontLayout != null) {
 			frontLayout.scrollTo(dpToPx(300), frontLayout.getScrollY());
+			menuRightShowed = true;
 		}
 	}
 	
 	/** Permite ocultar el menu que se encuentra a la derecha del aplicativo.*/
-	protected void hideMenuRight() {
+	public void hideMenuRight() {
 		if(frontLayout != null) {
-			frontLayout.scrollTo(0, frontLayout.getScrollY());	
+			frontLayout.scrollTo(0, frontLayout.getScrollY());
+			menuRightShowed = false;
 		}
 	}
 	

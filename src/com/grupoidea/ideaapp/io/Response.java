@@ -1,4 +1,4 @@
-package com.grupoidea.ideapp.models;
+package com.grupoidea.ideaapp.io;
 
 /** Clase que representa la response obtenida de manera local o remota */
 public class Response {

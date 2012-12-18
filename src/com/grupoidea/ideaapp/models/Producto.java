@@ -1,4 +1,4 @@
-package com.grupoidea.ideapp.models;
+package com.grupoidea.ideaapp.models;
 
 import android.graphics.Bitmap;
 /** Clase que contiene la representación de un producto*/
@@ -39,6 +39,7 @@ public class Producto {
 		this.precio = precio;
 		this.denominacion = denominacion;
 		this.imagen = imagen;
+		this.cantidad = 1;
 	}
 	public String getDenominacion() {
 		return denominacion;
@@ -70,8 +71,33 @@ public class Producto {
 	public void setImagen(Bitmap imagen) {
 		this.imagen = imagen;
 	}
-	/** Permite construir el string del precio concatenandole al precio la denominacion*/
+	/** Permite calcular el precio de los productos del mismo tipo.*/
+	public double getPrecioTotal() {
+		double precioTotal = -1;
+		precioTotal = precio * cantidad;
+		return precioTotal;
+	}
+	/** Permite construir el string del precio total concatenandole al precio la denominacion*/
+	public String getStringPrecioTotal() {
+		return precioToString(getPrecioTotal());
+	}
+	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
+		return precioToString(this.precio);
+	}
+	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
+	public void addCantidad() {
+		this.cantidad++;
+	}
+	
+	/** Permite disminuir un item a la cantidad de productos del mismo tipo*/
+	public void substractCantidad() {
+		if(cantidad-- == 0) {
+			this.cantidad = 0;
+		}
+	}
+	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
+	private String precioToString(double precio) {
 		StringBuffer stringBuffer;
 		String strValue = null;
 		

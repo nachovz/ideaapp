@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -11,9 +14,10 @@ import android.widget.RelativeLayout;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
-import com.grupoidea.ideapp.models.Producto;
-import com.grupoidea.ideapp.models.Request;
-import com.grupoidea.ideapp.models.Response;
+import com.grupoidea.ideaapp.io.Request;
+import com.grupoidea.ideaapp.io.Response;
+import com.grupoidea.ideaapp.models.Carrito;
+import com.grupoidea.ideaapp.models.Producto;
 
 public class CatalogoActivity extends ParentMenuActivity {
 	/** Elemento que permite mostrar Views en forma de grid.*/
@@ -22,10 +26,12 @@ public class CatalogoActivity extends ParentMenuActivity {
 	private String clienteNombre;
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
 	private ArrayList<Producto> catalogoProductos;
-	/** ArrayList que contiene los productos que se mostraran en el listado del carrito*/
-	private ArrayList<Producto> carritoProductos;
+	/** Objeto que representa al carrito de compras del catalogo.*/
+	private Carrito carrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del carrito y el layout de cada producto*/
 	private BannerProductoCarrito adapterCarrito;
+	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
+	private BannerProductoCatalogo adapterCatalogo;
 	
 	public CatalogoActivity() {
 		super(false, false, true); //TODO: Modificar a autoLoad:true, hasCache:true!
@@ -33,7 +39,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		BannerProductoCatalogo adapterCatalogo;
 		Producto producto;
 		RelativeLayout menuRight;
 		ListView listCarrito;
@@ -47,6 +52,16 @@ public class CatalogoActivity extends ParentMenuActivity {
 		
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
+		
+		carrito = new Carrito();
+		adapterCarrito = new BannerProductoCarrito(this, carrito);
+		menuRight = (RelativeLayout) getMenuRight();
+		if(menuRight != null) {
+			listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
+			if(listCarrito != null) {
+				listCarrito.setAdapter(adapterCarrito);
+			}
+		}
 		
 		catalogoProductos = new ArrayList<Producto>();
 		producto = new Producto("Producto1", 322);
@@ -74,25 +89,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 		producto = new Producto("Producto4", 242);
 		catalogoProductos.add(producto);
 		
-		adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos);
+		adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, adapterCarrito);
 		grid = (GridView) this.findViewById(R.id.catalogo_grid);
 		if(grid != null) {
 			grid.setAdapter(adapterCatalogo);
-		}
-		
-		carritoProductos = new ArrayList<Producto>();
-		producto = new Producto("Producto12", 3123);
-		carritoProductos.add(producto);
-		producto = new Producto("Producto24", 1233);
-		carritoProductos.add(producto);
-		
-		adapterCarrito = new BannerProductoCarrito(this, carritoProductos);
-		menuRight = (RelativeLayout) getMenuRight();
-		if(menuRight != null) {
-			listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
-			if(listCarrito != null) {
-				listCarrito.setAdapter(adapterCarrito);
-			}
 		}
 	}
 	
@@ -105,5 +105,4 @@ public class CatalogoActivity extends ParentMenuActivity {
 	protected Request getRequest() {
 		return null;
 	}
-
 }

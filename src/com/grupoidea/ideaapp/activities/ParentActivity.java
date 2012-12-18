@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideapp.models.Request;
-import com.grupoidea.ideapp.models.Response;
+import com.grupoidea.ideaapp.io.Request;
+import com.grupoidea.ideaapp.io.Response;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;

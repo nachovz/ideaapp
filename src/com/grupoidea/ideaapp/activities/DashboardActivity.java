@@ -7,8 +7,8 @@ import android.widget.LinearLayout;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowCliente;
-import com.grupoidea.ideapp.models.Request;
-import com.grupoidea.ideapp.models.Response;
+import com.grupoidea.ideaapp.io.Request;
+import com.grupoidea.ideaapp.io.Response;
 import com.parse.ParseUser;
 
 public class DashboardActivity extends ParentMenuActivity {
