@@ -2,6 +2,7 @@ package com.grupoidea.ideaapp.activities;
 
 import java.util.ArrayList;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -64,29 +65,38 @@ public class CatalogoActivity extends ParentMenuActivity {
 		}
 		
 		catalogoProductos = new ArrayList<Producto>();
-		producto = new Producto("Producto1", 322);
+		producto = new Producto("TV Samsung 3D 40'", 13550);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto2", 321.734);
+		producto = new Producto("Microondas Samsung", 1200);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.microondas));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto3", 123);
+		producto = new Producto("Aire Acondicionado Split 12KBTU", 9340);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.aire));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Equipo Sonido QKMJ12", 2490);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.audio));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("TV SmartTV Samung 60'", 23000);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Vinera Samnsug", 943);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.vinera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Sonido Home Samsung", 5200);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.sonido));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Parrillera Grill Delonghi", 6599);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.parrillera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Thermos AVT123", 239);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.thermos));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Cafetera Delonghi", 12000);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.cafetera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
-		catalogoProductos.add(producto);
-		producto = new Producto("Producto4", 242);
+		producto = new Producto("Tostadora Casera", 960);
+		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tostadoras));
 		catalogoProductos.add(producto);
 		
 		adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, adapterCarrito);

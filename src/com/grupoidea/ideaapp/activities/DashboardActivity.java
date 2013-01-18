@@ -1,12 +1,11 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideaapp.components.RowCliente;
+import com.grupoidea.ideaapp.components.RowClienteMarca;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.parse.ParseUser;
@@ -23,7 +22,7 @@ public class DashboardActivity extends ParentMenuActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		RowCliente row;
+		RowClienteMarca row;
 		
 		super.onCreate(savedInstanceState);
 		setParentLayoutVisibility(View.GONE);
@@ -32,13 +31,27 @@ public class DashboardActivity extends ParentMenuActivity {
 		clienteList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 		
 		//Creacion de Rows dummy!
-		row = new RowCliente(this, 40, "Centro Comercial Lider", 40000);
+		row = new RowClienteMarca(this, "Centro Comercial Lider");
+		row.addMarca("AirOn");
+		row.addMarca("Airston");
+		row.addMarca("Berloni");
+		row.addMarca("DeLonghi");
 		clienteList.addView(row);
-		row = new RowCliente(this, 30, "Restaurant Tamarindo", 30000);
+		row = new RowClienteMarca(this, "Restaurant Tamarindo");
+		row.addMarca("Samsung");
+		row.addMarca("Thermos");
+		row.addMarca("AirOn");
 		clienteList.addView(row);
-		row = new RowCliente(this, 20, "Central Madeirense", 20000);
+		row = new RowClienteMarca(this, "Central Madeirense");
+		row.addMarca("Samsung");
 		clienteList.addView(row);
-		row = new RowCliente(this, 10, "Makro", 10000);
+		row = new RowClienteMarca(this, "Makro");
+		row.addMarca("Samsung");
+		row.addMarca("AirOn");
+		row.addMarca("Airston");
+		row.addMarca("Thermos");
+		row.addMarca("Berloni");
+		row.addMarca("DeLonghi");
 		clienteList.addView(row);
 		
 		user = ParseUser.getCurrentUser();

@@ -17,8 +17,8 @@
             android:layout_width="339dp"
             android:layout_height="298dp"
             android:layout_centerInParent="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/pinguinos"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/pinguinos" />
 
         <ImageView
             android:id="@+id/banner_producto_tittle_image_view"
@@ -71,7 +71,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
-        android:src="@drawable/client_boton_carrito"
-        android:clickable="true" />
+        android:src="@drawable/client_boton_carrito" />
 
 </RelativeLayout>

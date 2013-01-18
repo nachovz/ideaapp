@@ -14,7 +14,7 @@ import com.grupoidea.ideaapp.activities.ParentActivity;
 
 /** Clase que permite crear una fila con el nombre y monto invertido por el cliente, esta fila permite mostrar un porcentaje de inversion del cliente
  *  por medio de un fill blanco en el fondo del mismo.*/
-public class RowCliente extends RelativeLayout {
+public class RowClientePorcentaje extends RelativeLayout {
 	private RelativeLayout rowClienteLayout;
 	private RelativeLayout fillLayout;
 	private RelativeLayout backgroundLayout;
@@ -32,8 +32,9 @@ public class RowCliente extends RelativeLayout {
 	 *  para mostrar esta informacion el row se llenara de color blanco hasta el punto que represente el porcentaje con respecto
 	 *  al ancho de la pantalla del dispositivo (100%).
 	 *  @param nombreCliente Cadena de texto que contiene el nombre del cliente.
-	 *  @param inversion Numero que contiene el dinero invertido por el cliente para el vendedor actual.*/
-	public RowCliente(Context context, int porcentaje, String nombreCliente, float inversion) {
+	 *  @param inversion Numero que contiene el dinero invertido por el cliente para el vendedor actual.
+	 *  @deprecated*/
+	public RowClientePorcentaje(Context context, int porcentaje, String nombreCliente, float inversion) {
 		super(context);
 		float fillWidth;
 		float backgroundWidth;
@@ -45,7 +46,7 @@ public class RowCliente extends RelativeLayout {
 		parent = (ParentActivity) context;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		view = inflater.inflate(R.layout.row_cliente_layout, this);
+		view = inflater.inflate(R.layout.row_cliente_porcentaje_layout, this);
 		rowClienteLayout = (RelativeLayout) view;
 		
 		view = rowClienteLayout.findViewById(R.id.cliente_nombre_text_view);
