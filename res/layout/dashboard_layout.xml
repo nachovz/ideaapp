@@ -9,10 +9,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
+        <ImageView
+            android:id="@+id/indicadores_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dash_img_velocimetro_temp" />
+
         <TextView
             android:id="@+id/dashboard_resumen_text_view"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
+            android:layout_below="@id/indicadores_image_view"
             android:layout_centerHorizontal="true"
             android:gravity="center_vertical|center_horizontal"
             android:text="Actual: 100.000 - Meta: 150.000 - Restan:50.000"
@@ -22,6 +29,7 @@
             android:id="@+id/cliente_relative_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/indicadores_image_view"
             android:background="@drawable/dash_bkg_banner_inferior" >
 
             <TextView
@@ -40,9 +48,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/dash_img_flecha_up" />
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/dash_img_icono_inferior" />
 
         </RelativeLayout>
 

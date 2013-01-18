@@ -1,4 +1,4 @@
-package com.grupoidea.ideapp.models;
+package com.grupoidea.ideaapp.io;
 
 /** Clase que representa las distintas consultas que puede realizar la aplicacion*/
 public class Request {

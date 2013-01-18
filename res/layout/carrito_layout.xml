@@ -5,12 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/menu_carrito_selector" >
 
-    <ListView
-        android:id="@+id/carrito_list_view"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
-
     <RelativeLayout
         android:id="@+id/carrito_total_layout"
         android:layout_width="wrap_content"
@@ -40,7 +34,14 @@
             android:textColor="#ffffff"
             android:textSize="23sp"
             android:textStyle="bold|italic" />
-
     </RelativeLayout>
+
+    <ListView
+        android:id="@+id/carrito_list_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/carrito_total_layout" >
+
+    </ListView>
 
 </RelativeLayout>
