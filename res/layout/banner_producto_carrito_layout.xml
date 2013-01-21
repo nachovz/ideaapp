@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/banner_carrito_relative_layout"
     android:layout_width="300dp"
-    android:layout_height="270dp"
-    android:orientation="vertical" >
+    android:layout_height="280dp"
+    android:orientation="vertical"
+    android:padding="3dp" >
 
     <RelativeLayout
         android:id="@+id/banner_carrito_layout"
@@ -24,24 +25,24 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_centerInParent="true"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:src="@drawable/pinguinos" />
 
             <ImageView
                 android:id="@+id/banner_carrito_tittle_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/client_img_bannerproducto" />
+                android:src="@drawable/pedidos_img_banner" />
 
             <TextView
                 android:id="@+id/banner_carrito_titulo_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="7dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="3dp"
                 android:text="Nombre del Producto."
                 android:textColor="#ffffff"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold|italic" />
 
         </RelativeLayout>
@@ -66,52 +67,30 @@
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/banner_carrito_eliminar_image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/pedidos_boton_eliminar" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/banner_carrito_info"
-        android:layout_width="250dp"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/banner_carrito_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" >
-
-        <EditText
-            android:id="@+id/banner_carrito_cantidad"
-            android:layout_width="39dp"
-            android:layout_height="42dp"
-            android:layout_marginLeft="7dp"
-            android:background="@drawable/pedidos_bkg_cantidad"
-            android:ems="10"
-            android:gravity="center_vertical|center_horizontal"
-            android:inputType="number" >
-
-        </EditText>
-
-        <ImageView
-            android:id="@+id/banner_carrito_mas_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="3dp"
-            android:layout_toRightOf="@id/banner_carrito_cantidad"
-            android:src="@drawable/pedidos_boton_mas" />
-
-        <ImageView
-            android:id="@+id/banner_carrito_menos_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/banner_carrito_mas_image_view"
-            android:layout_marginLeft="3dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@id/banner_carrito_cantidad"
-            android:src="@drawable/pedidos_boton_menos" />
+        android:layout_marginTop="5dp" >
 
         <RelativeLayout
             android:id="@+id/banner_carrito_total_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:background="@drawable/pedidos_bkg_precio" >
+            android:background="@drawable/pedidos_bkg_monto" >
 
             <TextView
                 android:id="@+id/banner_carrito_total_text_view"
@@ -121,16 +100,41 @@
                 android:text="999.999 Bs."
                 android:textColor="#ffffff"
                 android:textStyle="bold|italic" />
-
         </RelativeLayout>
 
-    </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/banner_carrito_cantidad_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
-    <ImageView
-        android:id="@+id/banner_carrito_eliminar_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/pedidos_boton_eliminar" />
+            <ImageView
+                android:id="@+id/banner_carrito_menos_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pedidos_manager_cantidad_menos" />
+
+            <EditText
+                android:id="@+id/banner_carrito_cantidad"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:background="@drawable/pedidos_manager_cantidad_center"
+                android:ems="10"
+                android:gravity="center_vertical|center_horizontal"
+                android:inputType="number"
+                android:textColor="#ffffff"
+                android:textStyle="bold" >
+
+                <requestFocus />
+            </EditText>
+
+            <ImageView
+                android:id="@+id/banner_carrito_mas_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pedidos_manager_cantidad_mas" />
+
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

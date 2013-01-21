@@ -13,12 +13,15 @@ public class Producto {
 	private Bitmap imagen;
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
+	/** Boolean que permite determinar si el menu del producto es visible al usuario*/
+	private Boolean isMenuOpen;
 	
 	/** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto */
 	public Producto(String nombre, double precio) {
 		this(nombre, precio, "Bs.", null);
+		isMenuOpen = false;
 	}
 	
 	/** Construye un producto con nombre y precio sin imagen del producto (imagen = null)
@@ -70,6 +73,14 @@ public class Producto {
 	}
 	public void setImagen(Bitmap imagen) {
 		this.imagen = imagen;
+	}
+	
+	public Boolean getIsMenuOpen() {
+		return isMenuOpen;
+	}
+
+	public void setIsMenuOpen(Boolean isMenuOpen) {
+		this.isMenuOpen = isMenuOpen;
 	}
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {

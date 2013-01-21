@@ -36,10 +36,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/catalogo_header_layout"
         android:layout_marginTop="15dp"
-        android:columnWidth="302dp"
+        android:columnWidth="352dp"
         android:gravity="center_horizontal"
         android:numColumns="auto_fit"
-        android:stretchMode="columnWidth" >
+        android:stretchMode="spacingWidthUniform"
+        android:verticalSpacing="10dp" >
 
     </GridView>
 
