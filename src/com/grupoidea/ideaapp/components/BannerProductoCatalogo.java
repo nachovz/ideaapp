@@ -3,11 +3,15 @@ package com.grupoidea.ideaapp.components;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
@@ -22,6 +26,8 @@ public class BannerProductoCatalogo extends BaseAdapter {
 	private BannerProductoCarrito adapterCarrito;
 	/** Arreglo de productos.*/
 	private ArrayList<Producto> productos;
+	/** ViewGroup que permite mostrar el menu del producto.*/
+	private LinearLayout menu;
 	
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
@@ -30,6 +36,7 @@ public class BannerProductoCatalogo extends BaseAdapter {
 		this.context = context;
 		this.productos = productos;
 		this.adapterCarrito = adapterCarrito;
+		menu = null;
 	}
 	
 	@Override
@@ -53,7 +60,7 @@ public class BannerProductoCatalogo extends BaseAdapter {
 		TextView textView;
 		ImageView imageView;
 		LayoutInflater inflater;
-		Producto producto;
+		final Producto producto;
 		
 		producto = (Producto) getItem(position);
 		
@@ -87,6 +94,40 @@ public class BannerProductoCatalogo extends BaseAdapter {
 					((ParentMenuActivity) context).showRightMenu();
 					adapterCarrito.getCarrito().addProducto(productos.get(position));
 					adapterCarrito.notifyDataSetChanged();
+				}
+			});
+			
+			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
+			if(producto.getIsMenuOpen()) {
+				menu.setVisibility(LinearLayout.VISIBLE);
+			} else {
+				menu.setVisibility(LinearLayout.GONE);
+			}
+			
+			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
+			imageView.setOnClickListener(new View.OnClickListener() {
+				LayoutParams layoutParams;
+				@Override
+				public void onClick(View view) {
+					if(producto.getIsMenuOpen()) {
+						//El menu esta abierto... cerrarlo
+						if(menu != null) {
+							producto.setIsMenuOpen(false);
+							notifyDataSetChanged();
+						}
+						layoutParams = new LayoutParams(40, 40);
+						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+						view.setLayoutParams(layoutParams);
+					} else {
+						//El menu esta cerrado... abrirlo
+						if(menu != null) {
+							producto.setIsMenuOpen(true);
+							notifyDataSetChanged();
+						}
+						layoutParams = new LayoutParams(180, 40);
+						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+						view.setLayoutParams(layoutParams);
+					}
 				}
 			});
 		}

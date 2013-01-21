@@ -55,9 +55,9 @@
                 android:id="@+id/menu_icon_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/dash_menu_icono_idea" />
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="35dp"
+                android:src="@drawable/icono_menu" />
 
             <TextView
                 android:id="@+id/menu_titulo_text_view"
