@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.activities.ParentMenuActivity;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Producto;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
-public class BannerProductoCarrito extends BaseAdapter{
-	/** Contexto actual de la aplicacion*/
-	private Context context;
+public class BannerProductoCarrito extends ParentBannerProducto{
 	/** Objeto que contiene la logica del carrito de productos*/
 	private Carrito carrito;
 	/** Objeto que contiene un producto de manera temporal*/
@@ -30,7 +30,7 @@ public class BannerProductoCarrito extends BaseAdapter{
 	 *  @param context Contexto actual de la aplicacion.
 	 *  @param productos Arreglo de productos. */
 	public BannerProductoCarrito(Context context, Carrito carrito) {
-		this.context = context;
+		super(context);
 		this.carrito = carrito;
 		carritoAdapter = this;
 	}
@@ -61,7 +61,7 @@ public class BannerProductoCarrito extends BaseAdapter{
 		producto = (Producto) getItem(position);
 		
 		if (convertView == null) {  
-			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(R.layout.banner_producto_carrito_layout, null);
 		} else {
 			view = convertView;
@@ -82,9 +82,15 @@ public class BannerProductoCarrito extends BaseAdapter{
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					TextView textView;
+					RelativeLayout layout;
+					ParentMenuActivity menuActivity;
+					
 					producto = (Producto) getItem(position);
 					producto.addCantidad();
 					carritoAdapter.notifyDataSetChanged();
+					//Calcula el total del carrito
+					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
 			
@@ -95,6 +101,8 @@ public class BannerProductoCarrito extends BaseAdapter{
 					producto = (Producto) getItem(position);
 					producto.substractCantidad();
 					carritoAdapter.notifyDataSetChanged();
+					//Calcula el total del carrito
+					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
 			
@@ -104,6 +112,8 @@ public class BannerProductoCarrito extends BaseAdapter{
 				public void onClick(View view) {
 					carrito.removeProducto(position);
 					carritoAdapter.notifyDataSetChanged();
+					//Calcula el total del carrito
+					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
 			

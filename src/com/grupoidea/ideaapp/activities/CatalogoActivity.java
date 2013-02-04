@@ -42,7 +42,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		Producto producto;
 		RelativeLayout menuRight;
-		ListView listCarrito;
+		ListView listCarrito = null;
 		
 		super.onCreate(savedInstanceState);
 		
@@ -61,48 +61,51 @@ public class CatalogoActivity extends ParentMenuActivity {
 			listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
 			if(listCarrito != null) {
 				listCarrito.setAdapter(adapterCarrito);
+				listCarrito.setSelection(listCarrito.getAdapter().getCount()-1);
 			}
 		}
 		
 		catalogoProductos = new ArrayList<Producto>();
-		producto = new Producto("TV Samsung 3D 40'", 13550);
+		producto = new Producto(1, "TV Samsung 3D 40'", 13550);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
 		catalogoProductos.add(producto);
-		producto = new Producto("Microondas Samsung", 1200);
+		producto = new Producto(2, "Microondas Samsung", 1200);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.microondas));
 		catalogoProductos.add(producto);
-		producto = new Producto("Aire Acondicionado Split 12KBTU", 9340);
+		producto = new Producto(3, "Aire Acondicionado Split 12KBTU", 9340);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.aire));
 		catalogoProductos.add(producto);
-		producto = new Producto("Equipo Sonido QKMJ12", 2490);
+		producto = new Producto(4, "Equipo Sonido QKMJ12", 2490);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.audio));
 		catalogoProductos.add(producto);
-		producto = new Producto("TV SmartTV Samung 60'", 23000);
+		producto = new Producto(5, "TV SmartTV Samung 60'", 23000);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
 		catalogoProductos.add(producto);
-		producto = new Producto("Vinera Samnsug", 943);
+		producto = new Producto(6, "Vinera Samnsug", 943);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.vinera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Sonido Home Samsung", 5200);
+		producto = new Producto(7, "Sonido Home Samsung", 5200);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.sonido));
 		catalogoProductos.add(producto);
-		producto = new Producto("Parrillera Grill Delonghi", 6599);
+		producto = new Producto(8, "Parrillera Grill Delonghi", 6599);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.parrillera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Thermos AVT123", 239);
+		producto = new Producto(9, "Thermos AVT123", 239);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.thermos));
 		catalogoProductos.add(producto);
-		producto = new Producto("Cafetera Delonghi", 12000);
+		producto = new Producto(10, "Cafetera Delonghi", 12000);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.cafetera));
 		catalogoProductos.add(producto);
-		producto = new Producto("Tostadora Casera", 960);
+		producto = new Producto(11, "Tostadora Casera", 960);
 		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tostadoras));
 		catalogoProductos.add(producto);
 		
-		adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, adapterCarrito);
-		grid = (GridView) this.findViewById(R.id.catalogo_grid);
-		if(grid != null) {
-			grid.setAdapter(adapterCatalogo);
+		if(listCarrito != null) {
+			adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, listCarrito);
+			grid = (GridView) this.findViewById(R.id.catalogo_grid);
+			if(grid != null) {
+				grid.setAdapter(adapterCatalogo);
+			}
 		}
 	}
 	

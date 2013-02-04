@@ -30,7 +30,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/carrito_total_label_text_view"
-            android:text="999.999 Bs."
+            android:text="0.0 Bs."
             android:textColor="#ffffff"
             android:textSize="23sp"
             android:textStyle="bold|italic" />
@@ -40,7 +40,8 @@
         android:id="@+id/carrito_list_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/carrito_total_layout" >
+        android:layout_above="@id/carrito_total_layout"
+        android:focusable="false" >
 
     </ListView>
 

@@ -3,6 +3,8 @@ package com.grupoidea.ideaapp.models;
 import android.graphics.Bitmap;
 /** Clase que contiene la representación de un producto*/
 public class Producto {
+	/** Entero con el identificador unico del producto*/
+	private int id;
 	/** Cadena de texto que contiene el nombre del producto.*/
 	private String nombre;
 	/** Cadena de texto que contiene la denominacion de la moneda y/o unidad de medida. ej: "Bs", "$", "pts".*/
@@ -17,27 +19,31 @@ public class Producto {
 	private Boolean isMenuOpen;
 	
 	/** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
+	 *  @param id Entero que contiene el identificador unico del producto
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto */
-	public Producto(String nombre, double precio) {
-		this(nombre, precio, "Bs.", null);
+	public Producto(int id, String nombre, double precio) {
+		this(id, nombre, precio, "Bs.", null);
 		isMenuOpen = false;
 	}
 	
 	/** Construye un producto con nombre y precio sin imagen del producto (imagen = null)
+	 *  @param id Entero que contiene el identificador unico del producto
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto
 	 *  @param denominacion Cadena de texto que contiene la denominacion de la moneda y/o unidad de medida. ej: "Bs", "$", "pts". */
-	public Producto(String nombre, double precio, String denominacion) {
-		this(nombre, precio, denominacion, null);
+	public Producto(int id, String nombre, double precio, String denominacion) {
+		this(id, nombre, precio, denominacion, null);
 	}
 	
 	/** Constructor por defecto, construye un producto con nombre, precio e imagen
+	 *  @param id Entero que contiene el identificador unico del producto
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto
 	 *  @param denominacion Cadena de texto que contiene la denominacion de la moneda y/o unidad de medida. ej: "Bs", "$", "pts".
 	 *  @param imagen  Mapa de bits con la representación visual del producto.*/
-	public Producto(String nombre, double precio, String denominacion, Bitmap imagen) {
+	public Producto(int id, String nombre, double precio, String denominacion, Bitmap imagen) {
+		this.id = id;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.denominacion = denominacion;
@@ -82,9 +88,18 @@ public class Producto {
 	public void setIsMenuOpen(Boolean isMenuOpen) {
 		this.isMenuOpen = isMenuOpen;
 	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {
-		double precioTotal = -1;
+		double precioTotal;
 		precioTotal = precio * cantidad;
 		return precioTotal;
 	}

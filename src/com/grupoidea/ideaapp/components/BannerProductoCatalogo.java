@@ -3,13 +3,13 @@ package com.grupoidea.ideaapp.components;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
@@ -19,11 +19,9 @@ import com.grupoidea.ideaapp.activities.ParentMenuActivity;
 import com.grupoidea.ideaapp.models.Producto;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
-public class BannerProductoCatalogo extends BaseAdapter {
-	/** Contexto actual de la aplicacion*/
-	private Context context;
-	/** Objeto que contiene el adaptador del carrito*/
-	private BannerProductoCarrito adapterCarrito;
+public class BannerProductoCatalogo extends ParentBannerProducto {
+	/** Listado de elementos del carrito*/
+	private ListView listCarrito;
 	/** Arreglo de productos.*/
 	private ArrayList<Producto> productos;
 	/** ViewGroup que permite mostrar el menu del producto.*/
@@ -32,10 +30,10 @@ public class BannerProductoCatalogo extends BaseAdapter {
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
 	 *  @param productos Arreglo de productos. */
-	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, BannerProductoCarrito adapterCarrito) {
-		this.context = context;
+	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
+		super(context);
 		this.productos = productos;
-		this.adapterCarrito = adapterCarrito;
+		this.listCarrito = listCarrito;
 		menu = null;
 	}
 	
@@ -62,10 +60,12 @@ public class BannerProductoCatalogo extends BaseAdapter {
 		LayoutInflater inflater;
 		final Producto producto;
 		
+//		final ListView listView = (ListView) parent;
+		
 		producto = (Producto) getItem(position);
 		
 		if (convertView == null) {  
-			inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(R.layout.banner_producto_catalogo_layout, null);
 		} else {
         	view = convertView;
@@ -91,9 +91,27 @@ public class BannerProductoCatalogo extends BaseAdapter {
 			imageView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					((ParentMenuActivity) context).showRightMenu();
-					adapterCarrito.getCarrito().addProducto(productos.get(position));
+					final int index;
+					Producto producto;
+					
+					BannerProductoCarrito adapterCarrito;
+					
+					//Muestra el carrito de compras.
+					showCarrito();
+					//Agrega el producto clickeado al carrito de compras.
+					producto = productos.get(position);
+					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
+					adapterCarrito.getCarrito().addProducto(producto);
+					//Realiza el scroll al elemento agregado o incrementado.
+					index = adapterCarrito.getCarrito().findProductoIndex(producto.getId());
 					adapterCarrito.notifyDataSetChanged();
+					listCarrito.post(new Runnable() {
+				        public void run() {
+				        	listCarrito.smoothScrollToPosition(index);  
+				        }
+				    });
+					//Calcula el total del carrito
+					setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
 				}
 			});
 			
