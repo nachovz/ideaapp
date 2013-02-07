@@ -97,7 +97,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	}
 	
 	/** Permite setear el ViewGroup que se utlizara como menu lateral derecho*/
-	private void setRightMenuLayout(int layoutResId) {
+	protected void setRightMenuLayout(int layoutResId) {
 		RelativeLayout parentInflater;
 		View inflateView;
 		
@@ -109,6 +109,11 @@ public abstract class ParentMenuActivity extends ParentActivity {
 				parentInflater.addView(inflateView);
 			}
 		}
+	}
+	
+	/** Permite obtener el ViewGroup que se utilizara como menu lateral derecho*/
+	public ViewGroup getRightMenuLayout() {
+		return menuRight;
 	}
 	
 	/** Permite mostrar una cadena de texto en el centro del menú.
