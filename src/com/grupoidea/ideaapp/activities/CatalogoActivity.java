@@ -35,7 +35,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	private BannerProductoCatalogo adapterCatalogo;
 	
 	public CatalogoActivity() {
-		super(false, false, true); //TODO: Modificar a autoLoad:true, hasCache:true!
+		super(false, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
 	}
 
 	@Override

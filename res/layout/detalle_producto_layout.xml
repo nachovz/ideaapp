@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/detalle_producto_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/detalle_menu_selector" >
+
+    <RelativeLayout
+        android:id="@+id/detalle_producto_inflated"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <RelativeLayout
+            android:id="@+id/detalle_producto_image_zone"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:gravity="center_vertical|center_horizontal" >
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/detalle_producto_label_text_view"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/detalle_producto_image_zone"
+            android:background="#888888"
+            android:gravity="center"
+            android:text="Detalles del Producto"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

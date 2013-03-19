@@ -3,6 +3,8 @@ package com.grupoidea.ideaapp.models;
 import android.graphics.Bitmap;
 /** Clase que contiene la representación de un producto*/
 public class Producto {
+	/** Long con el UID de serializacion*/
+	private static final long serialVersionUID = 7522501988094486252L;
 	/** Entero con el identificador unico del producto*/
 	private int id;
 	/** Cadena de texto que contiene el nombre del producto.*/

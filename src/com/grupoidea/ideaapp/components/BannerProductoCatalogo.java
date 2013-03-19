@@ -3,10 +3,13 @@ package com.grupoidea.ideaapp.components;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -15,7 +18,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideaapp.activities.ParentMenuActivity;
+import com.grupoidea.ideaapp.activities.DashboardActivity;
+import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Producto;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
@@ -26,6 +30,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	private ArrayList<Producto> productos;
 	/** ViewGroup que permite mostrar el menu del producto.*/
 	private LinearLayout menu;
+	protected Producto producto;
 	
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
@@ -57,8 +62,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		View view = null;
 		TextView textView;
 		ImageView imageView;
+		RelativeLayout relativeLayout;
 		LayoutInflater inflater;
-		final Producto producto;
+//		final Producto producto;
 		
 //		final ListView listView = (ListView) parent;
 		
@@ -86,6 +92,19 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
 				imageView.setImageBitmap(producto.getImagen());
 			}
+			
+			//Crear comportamiento de click al articulo = despachar al activity de detalla de producto.
+			relativeLayout = (RelativeLayout) view.findViewById(R.id.banner_producto_box);
+			relativeLayout.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Bundle extras = new Bundle();
+					extras.putString("nombre",producto.getNombre());
+					extras.putDouble("precio", producto.getPrecio());
+					extras.putParcelable("bitmap", producto.getImagen());
+					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
+				}
+			});
 			
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {

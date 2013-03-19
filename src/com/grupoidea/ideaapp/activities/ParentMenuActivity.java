@@ -19,14 +19,44 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private RelativeLayout frontLayout;
 	
 	private ViewGroup menuRight;
+	private ViewGroup menuLeft;
 	
 	private Boolean menuRightShowed;
+	private Boolean menuLeftShowed;
 	private Boolean hasMenuRight;
+	private Boolean hasMenuLeft;
 	
-	public ParentMenuActivity(boolean autoLoad, boolean hasCache, boolean hasMenuRight) {
-		super(autoLoad, hasCache);
+	/** Constructor sobrecargado.
+	 * @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
+	 * @param  useCache Boolean que denota si el Activity debe almacenar el resultado de una consulta exitosa, este resultado se mostrara
+	 *  		antes de consultar al proveedor de servicios (de esta forma el usuario observara la ultima consulta exitosa).*/
+	public ParentMenuActivity(boolean autoLoad, boolean useCache) {
+		this(autoLoad, useCache, false, false);
+	}
+	/** Constructor sobrecargado.
+	 * @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
+	 * @param  useCache Boolean que denota si el Activity debe almacenar el resultado de una consulta exitosa, este resultado se mostrara
+	 *  		antes de consultar al proveedor de servicios (de esta forma el usuario observara la ultima consulta exitosa).
+	 * @param hasMenuRight Boolean que denota si el Activity posee menu lateral dereceho (por defecto se agrega el boton mostrar carrito
+	 * 			que permite  despligar/ocultar el menu de carrito)*/
+	public ParentMenuActivity(boolean autoLoad, boolean useCache, boolean hasMenuRight) {
+		this(autoLoad, useCache, hasMenuRight, false);
+	}
+	
+	/** Constructor por defecto (contiene la implementacion de los constructores sobrecargados)
+	 * @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
+	 * @param  useCache Boolean que denota si el Activity debe almacenar el resultado de una consulta exitosa, este resultado se mostrara
+	 *  		antes de consultar al proveedor de servicios (de esta forma el usuario observara la ultima consulta exitosa).
+	 * @param hasMenuRight Boolean que denota si el Activity posee menu lateral dereceho (por defecto se agrega el boton mostrar carrito
+	 * 			que permite  despligar/ocultar el menu de carrito)
+	 * @param hasMenuLeft Boolean que denota si el Activity posee menu lateral izquierdo (por defecto se agrega la funcionalidad de
+	 * 			mostrar/ocultar el menu de filtro de categorias del catalogo al hacer click en el icono "menu").*/
+	public ParentMenuActivity(boolean autoLoad, boolean useCache, boolean hasMenuRight, boolean hasMenuLeft) {
+		super(autoLoad, useCache);
 		this.hasMenuRight = hasMenuRight;
+		this.hasMenuLeft = hasMenuLeft;
 		menuRight = null;
+		menuLeft = null;
 	}
 	
 	@Override
@@ -34,7 +64,10 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.parent_menu_layout);
 		
+		setParentLayoutVisibility(View.GONE);
+		
 		menuRightShowed = false;
+		menuLeftShowed = false;
 		
 		menuTituloTextView = (TextView) findViewById(R.id.menu_titulo_text_view);
 		logOff = (ImageView) findViewById(R.id.menu_logoff_image_view);
@@ -47,17 +80,27 @@ public abstract class ParentMenuActivity extends ParentActivity {
 			createRightMenu();
 		}
 		
+		if(hasMenuLeft) {
+			createLeftMenu();
+			menuIcon.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					toggleLeftMenu();
+				}
+			});
+		} else {
+			menuIcon.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onBackPressed();
+				}
+			});
+		}
+		
 		carrito.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				toggleRightMenu();
-			}
-		});
-		
-		menuIcon.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onBackPressed();
 			}
 		});
 		
@@ -96,6 +139,12 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		setRightMenuLayout(R.layout.carrito_layout);
 	}
 	
+	/** Metodo que puede ser reimplementado en los hijos, permite asignar un layout al menu lateral izquierdo. Por defecto
+	 *  se asigna el menu de categorias.*/
+	protected void createLeftMenu() {
+		setLeftMenuLayout(R.layout.menu_layout);
+	}
+	
 	/** Permite setear el ViewGroup que se utlizara como menu lateral derecho*/
 	protected void setRightMenuLayout(int layoutResId) {
 		RelativeLayout parentInflater;
@@ -111,9 +160,29 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		}
 	}
 	
+	/** Permite setear el ViewGroup que se utlizara como menu lateral derecho*/
+	protected void setLeftMenuLayout(int layoutResId) {
+		RelativeLayout parentInflater;
+		View inflateView;
+		
+		inflateView = getLayoutInflater().inflate(layoutResId, null);
+		if(inflateView != null) {
+			menuLeft = (ViewGroup) inflateView;
+			parentInflater = (RelativeLayout) findViewById(R.id.parent_menu_left_layout);
+			if(parentInflater != null) {
+				parentInflater.addView(inflateView);
+			}
+		}
+	}
+	
 	/** Permite obtener el ViewGroup que se utilizara como menu lateral derecho*/
 	public ViewGroup getRightMenuLayout() {
 		return menuRight;
+	}
+	
+	/** Permite obtener el ViewGroup que se utilizara como menu lateral derecho*/
+	public ViewGroup getLeftMenuLayout() {
+		return menuLeft;
 	}
 	
 	/** Permite mostrar una cadena de texto en el centro del menú.
@@ -122,6 +191,36 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		if(menuTituloTextView != null && titulo != null) {
 			menuTituloTextView.setText(titulo);
 		}
+	}
+	
+	/** Permite mostrar/ocultar el menu que se encuentra a la izquierda del aplicativo.*/
+	public void toggleLeftMenu() {
+		if(!menuLeftShowed) {
+			showLeftMenu();
+		} else {
+			hideMenuLeft();
+		}
+	}
+	
+	/** Permite mostrar el menu que se encuentra a la izquierda del aplicativo.*/
+	public void showLeftMenu() {
+		if(frontLayout != null) {
+			frontLayout.scrollTo(dpToPx(-300), frontLayout.getScrollY());
+			menuLeftShowed = true;
+		}
+	}
+	
+	/** Permite ocultar el menu que se encuentra a la izquierda del aplicativo.*/
+	public void hideMenuLeft() {
+		if(frontLayout != null) {
+			frontLayout.scrollTo(0, frontLayout.getScrollY());
+			menuLeftShowed = false;
+		}
+	}
+	
+	/** Permite determinar si el menu que se encuentra a la izquierda del aplicativo es visible actualmente*/
+	protected Boolean isMenuLeftShowed() {
+		return menuLeftShowed;
 	}
 	
 	/** Permite mostrar/ocultar el menu que se encuentra a la derecha del aplicativo.*/
