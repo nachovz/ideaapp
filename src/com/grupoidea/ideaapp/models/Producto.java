@@ -3,12 +3,14 @@ package com.grupoidea.ideaapp.models;
 import android.graphics.Bitmap;
 /** Clase que contiene la representación de un producto*/
 public class Producto {
+	/** Long con el UID de serializacion*/
+	private static final long serialVersionUID = 7522501988094486252L;
 	/** Entero con el identificador unico del producto*/
 	private int id;
 	/** Cadena de texto que contiene el nombre del producto.*/
 	private String nombre;
 	/** Cadena de texto que contiene la denominacion de la moneda y/o unidad de medida. ej: "Bs", "$", "pts".*/
-	private String denominacion;
+	private static String denominacion;
 	/** Numero con el precio unitario del producto.*/
 	private double precio;
 	/** Mapa de bits con la representación visual del producto.*/
@@ -123,7 +125,7 @@ public class Producto {
 		}
 	}
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
-	private String precioToString(double precio) {
+	public static String precioToString(double precio) {
 		StringBuffer stringBuffer;
 		String strValue = null;
 		

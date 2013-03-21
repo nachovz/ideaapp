@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
+import android.view.View.OnClickListener;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -35,13 +33,14 @@ public class CatalogoActivity extends ParentMenuActivity {
 	private BannerProductoCatalogo adapterCatalogo;
 	
 	public CatalogoActivity() {
-		super(false, false, true); //TODO: Modificar a autoLoad:true, hasCache:true!
+		super(false, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
 	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		Producto producto;
 		RelativeLayout menuRight;
+		RelativeLayout relativeLayout;
 		ListView listCarrito = null;
 		
 		super.onCreate(savedInstanceState);
@@ -59,6 +58,15 @@ public class CatalogoActivity extends ParentMenuActivity {
 		menuRight = (RelativeLayout) getMenuRight();
 		if(menuRight != null) {
 			listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
+			relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
+			if(relativeLayout != null) {
+				relativeLayout.setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View arg0) {
+						dispatchActivity(GestionPedidosActivity.class, null, false);
+					}
+				});
+			}
 			if(listCarrito != null) {
 				listCarrito.setAdapter(adapterCarrito);
 				listCarrito.setSelection(listCarrito.getAdapter().getCount()-1);
