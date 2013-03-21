@@ -36,7 +36,7 @@ public abstract class ParentActivity extends Activity {
 	protected TextView loadingTextView;
 	/** Layout que contiene informacion sobre el estatus del request actual.*/
 	private RelativeLayout parentAvailableLayout;
-	
+		
 	/** Constructor que define los atributos de carga automatica y almacenamiento en cache (si es requerido por las clases hijas).  
 	 *  @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
 	 *  @param  useCache Boolean que denota si el Activity debe almacenar el resultado de una consulta exitosa, este resultado se mostrara
