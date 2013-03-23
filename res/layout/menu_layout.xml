@@ -2,15 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/menu_relative_layout"
     android:layout_width="300dp"
-    android:layout_height="wrap_content"
+    android:layout_height="fill_parent"
     android:background="@drawable/menu_carrito_selector" >
 
-    <ListView
-        android:id="@+id/menu_list_view"
+    <RelativeLayout
+        android:id="@+id/menu_inflated_layout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:focusable="false" >
+        android:layout_height="fill_parent" >
 
-    </ListView>
+        <ImageView
+            android:id="@+id/menu_dummy_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_bkg" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
