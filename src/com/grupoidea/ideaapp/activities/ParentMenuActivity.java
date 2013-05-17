@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
@@ -16,6 +18,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private ImageView logOff;
 	private ImageView menuIcon;
 	private ImageView carrito;
+	private Spinner clienteSpinner;
 	private RelativeLayout frontLayout;
 	
 	private ViewGroup menuRight;
@@ -73,6 +76,14 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		logOff = (ImageView) findViewById(R.id.menu_logoff_image_view);
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
+		clienteSpinner = (Spinner) this.findViewById(R.id.menu_cliente_select_spinner);
+		// Create an ArrayAdapter using the string array and a default spinner layout
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.client_names, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		clienteSpinner.setAdapter(adapter);
 		frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 		
 		if(hasMenuRight) {
@@ -190,6 +201,8 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	protected void setMenuTittle(String titulo) {
 		if(menuTituloTextView != null && titulo != null) {
 			menuTituloTextView.setText(titulo);
+			clienteSpinner.setEnabled(false);
+			clienteSpinner.setVisibility(View.INVISIBLE);
 		}
 	}
 	

@@ -91,7 +91,7 @@ public class LoginActivity extends ParentActivity {
 	}
 
 	@Override
-	protected Request getRequest() {
+	protected Request getRequestAction() {
 		return null;
 	}
 }

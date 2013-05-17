@@ -1,18 +1,18 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.ParentMenuActivity;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Producto;
@@ -110,6 +110,14 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					CatalogoActivity catalogoActivity;
+					Producto producto;
+					
+					producto = (Producto) getItem(position);
+					catalogoActivity = (CatalogoActivity) menuActivity;
+					catalogoActivity.adapterCatalogo.removeProductoFlagCarrito(producto);
+					catalogoActivity.adapterCatalogo.notifyDataSetChanged();
+					
 					carrito.removeProducto(position);
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito

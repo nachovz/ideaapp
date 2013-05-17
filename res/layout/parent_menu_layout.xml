@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent_menu_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:focusable="false" >
 
     <RelativeLayout
         android:id="@+id/parent_menu_back_layout"
@@ -86,6 +87,17 @@
                 android:layout_marginTop="67dp"
                 android:src="@drawable/client_tab_carrito"
                 android:visibility="gone" />
+
+            <Spinner
+                android:id="@+id/menu_cliente_select_spinner"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/menu_icon_image_view"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentLeft="false"
+                android:layout_marginLeft="30dp"
+                android:layout_toRightOf="@+id/menu_titulo_text_view"
+                android:focusable="false" />
 
         </RelativeLayout>
 

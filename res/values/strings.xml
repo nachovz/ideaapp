@@ -8,4 +8,10 @@
 	<string name="ingresar">Ingresar</string>
 	<string name="fallo_login">Fallo al autentificarse en el servidor, verifique conexion y datos</string>
 	<string name="vacio_login">Nombre de usuario y/o contraseña vacios</string>
+	<string-array name="client_names">
+	    <item>Makro</item>
+	    <item>Central Madeirense</item>
+	    <item>Grupo Idea</item>
+	    <item>Actimedia</item>
+	</string-array>
 </resources>

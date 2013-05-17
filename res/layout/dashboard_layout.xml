@@ -51,24 +51,31 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/dash_img_icono_inferior" />
-
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/cliente_nuevo_pedido_boton"
+            android:layout_width="fill_parent"
+            android:layout_height="65dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/cliente_relative_layout"
+            android:text="Nuevo Pedido"
+            android:textSize="20dp"
+            android:onClick="createNewPedido" />
 
         <ScrollView
             android:id="@+id/cliente_scroll_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/cliente_relative_layout" >
+            android:layout_below="@id/cliente_nuevo_pedido_boton" >
 
             <LinearLayout
                 android:id="@+id/client_list_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical" >
-
             </LinearLayout>
         </ScrollView>
-
     </RelativeLayout>
 
 </RelativeLayout>

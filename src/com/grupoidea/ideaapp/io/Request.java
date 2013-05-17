@@ -8,7 +8,7 @@ public class Request {
 	public final static int HTTP_REQUEST = 1;
 	/** Entero que representa el tipo de consulta a realizar, valores permitidos en la clase <code>Request</code>*/
 	private int requestType;
-	/** Objeto que representa la consulta a realizar, si el tipo de consulta es PARSE_QUERY este objeto contendra un <code>ParseRequest</code>.
+	/** Objeto que representa la consulta a realizar, si el tipo de consulta es PARSE_QUERY este objeto contendra un <code>ParseQuery</code>.
 	 *  Si el tipo de consulta es HTTP_QUERY el objeto contendra un String con el URL de la consulta*/
 	private Object request;
 	

@@ -7,6 +7,11 @@ public class Cliente {
 	private String nombre;
 	/** Listado de marcas previamente adquiridas por un cliente*/
 	private ArrayList<Marca> marcas;
+	
+	public Cliente(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

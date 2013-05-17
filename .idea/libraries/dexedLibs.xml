@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="dexedLibs">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-a04c17d65b6ae5df0eb088645a8e154c.jar!/" />
-      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/Parse-1.1.9-80d6b1145c8ece5f126ae2afb66f5ca7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/Parse-1.1.9-0b5a4243324982ce82b938e65fdd9df2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/bin/dexedLibs/android-support-v4-0e378d20dd7752d029a924e0346ddafe.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

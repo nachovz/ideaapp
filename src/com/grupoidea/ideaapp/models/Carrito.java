@@ -43,13 +43,13 @@ public class Carrito {
 	 *  del carrito, es necesario suministrar el identificador unico del producto.
 	 *  @param id Entero con el identificador unico del producto
 	 *  @return Entero con la posicion del producto en el listado de productos del carrito.*/
-	public int findProductoIndex(int id) {
+	public int findProductoIndex(String id) {
 		Producto productoActual = null;
 		int index = -1;
 		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			if(productoActual != null && productoActual.getId() == id) {
+			if(productoActual != null && productoActual.getId().equals(id)) {
 				index = i;
 			}
 		}
@@ -61,13 +61,13 @@ public class Carrito {
 	 *  @param id Entero con el identificador unico del producto
 	 *  @return Objeto de tipo de Producto con el producto solicitado, si el producto no esta en el 
 	 *  		listado de productos del carrito retorna null.*/
-	public Producto findProductoById(int id) {
+	public Producto findProductoById(String id) {
 		Producto productoActual = null;
 		Producto productoFinal = null;
 		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			if(productoActual != null && productoActual.getId() == id) {
+			if(productoActual != null && productoActual.getId().equals(id)) {
 				productoFinal = productoActual;
 				break;
 			}
@@ -91,5 +91,10 @@ public class Carrito {
 	 *  @param indice Entero con el indice del producto que se desea eliminar.*/
 	public void removeProducto(int indice) {
 		this.productos.remove(indice);
+	}
+	/** Retorna el nœmero de elementos en el carrito.
+	 */
+	public int count(){
+		return productos.size();
 	}
 }

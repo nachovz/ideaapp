@@ -28,7 +28,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 	}
 
 	@Override
-	protected Request getRequest() {
+	protected Request getRequestAction() {
 		return null;
 	}
 }
