@@ -268,12 +268,13 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 						view.setLayoutParams(layoutParams);
 						
-						TextView descuentoText = new TextView(mContext);
-						for (int i = 0; i < producto.getCountDescuentos(); i++) {
-							descuentoText.setText(producto.getStringDescuento(i));
-							menu.addView(descuentoText);
-						}
-						
+						/*if (producto.getCountDescuentos()>0){
+                            TextView descuentoText = new TextView(mContext);
+                            for (int i = 0; i < producto.getCountDescuentos(); i++) {
+                                descuentoText.setText(producto.getStringDescuento(i));
+                                menu.addView(descuentoText);
+                            }
+                        }*/
 					}
 				}
 			});

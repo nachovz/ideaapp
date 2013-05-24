@@ -16,7 +16,7 @@ import com.parse.ParseRelation;
 import android.graphics.Bitmap;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
-/** Clase que contiene la representación de un producto*/
+/** Clase que contiene la representaciï¿½n de un producto*/
 public class Producto {
 	/** Long con el UID de serializacion*/
 	private static final long serialVersionUID = 7522501988094486252L;
@@ -28,9 +28,9 @@ public class Producto {
 	private static String denominacion;
 	/** Numero con el precio unitario del producto.*/
 	private double precio;
-	/** Mapa de bits con la representación visual del producto.*/
+	/** Mapa de bits con la representaciï¿½n visual del producto.*/
 	private Bitmap imagen;
-	/** String que representa el c—digo del producto para IDEA */
+	/** String que representa el cï¿½digo del producto para IDEA */
 	private String codigo;
 	/** Identificador de marca para obtener los descuentos desde parse */
 	private String idMarca;
@@ -38,7 +38,8 @@ public class Producto {
 	private String nombreMarca;
 	/** Clase dentro de la marca del producto */
 	private String claseMarca;
-	/** Objeto tipo ParseRelation para obtener los descuentos del producto */
+
+    /** Objeto tipo ParseRelation para obtener los descuentos del producto */
 	private ParseRelation descuentosQuery;
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
 	private ArrayList<Integer> cant;
@@ -46,13 +47,14 @@ public class Producto {
 	//private HashMap<Integer, Double> tablaDescuentos;
 	private SparseArray<Double> tablaDescuentos;
 	
-	/** Variables para uso del cat‡logo (instancia) */
+	/** Variables para uso del catï¿½logo (instancia) */
 	
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
 	/** Double que representa el descuento aplicado al producto (manualmente) */
 	private double descuentoManual;
-	/** Boolean que permite determinar si el menu del producto es visible al usuario*/
+
+    /** Boolean que permite determinar si el menu del producto es visible al usuario*/
 	private Boolean isMenuOpen;
 	/** Boolean que permite determinar si el producto esta en el carrito*/
 	private Boolean isInCarrito;
@@ -80,7 +82,7 @@ public class Producto {
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto
 	 *  @param denominacion Cadena de texto que contiene la denominacion de la moneda y/o unidad de medida. ej: "Bs", "$", "pts".
-	 *  @param imagen  Mapa de bits con la representación visual del producto.*/
+	 *  @param imagen  Mapa de bits con la representaciï¿½n visual del producto.*/
 	public Producto(String id, String nombre, double precio, String denominacion, Bitmap imagen, String codigo) {
 		this.id = id;
 		this.nombre = nombre;
@@ -185,7 +187,7 @@ public class Producto {
 
 	public void setClaseMarca(String claseMarca) {
 		this.claseMarca = claseMarca;
-		setDescuentosFromParse();
+		//setDescuentosFromParse();
 	}
 
 	/** Permite calcular el precio de los productos del mismo tipo.*/
