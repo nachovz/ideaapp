@@ -1,7 +1,6 @@
 package com.grupoidea.ideaapp;
 
 import android.app.Application;
-
 import com.parse.Parse;
 
 /** Clase que permite inicializar y almacenar valores globales de la aplicacion*/

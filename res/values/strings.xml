@@ -9,7 +9,7 @@
 	<string name="fallo_login">Fallo al autentificarse en el servidor, verifique conexion y datos</string>
 	<string name="vacio_login">Nombre de usuario y/o contraseña vacios</string>
     <string name="titulo_descuento_manual">Establecer Descuento Manual</string>
-    <string name="descuento_manual">Ingrese Descuento Manual</string>
+    <string name="descuento_manual">%Descuento</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
 	<string-array name="client_names">

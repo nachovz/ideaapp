@@ -3,27 +3,23 @@ package com.grupoidea.ideaapp.components;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
+import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Producto;
 
@@ -38,6 +34,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	protected Producto producto;
 	private BannerProductoCatalogo adapter;
 	private Context mContext;
+
+    public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
 	
 	protected AsyncTask<Object, Object, Object> tarea;
 	
@@ -279,47 +277,47 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 LayoutParams layoutParams;
                 @Override
                 public void onClick(View view) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setTitle(R.string.titulo_descuento_manual);
-
-                    LayoutInflater inflater = LayoutInflater.from(mContext);
-                    builder.setView(inflater.inflate(R.layout.producto_descuento_manual_popup, null));
-
-                    final EditText descuentoManual = (EditText) view.findViewById(R.id.valor_descuento_manual);
-
-                    builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Click en Aceptar
-                            try{
-                                double valorDescuento = Double.parseDouble(descuentoManual.getText().toString());
-                                if(valorDescuento < (Double) 100.0 && valorDescuento > (Double) 0.0){
-    //                                producto.setDescuento(valorDescuento);
-                                    Toast.makeText(mContext, descuentoManual.getText().toString(), Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(mContext, "Descuento manual establecido en "+ descuentoManual.getText().toString(), 3000).show();
-                                }else{
-                                    Toast.makeText(mContext, "Valor del descuento no esta en un rango valido", 3000).show();
-                                }
-                            }catch(Exception e){
-                                Log.d("idea", e.toString());
-
-                            }
-                        }
-                    });
-                    builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            //Click en Cancelar
-                            Toast.makeText(mContext, "Ajuste manual de descuento cancelado por el usuario", 3000);
-                            dialog.cancel();
-                        }
-                    });
-
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                    setValorDescuentoManual();
                 }
             });
 
 		}
 		return view;
 	}
+
+    //TODO documentar bien
+    public void setValorDescuentoManual(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        final EditText input = new EditText(mContext);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);    //seteandolo para numeros solamente
+        input.setMaxLines(1);
+        builder.setView(input);
+
+        builder.setMessage(R.string.titulo_descuento_manual)
+                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Valor de Descuento ingresado
+                        Double valor = Double.parseDouble(input.getText().toString());
+                        //TODO verificar boundaries o meterlos en algun xml
+                        if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
+                            producto.setDescuento(valor);
+                            Log.d("descuento_manual", valor.toString());
+                            Toast.makeText(mContext, "Porcentaje de descuento manual asignado", 3000).show();
+                        } else {
+                            Toast.makeText(mContext, "Porcentaje de descuento manual no valido", 3000).show();
+                            setValorDescuentoManual();
+                            Log.d("descuento_manual", "porcentaje no valido");
+                        }
+                    }
+                })
+                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Dialogo cancelado
+                        Toast.makeText(mContext, "Descuento manual no establecido", 3000).show();
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
 }

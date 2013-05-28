@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -11,7 +12,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
-import com.parse.ParseUser;
+import com.grupoidea.ideaapp.io.Request;
+import com.parse.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ParentMenuActivity extends ParentActivity {
 	private TextView menuTituloTextView; 
@@ -79,6 +84,17 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		clienteSpinner = (Spinner) this.findViewById(R.id.menu_cliente_select_spinner);
 		// Create an ArrayAdapter using the string array and a default spinner layout
         //TODO Reemplazar por query de Clientes de parse
+        ParseQuery query = new ParseQuery("Cliente");
+        query.findInBackground(new FindCallback() {
+            public void done(List<ParseObject> listaClientes, ParseException e) {
+                if (e == null) {
+                    Log.d("score", "Obtenidos " + listaClientes.size() + " clientes");
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 		        R.array.client_names, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
