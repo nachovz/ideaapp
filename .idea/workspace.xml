@@ -56,7 +56,7 @@
     </list>
     <ignored path="IDEAApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369757481288" ignored="false" />
+    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369758031518" ignored="false" />
     <file path="/fragment.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369583554076" ignored="false" />
     <file path="/BannerProductoCatalogo.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369757071995" ignored="false" />
     <file path="/a.dummy" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369411257983" ignored="false" />
@@ -141,50 +141,7 @@
     <favorites_list name="IDEAApp" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="BannerProductoCatalogo.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="291" column="77" selection-start="10544" selection-end="10544" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4875#5313#0" expanded="true" />
-                <element signature="e#5307#5308#0" expanded="true" />
-                <element signature="e#5569#7399#0" expanded="true" />
-                <element signature="e#7116#7276#0" expanded="true" />
-                <element signature="e#7265#7266#0" expanded="true" />
-                <element signature="e#7393#7394#0" expanded="true" />
-                <element signature="e#10427#11581#0" expanded="true" />
-                <element signature="e#11558#11559#0" expanded="true" />
-                <element signature="e#11649#12022#0" expanded="true" />
-                <element signature="e#11999#12000#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RowClientePedido.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="123" column="8" selection-start="4233" selection-end="4233" vertical-scroll-proportion="0.53296703">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="producto_descuento_manual_popup.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/producto_descuento_manual_popup.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="34" selection-start="518" selection-end="518" vertical-scroll-proportion="-3.3">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -304,21 +261,21 @@
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Artifacts" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="112" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="114" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="115" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="117" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="112" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="115" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="117" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="912" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="912" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="117" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="114" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="121" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="915" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="915" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="121" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="117" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_4" />
@@ -514,17 +471,21 @@
       <workItem from="1369156384070" duration="862000" />
       <workItem from="1369404483232" duration="7293000" />
       <workItem from="1369582799865" duration="2307000" />
-      <workItem from="1369667266806" duration="31623000" />
+      <workItem from="1369667266806" duration="31708000" />
     </task>
     <task id="LOCAL-00001" summary="Pruebas con dialogo para descuento manual">
       <created>1369757369510</created>
       <updated>1369757369510</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Pruebas con dialogo para descuento manual">
+      <created>1369758018374</created>
+      <updated>1369758018374</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44434000" />
+    <option name="totallyTimeSpent" value="44519000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -548,7 +509,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="34" width="1346" height="728" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23882897" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32896763" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -560,15 +521,15 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32931036" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24884437" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24884437" sideWeight="0.67241377" order="0" side_tool="true" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3275862" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24884437" sideWeight="0.67068964" order="0" side_tool="true" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3275862" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -728,19 +689,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/producto_descuento_manual_popup.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="34" selection-start="518" selection-end="518" vertical-scroll-proportion="-3.3">
+        <state line="123" column="8" selection-start="4233" selection-end="4233" vertical-scroll-proportion="0.5344353">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="291" column="77" selection-start="10544" selection-end="10544" vertical-scroll-proportion="0.0">
+        <state line="291" column="77" selection-start="10544" selection-end="10544" vertical-scroll-proportion="0.9">
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4875#5313#0" expanded="true" />
@@ -757,9 +715,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
+    <entry file="file://$PROJECT_DIR$/res/layout/producto_descuento_manual_popup.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="123" column="8" selection-start="4233" selection-end="4233" vertical-scroll-proportion="0.53296703">
+        <state line="11" column="34" selection-start="518" selection-end="518" vertical-scroll-proportion="0.52715653">
           <folding />
         </state>
       </provider>
