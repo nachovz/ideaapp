@@ -1,8 +1,6 @@
 package com.grupoidea.ideaapp.models;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.json.JSONException;
@@ -15,7 +13,7 @@ import com.parse.ParseRelation;
 
 import android.graphics.Bitmap;
 import android.util.SparseArray;
-import android.util.SparseIntArray;
+
 /** Clase que contiene la representaci�n de un producto*/
 public class Producto {
 	/** Long con el UID de serializacion*/
@@ -52,7 +50,7 @@ public class Producto {
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
 	/** Double que representa el descuento aplicado al producto (manualmente) */
-	private double descuentoManual;
+	private double descuento;
 
     /** Boolean que permite determinar si el menu del producto es visible al usuario*/
 	private Boolean isMenuOpen;
@@ -142,11 +140,11 @@ public class Producto {
 	}
 	
 	public double getDescuento() {
-		return descuentoManual;
+		return descuento;
 	}
 
 	public void setDescuento(double descuento) {
-		this.descuentoManual = descuento;
+		this.descuento = descuento;
 	}
 	
 	public String getCodigo() {

@@ -8,13 +8,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideaapp.components.RowClienteMarca;
 import com.grupoidea.ideaapp.components.RowClientePedido;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Pedido;
-import com.grupoidea.ideaapp.models.Producto;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -24,7 +22,7 @@ public class DashboardActivity extends ParentMenuActivity {
 	private ParseUser user;
 	/** ViewGroup que contiene las filas con informacion de los clientes*/
 	//private LinearLayout clienteList;
-	/** ViewGroup que contiene las filas con informaci—n de los pedidos */
+	/** ViewGroup que contiene las filas con informacion de los pedidos */
 	private LinearLayout pedidosList;
 	
 	public DashboardActivity() {
@@ -78,7 +76,7 @@ public class DashboardActivity extends ParentMenuActivity {
 		}
 	}
 	 
-	private Cliente retreiveCliente(ParseObject producto){
+	private Cliente retrieveCliente(ParseObject producto){
 		
 		String nombre = producto.getString("nombre");		
 		Cliente client = new Cliente(nombre);
@@ -94,7 +92,7 @@ public class DashboardActivity extends ParentMenuActivity {
 		Cliente cliente;
 		
 		for (ParseObject parseObject : clientesParse) {	
-			cliente = retreiveCliente(parseObject);
+			cliente = retrieveCliente(parseObject);
 			clientes.add(cliente);
 		}
 		

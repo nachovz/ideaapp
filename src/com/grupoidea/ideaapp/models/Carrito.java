@@ -92,7 +92,7 @@ public class Carrito {
 	public void removeProducto(int indice) {
 		this.productos.remove(indice);
 	}
-	/** Retorna el nœmero de elementos en el carrito.
+	/** Retorna el numero de elementos en el carrito.
 	 */
 	public int count(){
 		return productos.size();

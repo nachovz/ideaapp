@@ -22,7 +22,7 @@ import com.grupoidea.ideaapp.models.Pedido;
 
 /**
  * Clase que permite crear una fila con el nombre del cliente con el estado y la
- * fecha del pedido que se realiz—
+ * fecha del pedido que se realizo
  * 
  * @author ignaciocordoba
  * 
@@ -43,13 +43,13 @@ public class RowClientePedido extends RelativeLayout {
 
 	/**
 	 * Constructor de clase RowClientePedido. Permite crear una fila con el
-	 * nombre del cliente (Raz—n Social) con la que se gener— el pedido, la
-	 * fecha de creaci—n del pedido y el estado actual.
+	 * nombre del cliente (Razon Social) con la que se genero el pedido, la
+	 * fecha de creacion del pedido y el estado actual.
 	 * 
 	 * @param context
 	 *            Contexto actual de la app
 	 * @param nombreCliente
-	 *            Cadena de texto con el nombre (Raz—n Social) del cliente
+	 *            Cadena de texto con el nombre (Razon Social) del cliente
 	 */
 	public RowClientePedido(Context context, String nombreCliente, int estadoParam) {
 		super(context);
@@ -92,7 +92,7 @@ public class RowClientePedido extends RelativeLayout {
 	}
 	
 	/**
-	 * MŽtodo privado que permite crear un TextView con el estado actual del pedido.
+	 * Metodo privado que permite crear un TextView con el estado actual del pedido.
 	 * @param status Cadena de texto con el estado actual.*/
 	private View createStatusTag(String status) {
 		FrameLayout.LayoutParams layoutParams;
@@ -105,8 +105,10 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		drawable = getResources().getDrawable(R.drawable.client_img_pastilla);
-		textView.setBackgroundDrawable(drawable);
+		/*drawable = getResources().getDrawable(R.drawable.client_img_pastilla);
+		textView.setBackgroundDrawable(drawable);*/
+        /** Lo comentado fue reemplazado por llamada a setBackgroundResource -- Fernando*/
+        textView.setBackgroundResource(R.drawable.client_img_pastilla);
 		//layoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		//layoutParams.setMargins(7, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
 		//textView.setLayoutParams(layoutParams);
@@ -114,8 +116,8 @@ public class RowClientePedido extends RelativeLayout {
 		return textView;
 	}
 	/**
-	 * Permite colocar la etiqueta del estado para el pedido actual. Esta funci—n sobre-escribe el estado anterior.
-	 * @param estado Valor del Estado en <code>Pedido.ESTADO_*</code>
+	 * Permite colocar la etiqueta del estado para el pedido actual. Esta funcion sobre-escribe el estado anterior.
+	 * @param estadoParam Valor del Estado en <code>Pedido.ESTADO_*</code>
 	 */
 	public void addEstado(int estadoParam) {
 		String estadoString = "";

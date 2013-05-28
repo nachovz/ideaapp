@@ -78,10 +78,14 @@ public class RowClienteMarca extends RelativeLayout{
 		textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		drawable = getResources().getDrawable(R.drawable.client_img_pastilla);
+
+		/*drawable = getResources().getDrawable(R.drawable.client_img_pastilla);
 		//Se utiliza este metodo deprecado por el min-API:13.
-		textView.setBackgroundDrawable(drawable);
-		layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		textView.setBackgroundDrawable(drawable);*/
+        /**Lo comentado fue reemplazado por llamada a setBackgroundResource -- Fernando*/
+        textView.setBackgroundResource(R.drawable.client_img_pastilla);
+
+        layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(7, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
 		textView.setLayoutParams(layoutParams);
 	    

@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.parse.Parse;
 
-/** Clase que permite inicializar y almacenar valores globales de la aplicación*/
+/** Clase que permite inicializar y almacenar valores globales de la aplicacion*/
 public class GrupoIdea extends Application {
 	/** Cadena de texto que contiene el identificador unico de la aplicacion en Parse*/
 	public static final String PARSE_APP_ID = "UIoWxIGXSIzMSB7osoxUHkK72yOrHHLzqNwA9O2B";//"74hxdwCXYYP2jtbHuX4mVVbX1HjpkOSAqmdMM4pp";

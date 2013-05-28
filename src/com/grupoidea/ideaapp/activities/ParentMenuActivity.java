@@ -78,6 +78,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 		clienteSpinner = (Spinner) this.findViewById(R.id.menu_cliente_select_spinner);
 		// Create an ArrayAdapter using the string array and a default spinner layout
+        //TODO Reemplazar por query de Clientes de parse
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 		        R.array.client_names, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
@@ -196,7 +197,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		return menuLeft;
 	}
 	
-	/** Permite mostrar una cadena de texto en el centro del menú.
+	/** Permite mostrar una cadena de texto en el centro del menu.
 	 *  @param titulo Cadena de texto que representa informacion relevante al Activity.*/
 	protected void setMenuTittle(String titulo) {
 		if(menuTituloTextView != null && titulo != null) {

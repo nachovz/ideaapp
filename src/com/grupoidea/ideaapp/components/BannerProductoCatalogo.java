@@ -2,25 +2,25 @@ package com.grupoidea.ideaapp.components;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
@@ -53,7 +53,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		menu = null;
 	}
 	
-	/** Permite obtener la posicion de un producto en el ArrayList de productos perteneciente al catalogo**/
+	/** Permite apagar la bandera isInCarrito de un producto en el carrito**/
 	public void removeProductoFlagCarrito(Producto producto) {
 		Producto prod;
 		if(producto != null) {
@@ -66,7 +66,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		}
 	}
 	
-	/** Permite obtener la posicion de un producto en el ArrayList de productos perteneciente al catalogo**/
+	/** Permite encender la bandera isInCarrito de un producto en el carrito**/
 	public void addProductoFlagCarrito(Producto producto) {
 		Producto prod;
 		if(producto != null) {
@@ -127,11 +127,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			}
 			
 			if(producto.getIsInCarrito()) {
-				//textView = (TextView) view.findViewById(R.id.banner_producto_titulo_text_view);
-				//textView.setText("AGREGADO!");
+				/** Mostrar el boton del carrito como seleccionado si el producto se encuentra dentro del mismo*/
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito_selected));
 			}else{
+                /** No mostrar el boton de carrito seleccionado*/
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
@@ -156,22 +156,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
 				}
 			});
-			
-//			relativeLayout = (RelativeLayout) view.findViewById(R.id.banner_producto_box);
-//			relativeLayout.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					Producto producto;
-//					producto = productos.get(position);
-//					
-//					Bundle extras = new Bundle();
-//					extras.putString("nombre",producto.getNombre());
-//					extras.putDouble("precio", producto.getPrecio());
-//					extras.putParcelable("bitmap", producto.getImagen());
-//					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
-//				}
-//			});
-			
+
+            /**Crear Listener para cuando el producto es agregado al carrito, agregar el producto al carrito y mostrar carrito*/
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -225,22 +211,21 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 //				        	tarea.execute();
 				        }
 				    });
-					
-					
-					
-					
+
 					//Calcula el total del carrito
 					setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
 				}
 			});
 			
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
+
 			if(producto.getIsMenuOpen()) {
 				menu.setVisibility(LinearLayout.VISIBLE);
 			} else {
 				menu.setVisibility(LinearLayout.GONE);
 			}
-			
+
+            /** Menu de producto*/
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				LayoutParams layoutParams;
@@ -267,17 +252,73 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 						layoutParams = new LayoutParams(180, 40);
 						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 						view.setLayoutParams(layoutParams);
-						
-						/*if (producto.getCountDescuentos()>0){
-                            TextView descuentoText = new TextView(mContext);
-                            for (int i = 0; i < producto.getCountDescuentos(); i++) {
-                                descuentoText.setText(producto.getStringDescuento(i));
-                                menu.addView(descuentoText);
-                            }
-                        }*/
 					}
+
+                    /** Listar descuentos en el menu de producto*/
+//					if (producto.getCountDescuentos()>0){
+                        TextView descProd = new TextView(mContext);
+                        descProd.setHeight(40);
+                        descProd.setWidth(LayoutParams.MATCH_PARENT);
+                        descProd.setTextColor(Color.parseColor("#646464"));
+                        descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
+                        descProd.setGravity(Gravity.CENTER);
+                        descProd.setBackgroundResource(R.drawable.menu_producto_selector);
+                        descProd.setText("Desc1");
+                        menu.addView(descProd, 1);
+                        /*for (int i = 0; i < producto.getCountDescuentos(); i++) {
+                            descProd.setText(producto.getStringDescuento(i));
+                            menu.addView(descProd);
+                        }*/
+//                  }
+
 				}
 			});
+
+            TextView prodMenuText = (TextView) view.findViewById(R.id.banner_producto_menu_item_descuento_manual);
+            prodMenuText.setOnClickListener(new View.OnClickListener() {
+                LayoutParams layoutParams;
+                @Override
+                public void onClick(View view) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle(R.string.titulo_descuento_manual);
+
+                    LayoutInflater inflater = LayoutInflater.from(mContext);
+                    builder.setView(inflater.inflate(R.layout.producto_descuento_manual_popup, null));
+
+                    final EditText descuentoManual = (EditText) view.findViewById(R.id.valor_descuento_manual);
+
+                    builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Click en Aceptar
+                            try{
+                                double valorDescuento = Double.parseDouble(descuentoManual.getText().toString());
+                                if(valorDescuento < (Double) 100.0 && valorDescuento > (Double) 0.0){
+    //                                producto.setDescuento(valorDescuento);
+                                    Toast.makeText(mContext, descuentoManual.getText().toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "Descuento manual establecido en "+ descuentoManual.getText().toString(), 3000).show();
+                                }else{
+                                    Toast.makeText(mContext, "Valor del descuento no esta en un rango valido", 3000).show();
+                                }
+                            }catch(Exception e){
+                                Log.d("idea", e.toString());
+
+                            }
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Click en Cancelar
+                            Toast.makeText(mContext, "Ajuste manual de descuento cancelado por el usuario", 3000);
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
 		}
 		return view;
 	}

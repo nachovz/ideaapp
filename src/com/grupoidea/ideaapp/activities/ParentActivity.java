@@ -179,7 +179,7 @@ public abstract class ParentActivity extends Activity {
 	 * 
 	 * @param query
 	 *            Objeto de tipo ParseQuery que contiene la consulta que se
-	 *            desea realizar (para mas info revisar documentación de Parse)
+	 *            desea realizar (para mas info revisar documentacion de Parse)
 	 */
 	private void loadFromParse(ParseQuery query) {
 		query.findInBackground(new FindCallback() {
@@ -237,7 +237,7 @@ public abstract class ParentActivity extends Activity {
 	 * @param dp
 	 *            Entero que contiene los dp que se desean transformar
 	 * @return Entero con la cantidad de pixeles equivalentes a los dp
-	 *         suministrados, si existe algun error en la transformación se
+	 *         suministrados, si existe algun error en la transformacion se
 	 *         retornara -1
 	 */
 	protected int dpToPx(int dp) {
@@ -257,7 +257,7 @@ public abstract class ParentActivity extends Activity {
 	 * @param px
 	 *            Entero que contiene los px que se desean transformar
 	 * @return Entero con la cantidad de dp equivalentes a los pixeles
-	 *         suministrados, si existe algun error en la transformación se
+	 *         suministrados, si existe algun error en la transformacion se
 	 *         retornara -1
 	 */
 	protected int pxToDp(int px) {

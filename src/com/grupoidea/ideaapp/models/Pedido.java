@@ -11,9 +11,9 @@ public class Pedido {
 	
 	/** Objeto de tipo Cliente asociado al pedido */
 	private Cliente cliente;
-	/** Direcci—n de env’o del pedido */
+	/** Direccion de envio del pedido */
 	private String direccion;
-	/** Fecha de creaci—n del pedido */
+	/** Fecha de creacion del pedido */
 	private Date fechaCreado;
 	/** Variable para verificar el estado del pedido */
 	private int estado;

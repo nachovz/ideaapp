@@ -14,14 +14,14 @@ import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-/** Activity que permite al usuario autentificarse en la aplición mediante la data obtenida de Parse*/
+/** Activity que permite al usuario autentificarse en la aplicaion mediante la data obtenida de Parse*/
 public class LoginActivity extends ParentActivity {
 	private LoginActivity loginActivity;
 	/** View que almacena el nombre de usuario*/
 	private TextView userTextView;
-	/** View que almacena el la contraseña del usuario*/
+	/** View que almacena el la contraseÃ±a del usuario*/
 	private TextView passwordTextView;
-	/** Elemnto grafico que permite mostrarle al usuario que hay una consulta en curso*/
+	/** Elemento grafico que permite mostrarle al usuario que hay una consulta en curso*/
 	private ProgressBar loading;
 	
 	public LoginActivity() {
@@ -81,7 +81,7 @@ public class LoginActivity extends ParentActivity {
 				}
 			});
 		} else {
-			Log.e("ERROR", "Nombre de usuario y/o contraseña vacios");
+			Log.e("ERROR", "Nombre de usuario y/o contraseÃ±a vacios");
 			Toast.makeText(getApplicationContext(), getString(R.string.vacio_login), Toast.LENGTH_LONG).show();
 		}
 	}

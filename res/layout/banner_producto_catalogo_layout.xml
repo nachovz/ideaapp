@@ -94,9 +94,9 @@
 	        android:background="#ffffff"
 	        android:orientation="vertical"
 	        android:visibility="gone" >
-	
+
 	        <TextView
-	            android:id="@+id/banner_producto_menu_item_descuento"
+	            android:id="@+id/banner_producto_menu_item_descuento_manual"
 	            android:layout_width="fill_parent"
 	            android:layout_height="40dp"
 	            android:background="@drawable/menu_producto_selector"
@@ -104,7 +104,7 @@
 	            android:text="Agregar Descuento"
 	            android:textColor="#646464"
 	            android:textStyle="bold|italic" />
-	
+
 	        <TextView
 	            android:id="@+id/banner_producto_menu_item_excedentes"
 	            android:layout_width="fill_parent"

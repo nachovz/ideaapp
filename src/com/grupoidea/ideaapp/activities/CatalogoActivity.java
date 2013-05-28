@@ -6,9 +6,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,7 +14,6 @@ import android.view.View.OnTouchListener;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.grupoidea.ideaapp.R;
@@ -26,11 +23,8 @@ import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Producto;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseRelation;
 
 public class CatalogoActivity extends ParentMenuActivity {
 	/** Elemento que permite mostrar Views en forma de grid.*/
@@ -52,8 +46,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
-		
+
 		super.onCreate(savedInstanceState);
 		
 		clienteNombre = getIntent().getExtras().getString("clienteNombre");
@@ -64,49 +57,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
 		
-//		producto = new Producto(1, "nacho 40'", 13550);
-//		carrito.addProducto(producto);
-		
-		
-//		catalogoProductos = new ArrayList<Producto>();
-//		producto = new Producto(1, "TV Samsung 3D 40'", 13550);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(2, "Microondas Samsung", 1200);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.microondas));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(3, "Aire Acondicionado Split 12KBTU", 9340);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.aire));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(4, "Equipo Sonido QKMJ12", 2490);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.audio));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(5, "TV SmartTV Samung 60'", 23000);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tv));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(6, "Vinera Samnsug", 943);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.vinera));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(7, "Sonido Home Samsung", 5200);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.sonido));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(8, "Parrillera Grill Delonghi", 6599);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.parrillera));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(9, "Thermos AVT123", 239);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.thermos));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(10, "Cafetera Delonghi", 12000);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.cafetera));
-//		catalogoProductos.add(producto);
-//		producto = new Producto(11, "Tostadora Casera", 960);
-//		producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.tostadoras));
-//		catalogoProductos.add(producto);
-		
-		
 	}
 	
-	private Producto retreiveProducto(ParseObject producto){
+	private Producto retrieveProducto(ParseObject producto){
 		
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
@@ -135,7 +88,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		ListView listCarrito = null;
 		
 		for (ParseObject parseObject : productosParse) {	
-			producto = retreiveProducto(parseObject);
+			producto = retrieveProducto(parseObject);
 			productos.add(producto);
 		}
 
