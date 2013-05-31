@@ -9,6 +9,7 @@ import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.ParentMenuActivity;
 
 public abstract class ParentBannerProducto extends BaseAdapter {
+    /**Actividad padre*/
 	protected ParentMenuActivity menuActivity;
 	
 	public ParentBannerProducto(Context context) {

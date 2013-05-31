@@ -90,14 +90,14 @@
 
             <Spinner
                 android:id="@+id/menu_cliente_select_spinner"
-                android:layout_width="160dp"
+                android:layout_width="320dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/menu_icon_image_view"
                 android:layout_alignParentBottom="false"
                 android:layout_alignParentLeft="false"
-                android:layout_marginLeft="30dp"
                 android:layout_toRightOf="@+id/menu_titulo_text_view"
-                android:focusable="false" />
+                android:focusable="false"
+                    />
 
         </RelativeLayout>
 

@@ -33,8 +33,6 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private Boolean menuLeftShowed;
 	private Boolean hasMenuRight;
 	private Boolean hasMenuLeft;
-
-    public ArrayList<String> clientes;
 	
 	/** Constructor sobrecargado.
 	 * @param  autoLoad Boolean que denota si el Activity debe consultar al proveedor de servicios al inciar.
@@ -84,20 +82,19 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-        //TODO Reemplazar por query de Clientes de parse
+
+        //Hacer query de la tabla Cliente en Parse
         ParseQuery query = new ParseQuery("Cliente");
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> listaClientes, ParseException e) {
                 String cliente;
-                ParseObject parseObj;
-                clientes = new ArrayList<String>();
                 if (e == null) {
                     Log.d("clientes", "Obtenidos " + listaClientes.size() + " clientes");
-                    for (int i=0; i<listaClientes.size(); i++) {
-                        parseObj=listaClientes.get(i);
+                    for (ParseObject parseObj:listaClientes){
                         cliente = parseObj.getString("nombre");
-                        clientes.add(cliente);
+                        //Almacenar clientes directamente en el adapter
+                        adapter.add(cliente);
                     }
                 } else {
                     Log.d("clientes", "Error: " + e.getMessage());
@@ -105,11 +102,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
             }
         });
 
-//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, clientes);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.client_names, android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
 		clienteSpinner.setAdapter(adapter);
 		frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 		

@@ -28,7 +28,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 	
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
-	 *  @param productos Arreglo de productos. */
+	 *  @param carrito Arreglo de productos. */
 	public BannerProductoCarrito(Context context, Carrito carrito) {
 		super(context);
 		this.carrito = carrito;
