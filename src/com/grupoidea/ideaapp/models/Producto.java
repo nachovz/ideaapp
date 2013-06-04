@@ -6,13 +6,17 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.grupoidea.ideaapp.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.SparseArray;
+import android.widget.LinearLayout;
 
 /** Clase que contiene la representaci�n de un producto*/
 public class Producto {
@@ -40,9 +44,8 @@ public class Producto {
     /** Objeto tipo ParseRelation para obtener los descuentos del producto */
 	private ParseRelation descuentosQuery;
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
-	private ArrayList<Integer> cant;
-	private ArrayList<Double> porc;
-	//private HashMap<Integer, Double> tablaDescuentos;
+//	private ArrayList<Integer> cant;
+//	private ArrayList<Double> porc;
 	private SparseArray<Double> tablaDescuentos;
 	
 	/** Variables para uso del cat�logo (instancia) */
@@ -196,11 +199,11 @@ public class Producto {
 	}
 	/** Permite construir el string del precio total concatenandole al precio la denominacion*/
 	public String getStringPrecioTotal() {
-		return precioToString(getPrecioTotal());
+		return precioDenominacionToString(getPrecioTotal());
 	}
 	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
-		return precioToString(this.precio);
+		return precioDenominacionToString(this.precio);
 	}
 	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
 	public void addCantidad() {
@@ -214,7 +217,7 @@ public class Producto {
 		}
 	}
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
-	public static String precioToString(double precio) {
+	public static String precioDenominacionToString(double precio) {
 		StringBuffer stringBuffer;
 		String strValue = null;
 		
@@ -243,51 +246,76 @@ public class Producto {
 	
 	public void setCantidadDescuento(int c, double d){
 		tablaDescuentos.append(c, d);
-		cant.add(c);
-		porc.add(d);
+//		cant.add(c);
+//		porc.add(d);
 	}
 	
 	public double getDescuentoCantidad(){
+
+        int size = tablaDescuentos.size(), key;
+
+        for( int i = 0; i<size; i++){
+            key= tablaDescuentos.keyAt(i);
+            if( key >= cantidad){
+                return tablaDescuentos.valueAt(key);
+            }
+        }
+
+//		for (Integer cantidades : cant) {
+//			if (cantidad >= cantidades) {
+//				descuento = porc.get(cant.indexOf(cantidades));
+//			}
+//		}
 		
-		double descuento = 0;
-		
-		for (Integer cantidades : cant) {
-			if (cantidad >= cantidades) {
-				descuento = porc.get(cant.indexOf(cantidades));
-			}
-		}
-		
-		return descuento;
+		return 0.0;
 	}
 	
 	public int getCountDescuentos(){
-		return cant.size();
+        return tablaDescuentos.size();
+//		return cant.size();
 	}
 	
 	public String getStringDescuento(int index){
 		String texto = "";
-		texto = ">"+cant.get(index)+" : "+porc.get(index)+"%";
+        texto = ">"+tablaDescuentos.keyAt(index)+" : "+tablaDescuentos.valueAt(index)+"%";
+//		texto = ">"+cant.get(index)+" : "+porc.get(index)+"%";
 		return texto;
 	}
 	
-	private void setDescuentosFromParse(){
-		
-		//ParseRelation desctos = marca.getRelation("descuentos");
-		getDescuentosQuery().getQuery().findInBackground(new FindCallback() {
-			
-			@Override
-			public void done(List<ParseObject> arg0, ParseException arg1) {
-				// TODO Auto-generated method stub
-				if(arg1 == null && arg0 != null){
-					for (ParseObject descuentos : arg0) {
-						//prod.setCantidadDescuento(parseObject.getInt("cantidad"), parseObject.getDouble("descuento"));
-						cant.add(descuentos.getInt("cantidad"));
-						porc.add(descuentos.getDouble("descuento"));
-					}
-				}
-			}
-		});
-	}
+	public void setDescuentosFromParse(){
+
+        ParseQuery query = new ParseQuery("Marca");
+        query.include("descuentos");
+        query.whereEqualTo("nombre", nombreMarca);
+        query.whereEqualTo("clase",claseMarca);
+		query.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> arg0, ParseException e) {
+                Log.d("setDescuentosFromParse", String.valueOf(arg0.size()));
+                if(e == null && arg0 != null){
+                    for (ParseObject descuentos : arg0) {
+                        tablaDescuentos.append(descuentos.getInt("cantidad"),descuentos.getDouble("descuento"));
+                    }
+                }
+            }
+        });
+    }
+
+//		//ParseRelation desctos = marca.getRelation("descuentos");
+//		getDescuentosQuery().getQuery().findInBackground(new FindCallback() {
+//			@Override
+//			public void done(List<ParseObject> arg0, ParseException arg1) {
+//				if(arg1 == null && arg0 != null){
+//					for (ParseObject descuentos : arg0) {
+//						//prod.setCantidadDescuento(parseObject.getInt("cantidad"), parseObject.getDouble("descuento"));
+//                        tablaDescuentos.append(descuentos.getInt("cantidad"),descuentos.getDouble("descuento"));
+////                        cant.add(descuentos.getInt("cantidad"));
+////						porc.add(descuentos.getDouble("descuento"));
+//					}
+//				}
+//			}
+//		});
+//	}
 
 	public ParseRelation getDescuentosQuery() {
 		return descuentosQuery;
@@ -296,4 +324,14 @@ public class Producto {
 	public void setDescuentosQuery(ParseRelation descuentosQuery) {
 		this.descuentosQuery = descuentosQuery;
 	}
+
+    public ArrayList<String> getDescuentosString(){
+        ArrayList<String> descuentos = new ArrayList<String>();
+        int size = descuentos.size();
+        for (int i=0; i<size; i++){
+            descuentos.add(getStringDescuento(i));
+        }
+        Log.d("getDescuentosString Result", descuentos.toString());
+        return descuentos;
+    }
 }

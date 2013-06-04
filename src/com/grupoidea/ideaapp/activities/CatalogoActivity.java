@@ -72,6 +72,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		prod.setIdMarca(marca.getObjectId());
 		prod.setNombreMarca(marca.getString("nombre"));
 		prod.setClaseMarca(marca.getString("clase"));
+
+        //TODO cargar descuentos
+        prod.setDescuentosFromParse();;
 	
 		return prod;
 	}

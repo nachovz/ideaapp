@@ -125,11 +125,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			}
 			
 			if(producto.getIsInCarrito()) {
-				/** Mostrar el boton del carrito como seleccionado si el producto se encuentra dentro del mismo*/
+				/* Mostrar el boton del carrito como seleccionado si el producto se encuentra dentro del mismo*/
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito_selected));
 			}else{
-                /** No mostrar el boton de carrito seleccionado*/
+                /* No mostrar el boton de carrito seleccionado*/
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
@@ -155,7 +155,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				}
 			});
 
-            /**Crear Listener para cuando el producto es agregado al carrito, agregar el producto al carrito y mostrar carrito*/
+            /*Crear Listener para cuando el producto es agregado al carrito, agregar el producto al carrito y mostrar carrito*/
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -214,8 +214,29 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
 				}
 			});
-			
+
+
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
+            ArrayList<String> menu_prod = producto.getDescuentosString();
+
+            /** Listar descuentos en el menu de producto*/
+            if (menu_prod.size()>0){
+
+                TextView descProd = new TextView(menuActivity);
+                descProd.setHeight(40);
+                descProd.setWidth(LayoutParams.MATCH_PARENT);
+                descProd.setTextColor(Color.parseColor("#646464"));
+                descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
+                descProd.setGravity(Gravity.CENTER);
+                descProd.setBackgroundResource(R.drawable.menu_producto_selector);
+//                descProd.setText("Desc1");
+                descProd.setText(menu_prod.get(0));
+                menu.addView(descProd, 1);
+                        /*for (int i = 0; i < producto.getCountDescuentos(); i++) {
+                            descProd.setText(producto.getStringDescuento(i));
+                            menu.addView(descProd);
+                        }*/
+            }
 
 			if(producto.getIsMenuOpen()) {
 				menu.setVisibility(LinearLayout.VISIBLE);
@@ -251,30 +272,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 						view.setLayoutParams(layoutParams);
 					}
-
-                    /** Listar descuentos en el menu de producto*/
-//					if (producto.getCountDescuentos()>0){
-                        TextView descProd = new TextView(mContext);
-                        descProd.setHeight(40);
-                        descProd.setWidth(LayoutParams.MATCH_PARENT);
-                        descProd.setTextColor(Color.parseColor("#646464"));
-                        descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
-                        descProd.setGravity(Gravity.CENTER);
-                        descProd.setBackgroundResource(R.drawable.menu_producto_selector);
-                        descProd.setText("Desc1");
-                        menu.addView(descProd, 1);
-                        /*for (int i = 0; i < producto.getCountDescuentos(); i++) {
-                            descProd.setText(producto.getStringDescuento(i));
-                            menu.addView(descProd);
-                        }*/
-//                  }
-
 				}
 			});
 
             TextView prodMenuText = (TextView) view.findViewById(R.id.banner_producto_menu_item_descuento_manual);
             prodMenuText.setOnClickListener(new View.OnClickListener() {
-                LayoutParams layoutParams;
                 @Override
                 public void onClick(View view) {
                     setValorDescuentoManual();

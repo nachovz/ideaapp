@@ -48,7 +48,7 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 				textView.setText(nombre);
 				
 				textView = (TextView) inflateView.findViewById(R.id.banner_producto_precio_text_view);
-				textView.setText(Producto.precioToString(precio));
+				textView.setText(Producto.precioDenominacionToString(precio));
 				
 				imageView = (ImageView) inflateView.findViewById(R.id.banner_producto_image_view);
 				imageView.setImageBitmap(bitmap);
