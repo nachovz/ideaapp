@@ -44,8 +44,6 @@ public class Producto {
     /** Objeto tipo ParseRelation para obtener los descuentos del producto */
 	private ParseRelation descuentosQuery;
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
-//	private ArrayList<Integer> cant;
-//	private ArrayList<Double> porc;
 	private SparseArray<Double> tablaDescuentos;
 	
 	/** Variables para uso del cat�logo (instancia) */
@@ -246,8 +244,6 @@ public class Producto {
 	
 	public void setCantidadDescuento(int c, double d){
 		tablaDescuentos.append(c, d);
-//		cant.add(c);
-//		porc.add(d);
 	}
 	
 	public double getDescuentoCantidad(){
@@ -260,62 +256,83 @@ public class Producto {
                 return tablaDescuentos.valueAt(key);
             }
         }
-
-//		for (Integer cantidades : cant) {
-//			if (cantidad >= cantidades) {
-//				descuento = porc.get(cant.indexOf(cantidades));
-//			}
-//		}
 		
 		return 0.0;
 	}
 	
 	public int getCountDescuentos(){
         return tablaDescuentos.size();
-//		return cant.size();
 	}
 	
 	public String getStringDescuento(int index){
-		String texto = "";
-        texto = ">"+tablaDescuentos.keyAt(index)+" : "+tablaDescuentos.valueAt(index)+"%";
-//		texto = ">"+cant.get(index)+" : "+porc.get(index)+"%";
+		String texto = ">"+tablaDescuentos.keyAt(index)+" : "+tablaDescuentos.valueAt(index)+"%";
 		return texto;
 	}
-	
-	public void setDescuentosFromParse(){
 
-        ParseQuery query = new ParseQuery("Marca");
-        query.include("descuentos");
-        query.whereEqualTo("nombre", nombreMarca);
-        query.whereEqualTo("clase",claseMarca);
-		query.findInBackground(new FindCallback() {
-            @Override
-            public void done(List<ParseObject> arg0, ParseException e) {
-                Log.d("setDescuentosFromParse", String.valueOf(arg0.size()));
-                if(e == null && arg0 != null){
-                    for (ParseObject descuentos : arg0) {
-                        tablaDescuentos.append(descuentos.getInt("cantidad"),descuentos.getDouble("descuento"));
+    public ArrayList<String> getDescuentosString(){
+        ArrayList<String> descuentos = new ArrayList<String>();
+        for (int i=0, size = tablaDescuentos.size(); i<size; i++){
+            descuentos.add(getStringDescuento(i));
+        }
+        Log.d("getDescuentosString Result", descuentos.toString());
+        return descuentos;
+    }
+
+	public void setDescuentosFromParse() {
+        tablaDescuentos.clear();
+        final ParseQuery query = new ParseQuery("Marca");
+        /*query.whereEqualTo("nombre", this.getNombreMarca());
+        query.whereEqualTo("clase",this.getClaseMarca());
+        List<ParseObject> marcas = query.find();
+            if(marcas != null){
+                Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
+                for (ParseObject marcaObj : marcas) {
+                    ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
+                    List<ParseObject> descuentos= descuentosQuery.find();
+                    if(descuentos != null){
+                        Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
+                        int pos=0;
+                        for(ParseObject descuento: descuentos){
+                            tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
+                            pos = tablaDescuentos.size()-1;
+                            Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
+                        }
+                    }else{
+                        Log.d("DEBUG", "No se recuperaron descuentos para este producto");
                     }
+                }
+            }else{
+                Log.d("DEBUG", "result: null");
+            }*/
+
+        query.findInBackground(new FindCallback() {
+            public void done(List<ParseObject> marcas, ParseException e) {
+                if(e == null && marcas != null){
+                    Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
+                    for (ParseObject marcaObj : marcas) {
+                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
+                        descuentosQuery.findInBackground(new FindCallback() {
+                            public void done(List<ParseObject> descuentos, ParseException e) {
+                                if(e == null && descuentos != null){
+                                    Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
+                                    int pos=0;
+                                    for(ParseObject descuento: descuentos){
+                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
+                                        pos = tablaDescuentos.size()-1;
+                                        Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
+                                    }
+                                }else{
+                                    Log.d("DEBUG", "No se recuperaron descuentos para este producto");
+                                }
+                            }
+                            });
+                    }
+                }else{
+                    Log.d("DEBUG", "result: null");
                 }
             }
         });
     }
-
-//		//ParseRelation desctos = marca.getRelation("descuentos");
-//		getDescuentosQuery().getQuery().findInBackground(new FindCallback() {
-//			@Override
-//			public void done(List<ParseObject> arg0, ParseException arg1) {
-//				if(arg1 == null && arg0 != null){
-//					for (ParseObject descuentos : arg0) {
-//						//prod.setCantidadDescuento(parseObject.getInt("cantidad"), parseObject.getDouble("descuento"));
-//                        tablaDescuentos.append(descuentos.getInt("cantidad"),descuentos.getDouble("descuento"));
-////                        cant.add(descuentos.getInt("cantidad"));
-////						porc.add(descuentos.getDouble("descuento"));
-//					}
-//				}
-//			}
-//		});
-//	}
 
 	public ParseRelation getDescuentosQuery() {
 		return descuentosQuery;
@@ -324,14 +341,4 @@ public class Producto {
 	public void setDescuentosQuery(ParseRelation descuentosQuery) {
 		this.descuentosQuery = descuentosQuery;
 	}
-
-    public ArrayList<String> getDescuentosString(){
-        ArrayList<String> descuentos = new ArrayList<String>();
-        int size = descuentos.size();
-        for (int i=0; i<size; i++){
-            descuentos.add(getStringDescuento(i));
-        }
-        Log.d("getDescuentosString Result", descuentos.toString());
-        return descuentos;
-    }
 }

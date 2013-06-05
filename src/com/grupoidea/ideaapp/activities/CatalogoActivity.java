@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,8 @@ import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Producto;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -73,10 +76,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		prod.setNombreMarca(marca.getString("nombre"));
 		prod.setClaseMarca(marca.getString("clase"));
 
-        //TODO cargar descuentos
-        prod.setDescuentosFromParse();;
-	
-		return prod;
+        prod.setDescuentosFromParse();
+
+        return prod;
 	}
 	 
 	@Override

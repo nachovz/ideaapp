@@ -215,27 +215,25 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				}
 			});
 
-
+            //TODO corregir descuentos
+            menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
             ArrayList<String> menu_prod = producto.getDescuentosString();
+            Log.d("DEBUG", "descuentos para prod: "+menu_prod.toString());
 
             /** Listar descuentos en el menu de producto*/
-            if (menu_prod.size()>0){
-
-                TextView descProd = new TextView(menuActivity);
-                descProd.setHeight(40);
-                descProd.setWidth(LayoutParams.MATCH_PARENT);
-                descProd.setTextColor(Color.parseColor("#646464"));
-                descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
-                descProd.setGravity(Gravity.CENTER);
-                descProd.setBackgroundResource(R.drawable.menu_producto_selector);
-//                descProd.setText("Desc1");
-                descProd.setText(menu_prod.get(0));
-                menu.addView(descProd, 1);
-                        /*for (int i = 0; i < producto.getCountDescuentos(); i++) {
-                            descProd.setText(producto.getStringDescuento(i));
-                            menu.addView(descProd);
-                        }*/
+            if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+2)){
+                for(int i=0, size=menu_prod.size(); i<size; i++) {
+                    TextView descProd = new TextView(menuActivity);
+                    descProd.setHeight(40);
+                    descProd.setWidth(LayoutParams.MATCH_PARENT);
+                    descProd.setTextColor(Color.parseColor("#646464"));
+                    descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
+                    descProd.setGravity(Gravity.CENTER);
+                    descProd.setBackgroundResource(R.drawable.menu_producto_selector);
+                    descProd.setText(menu_prod.get(i));
+                    menu.addView(descProd, menu.getChildCount()-2);
+                }
             }
 
 			if(producto.getIsMenuOpen()) {

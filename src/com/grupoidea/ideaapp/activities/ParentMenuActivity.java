@@ -90,14 +90,14 @@ public abstract class ParentMenuActivity extends ParentActivity {
             public void done(List<ParseObject> listaClientes, ParseException e) {
                 String cliente;
                 if (e == null) {
-                    Log.d("clientes", "Obtenidos " + listaClientes.size() + " clientes");
+                    Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
                     for (ParseObject parseObj:listaClientes){
                         cliente = parseObj.getString("nombre");
                         //Almacenar clientes directamente en el adapter
                         adapter.add(cliente);
                     }
                 } else {
-                    Log.d("clientes", "Error: " + e.getMessage());
+                    Log.d("DEBUG", "Error: " + e.getMessage());
                 }
             }
         });
