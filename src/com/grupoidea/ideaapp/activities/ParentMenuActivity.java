@@ -12,10 +12,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
-import com.grupoidea.ideaapp.io.Request;
-import com.parse.*;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ParentMenuActivity extends ParentActivity {
@@ -81,36 +83,30 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		logOff = (ImageView) findViewById(R.id.menu_logoff_image_view);
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
+
+        //Poblar Spinner de Clientes e inflar
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
-
-        //Hacer query de la tabla Cliente en Parse
-        ParseQuery query = new ParseQuery("Cliente");
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        query.findInBackground(new FindCallback() {
-            public void done(List<ParseObject> listaClientes, ParseException e) {
-                String cliente;
-                if (e == null) {
-                    Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
-                    for (ParseObject parseObj:listaClientes){
-                        cliente = parseObj.getString("nombre");
-                        //Almacenar clientes directamente en el adapter
-                        adapter.add(cliente);
-                    }
-                } else {
-                    Log.d("DEBUG", "Error: " + e.getMessage());
-                }
-            }
-        });
-
+        ArrayAdapter<String> adapter = getClientesFromParse();
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		clienteSpinner.setAdapter(adapter);
-		frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
-		
+
+        frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
+
+        //Mostrar imagen del carrito si el activity tiene menu lateral derecho
 		if(hasMenuRight) {
 			carrito.setVisibility(View.VISIBLE);
 			createRightMenu();
 		}
-		
+        //crear listener para tap sobre icono del carrito
+        carrito.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                toggleRightMenu();
+            }
+        });
+
+        //Mostrar icono de menu de categorias y suscribir un listener si el activity tiene menu lateral izquierdo
+        // si no crear un listener para cuando se presiona el boton de atrás
 		if(hasMenuLeft) {
 			createLeftMenu();
 			menuIcon.setOnClickListener(new OnClickListener() {
@@ -127,14 +123,8 @@ public abstract class ParentMenuActivity extends ParentActivity {
 				}
 			});
 		}
-		
-		carrito.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				toggleRightMenu();
-			}
-		});
-		
+
+        //Crear listener para el boton de log off
 		logOff.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -285,4 +275,29 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	protected Boolean isMenuRightShowed() {
 		return menuRightShowed;
 	}
+
+    /**
+     * Obtener Clientes desde Parse y almacenarlos en un ArrayAdapter
+     * @return ArrayAdapter con los nombres de clientes
+     */
+    public ArrayAdapter<String> getClientesFromParse(){
+        ParseQuery query = new ParseQuery("Cliente");
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        query.findInBackground(new FindCallback() {
+            public void done(List<ParseObject> listaClientes, ParseException e) {
+                String cliente;
+                if (e == null) {
+                    Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
+                    for (ParseObject parseObj:listaClientes){
+                        cliente = parseObj.getString("nombre");
+                        //Almacenar clientes directamente en el adapter
+                        adapter.add(cliente);
+                    }
+                } else {
+                    Log.d("DEBUG", "Error: " + e.getMessage());
+                }
+            }
+        });
+        return adapter;
+    }
 }

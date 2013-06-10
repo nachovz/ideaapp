@@ -12,10 +12,5 @@
     <string name="descuento_manual">%Descuento</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
-	<string-array name="client_names">
-	    <item>Makro</item>
-	    <item>Central Madeirense</item>
-	    <item>Grupo Idea</item>
-	    <item>Actimedia</item>
-	</string-array>
+    <string name="excedentes">Excedentes: </string>
 </resources>

@@ -1,22 +1,15 @@
 package com.grupoidea.ideaapp.models;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.util.SparseArray;
+
+import com.parse.ParseRelation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.grupoidea.ideaapp.R;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-
-import android.graphics.Bitmap;
-import android.util.Log;
-import android.util.SparseArray;
-import android.widget.LinearLayout;
+import java.util.ArrayList;
 
 /** Clase que contiene la representaci�n de un producto*/
 public class Producto {
@@ -47,7 +40,9 @@ public class Producto {
 	private SparseArray<Double> tablaDescuentos;
 	
 	/** Variables para uso del cat�logo (instancia) */
-	
+
+    /**Entero que almacena la existencia del producto en el servidor*/
+    private int existencia;
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
 	/** Double que representa el descuento aplicado al producto (manualmente) */
@@ -90,6 +85,7 @@ public class Producto {
 		this.imagen = imagen;
 		this.codigo = codigo;
 		this.cantidad = 1;
+        this.descuento = 0.0;
 		this.isInCarrito = false;
 		this.tablaDescuentos = new SparseArray<Double>();
 	}
@@ -99,6 +95,14 @@ public class Producto {
 	public void setDenominacion(String denominacion) {
 		this.denominacion = denominacion;
 	}
+
+    public int getExistencia() {
+        return existencia;
+    }
+    public void setExistencia(int existencia) {
+        this.existencia = existencia;
+    }
+
 	public int getCantidad() {
 		return cantidad;
 	}
@@ -191,8 +195,10 @@ public class Producto {
 
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {
-		double precioTotal;
-		precioTotal = precio * cantidad;
+		double precioTotal, desc= 1.0 - getDescuentoCantidad();
+        Log.d("DEBUG", String.valueOf(descuento));
+        precioTotal = cantidad * precio * desc;
+        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precio)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
 		return precioTotal;
 	}
 	/** Permite construir el string del precio total concatenandole al precio la denominacion*/
@@ -247,24 +253,27 @@ public class Producto {
 	}
 	
 	public double getDescuentoCantidad(){
-
-        int size = tablaDescuentos.size(), key;
-
-        for( int i = 0; i<size; i++){
-            key= tablaDescuentos.keyAt(i);
-            if( key >= cantidad){
-                return tablaDescuentos.valueAt(key);
+        if(descuento==0){
+            Log.d("DEBUG", "entrando a if: "+ String.valueOf(descuento));
+            int key;
+            for( int i = tablaDescuentos.size()-1; i>=0; i--){
+                key = tablaDescuentos.keyAt(i);
+                if( key <= cantidad){
+                    return tablaDescuentos.valueAt(i)/100.0;
+                }
             }
+        }else{
+            Log.d("DEBUG", "entrando a else: "+ String.valueOf(descuento));
+            return descuento/100.0;
         }
-		
-		return 0.0;
+        return 0.0;
 	}
 	
 	public int getCountDescuentos(){
         return tablaDescuentos.size();
 	}
 	
-	public String getStringDescuento(int index){
+	public String getStringDescuentoAt(int index){
 		String texto = ">"+tablaDescuentos.keyAt(index)+" : "+tablaDescuentos.valueAt(index)+"%";
 		return texto;
 	}
@@ -272,66 +281,45 @@ public class Producto {
     public ArrayList<String> getDescuentosString(){
         ArrayList<String> descuentos = new ArrayList<String>();
         for (int i=0, size = tablaDescuentos.size(); i<size; i++){
-            descuentos.add(getStringDescuento(i));
+            descuentos.add(getStringDescuentoAt(i));
         }
-        Log.d("getDescuentosString Result", descuentos.toString());
         return descuentos;
+    }
+
+    public void setTablaDescuentos(SparseArray<Double> tablaDescuentos){
+        this.tablaDescuentos=tablaDescuentos;
     }
 
 	public void setDescuentosFromParse() {
         tablaDescuentos.clear();
-        final ParseQuery query = new ParseQuery("Marca");
-        /*query.whereEqualTo("nombre", this.getNombreMarca());
-        query.whereEqualTo("clase",this.getClaseMarca());
-        List<ParseObject> marcas = query.find();
-            if(marcas != null){
-                Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
-                for (ParseObject marcaObj : marcas) {
-                    ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
-                    List<ParseObject> descuentos= descuentosQuery.find();
-                    if(descuentos != null){
-                        Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
-                        int pos=0;
-                        for(ParseObject descuento: descuentos){
-                            tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
-                            pos = tablaDescuentos.size()-1;
-                            Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
-                        }
-                    }else{
-                        Log.d("DEBUG", "No se recuperaron descuentos para este producto");
-                    }
-                }
-            }else{
-                Log.d("DEBUG", "result: null");
-            }*/
-
-        query.findInBackground(new FindCallback() {
-            public void done(List<ParseObject> marcas, ParseException e) {
-                if(e == null && marcas != null){
-                    Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
-                    for (ParseObject marcaObj : marcas) {
-                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
-                        descuentosQuery.findInBackground(new FindCallback() {
-                            public void done(List<ParseObject> descuentos, ParseException e) {
-                                if(e == null && descuentos != null){
-                                    Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
-                                    int pos=0;
-                                    for(ParseObject descuento: descuentos){
-                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
-                                        pos = tablaDescuentos.size()-1;
-                                        Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
-                                    }
-                                }else{
-                                    Log.d("DEBUG", "No se recuperaron descuentos para este producto");
-                                }
-                            }
-                            });
-                    }
-                }else{
-                    Log.d("DEBUG", "result: null");
-                }
-            }
-        });
+//        final ParseQuery query = new ParseQuery("Marca");
+//        query.findInBackground(new FindCallback() {
+//            public void done(List<ParseObject> marcas, ParseException e) {
+//                if(e == null && marcas != null){
+//                    Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
+//                    for (ParseObject marcaObj : marcas) {
+//                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
+//                        descuentosQuery.findInBackground(new FindCallback() {
+//                            public void done(List<ParseObject> descuentos, ParseException e) {
+//                                if(e == null && descuentos != null){
+//                                    Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
+//                                    int pos=0;
+//                                    for(ParseObject descuento: descuentos){
+//                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
+//                                        pos = tablaDescuentos.size()-1;
+//                                        Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
+//                                    }
+//                                }else{
+//                                    Log.d("DEBUG", "No se recuperaron descuentos para este producto");
+//                                }
+//                            }
+//                            });
+//                    }
+//                }else{
+//                    Log.d("DEBUG", "result: null");
+//                }
+//            }
+//        });
     }
 
 	public ParseRelation getDescuentosQuery() {

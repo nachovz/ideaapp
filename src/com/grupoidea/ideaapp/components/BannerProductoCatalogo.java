@@ -1,9 +1,6 @@
 package com.grupoidea.ideaapp.components;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
@@ -11,17 +8,27 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.util.Log;
-import android.view.*;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.*;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Producto;
+
+import java.util.ArrayList;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
 public class BannerProductoCatalogo extends ParentBannerProducto {
@@ -45,6 +52,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
 		super(context);
 		this.productos = productos;
+//        this.menusProductos = generateMenusProductos();
 		this.listCarrito = listCarrito;
 		this.adapter = this;
 		this.mContext = context;
@@ -77,7 +85,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		}
 	}
 	
-	
 	@Override
 	public int getCount() {
 		return productos.size();
@@ -100,12 +107,10 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		ImageView imageView;
 		RelativeLayout relativeLayout;
 		LayoutInflater inflater;
-//		final Producto producto;
-		
-//		final ListView listView = (ListView) parent;
 		
 		producto = (Producto) getItem(position);
-		
+
+        //View previo no existe
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(R.layout.banner_producto_catalogo_layout, null);
@@ -215,23 +220,39 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				}
 			});
 
-            //TODO corregir descuentos
+            //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
             menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
-            ArrayList<String> menu_prod = producto.getDescuentosString();
-            Log.d("DEBUG", "descuentos para prod: "+menu_prod.toString());
+            //TODO fix: Agregar Listener para cuando se pierda el foco
+            menu.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+                LayoutParams layoutParams;
+                @Override
+                public void onFocusChange(View v, boolean hasFocus){
+                    if(producto.getIsMenuOpen() && !hasFocus){
+                        //El menu esta abierto... cerrarlo
+                        if(menu != null) {
+                            producto.setIsMenuOpen(false);
+                            menu.setVisibility(LinearLayout.VISIBLE);
+                            notifyDataSetChanged();
+                        }
+                        layoutParams = new LayoutParams(40, 40);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                        v.setLayoutParams(layoutParams);
+                    }
+                }
+            });
 
-            /** Listar descuentos en el menu de producto*/
+            TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
+            if (exced == null) {
+                throw new AssertionError();
+            }
+            exced.setText(menuActivity.getText(R.string.excedentes)+String.valueOf(producto.getExistencia()));
+
+            // Listar descuentos en el menu de producto
+            ArrayList<String> menu_prod = producto.getDescuentosString();
             if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+2)){
                 for(int i=0, size=menu_prod.size(); i<size; i++) {
-                    TextView descProd = new TextView(menuActivity);
-                    descProd.setHeight(40);
-                    descProd.setWidth(LayoutParams.MATCH_PARENT);
-                    descProd.setTextColor(Color.parseColor("#646464"));
-                    descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
-                    descProd.setGravity(Gravity.CENTER);
-                    descProd.setBackgroundResource(R.drawable.menu_producto_selector);
-                    descProd.setText(menu_prod.get(i));
+                    TextView descProd = createProductoMenuTextView(menuActivity, menu_prod.get(i));
                     menu.addView(descProd, menu.getChildCount()-2);
                 }
             }
@@ -242,7 +263,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				menu.setVisibility(LinearLayout.GONE);
 			}
 
-            /** Menu de producto*/
+            /** Imagen de menu emergente de producto*/
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				LayoutParams layoutParams;
@@ -285,39 +306,64 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		return view;
 	}
 
-    //TODO documentar bien
+    /**
+     * Funcion que retorna un TextView configurado para el menu de producto, con el contexto y texto especificado
+     * @param mContext Contexto del menu
+     * @param text Texto a mostrar por el TextView
+     * @return TextView configurado
+     */
+    public TextView createProductoMenuTextView(Context mContext, String text){
+        TextView descProd = new TextView(mContext);
+        descProd.setHeight(40);
+        descProd.setWidth(LayoutParams.MATCH_PARENT);
+        descProd.setTextColor(Color.parseColor("#646464"));
+        descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
+        descProd.setGravity(Gravity.CENTER);
+        descProd.setBackgroundResource(R.drawable.menu_producto_selector);
+        descProd.setText(text);
+
+        return descProd;
+    }
+
+    /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
     public void setValorDescuentoManual(){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
         final EditText input = new EditText(mContext);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);    //seteandolo para numeros solamente
+        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);    //seteandolo para numeros solamente
         input.setMaxLines(1);
+        input.setHint(R.string.descuento_manual);
         builder.setView(input);
-
-        builder.setMessage(R.string.titulo_descuento_manual)
-                .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Valor de Descuento ingresado
-                        Double valor = Double.parseDouble(input.getText().toString());
-                        //TODO verificar boundaries o meterlos en algun xml
-                        if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-                            producto.setDescuento(valor);
-                            Log.d("descuento_manual", valor.toString());
-                            Toast.makeText(mContext, "Porcentaje de descuento manual asignado", 3000).show();
-                        } else {
-                            Toast.makeText(mContext, "Porcentaje de descuento manual no valido", 3000).show();
-                            setValorDescuentoManual();
-                            Log.d("descuento_manual", "porcentaje no valido");
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Dialogo cancelado
-                        Toast.makeText(mContext, "Descuento manual no establecido", 3000).show();
-                    }
-                });
+        TextView title = new TextView(mContext);
+        title.setText(R.string.titulo_descuento_manual);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+        builder.setCustomTitle(title);
+        builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Valor de Descuento ingresado
+                Double valor = Double.parseDouble(input.getText().toString());
+                //TODO boundaries como final (meterlos en algun xml)
+                if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
+                    producto.setDescuento(valor);
+                    Log.d("descuento_manual", valor.toString());
+                    Toast.makeText(mContext, "Porcentaje de descuento manual asignado", 3000).show();
+                } else {
+                    Toast.makeText(mContext, "Porcentaje de descuento manual no valido", 3000).show();
+                    setValorDescuentoManual();
+                    Log.d("descuento_manual", "porcentaje no valido");
+                }
+            }
+        })
+        .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Dialogo cancelado
+                Toast.makeText(mContext, "Descuento manual no establecido", 3000).show();
+            }
+        });
         builder.create();
         builder.show();
     }
+
 }

@@ -111,7 +111,7 @@
 	            android:layout_height="40dp"
 	            android:background="@drawable/menu_producto_selector"
 	            android:gravity="center_vertical|center_horizontal"
-	            android:text="Calcular Excedentes"
+	            android:text="Excedentes: "
 	            android:textColor="#646464"
 	            android:textStyle="bold|italic" />
 	

@@ -47,7 +47,7 @@
     </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="D/DEBUG" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="D/DE" />
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
   </component>
   <component name="ChangeListManager">
@@ -56,41 +56,13 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/banner_producto_catalogo_layout.xml" afterPath="$PROJECT_DIR$/res/layout/banner_producto_catalogo_layout.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/fernando.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/fernando.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="IDEAApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370405624439" ignored="false" />
-    <file path="/fragment.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370032444050" ignored="false" />
-    <file path="/BannerProductoCatalogo.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370403017465" ignored="false" />
-    <file path="/a.dummy" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370317510008" ignored="false" />
-    <file path="/GrupoIdea.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369583227757" ignored="false" />
-    <file path="/ParentMenuActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370035874588" ignored="false" />
-    <file path="/Carrito.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369583240740" ignored="false" />
-    <file path="/Pedido.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369583312704" ignored="false" />
-    <file path="/ParentActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369806827729" ignored="false" />
-    <file path="/DashboardActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369669732853" ignored="false" />
-    <file path="/LoginActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369672352763" ignored="false" />
-    <file path="/RowClientePedido.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369757321232" ignored="false" />
-    <file path="/CatalogoActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370402634788" ignored="false" />
-    <file path="/banner_producto_catalogo_layout.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369677732892" ignored="false" />
-    <file path="/styles.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369710594504" ignored="false" />
-    <file path="/a.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369757506434" ignored="false" />
-    <file path="/strings.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369802594367" ignored="false" />
-    <file path="/producto_descuento_manual_popup.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369720018108" ignored="false" />
-    <file path="/RowClienteMarca.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369721013869" ignored="false" />
-    <file path="/PopupDescuentoManualProducto.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369724106091" ignored="false" />
-    <file path="/a.groovy" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369788830063" ignored="false" />
-    <file path="/popup_descuento_producto.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369803153402" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369802508847" ignored="false" />
-    <file path="/PopupDescuentoProductoDialog.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369807440012" ignored="false" />
-    <file path="$PROJECT_DIR$/gen/com/grupoidea/ideaapp/BuildConfig.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1369803537624" ignored="false" />
-    <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370032438483" ignored="false" />
-    <file path="/ParentBannerProducto.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370034887609" ignored="false" />
-    <file path="/ClientesListAdapter.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370035038640" ignored="false" />
-    <file path="/BannerProductoCarrito.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370035003666" ignored="false" />
-    <file path="/Producto.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370402728538" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,6 +82,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -147,7 +120,6 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -160,19 +132,17 @@
       <file leaf-file-name="CatalogoActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="8" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.0">
+            <state line="173" column="38" selection-start="6933" selection-end="6933" vertical-scroll-proportion="0.0" vertical-offset="2580" max-vertical-offset="3870">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BannerProductoCatalogo.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
+      <file leaf-file-name="Carrito.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Carrito.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="217" column="38" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.026929982">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="13" column="25" selection-start="339" selection-end="339" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="1590">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -180,7 +150,25 @@
       <file leaf-file-name="Producto.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="282" column="8" selection-start="8622" selection-end="8622" vertical-scroll-proportion="0.0">
+            <state line="265" column="43" selection-start="8449" selection-end="8449" vertical-scroll-proportion="0.0" vertical-offset="3960" max-vertical-offset="5070">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BannerProductoCatalogo.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="348" column="49" selection-start="12987" selection-end="12987" vertical-scroll-proportion="0.0" vertical-offset="5205" max-vertical-offset="5625">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BannerProductoCarrito.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="13" selection-start="730" selection-end="730" vertical-scroll-proportion="0.20107238" vertical-offset="0" max-vertical-offset="2115">
               <folding />
             </state>
           </provider>
@@ -210,10 +198,8 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/PopupDescuentoManualProducto.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/GrupoIdea.java" />
-        <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/res/layout/popup_descuento_producto.xml" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/PopupDescuentoProductoDialog.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/PopupDescuentoDialog.java" />
@@ -222,6 +208,8 @@
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/ClientesListAdapter.java" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/res/layout/banner_producto_catalogo_layout.xml" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java" />
@@ -402,6 +390,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="idea-app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -630,7 +636,8 @@
       <workItem from="1370030492561" duration="19000" />
       <workItem from="1370030531574" duration="6934000" />
       <workItem from="1370306200189" duration="23118000" />
-      <workItem from="1370405619336" duration="16000" />
+      <workItem from="1370405619336" duration="25961000" />
+      <workItem from="1370883852529" duration="81000" />
     </task>
     <task id="LOCAL-00001" summary="Pruebas con dialogo para descuento manual">
       <created>1369757369510</created>
@@ -660,11 +667,15 @@
       <created>1370379226431</created>
       <updated>1370379226431</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="[Buggy]   : Mostrar Descuentos en menu desplegable&#10;[Pending] : Excedentes&#10;[Done]    : Establecer Descuento Manual">
+      <created>1370405753143</created>
+      <updated>1370405753143</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="100605000" />
+    <option name="totallyTimeSpent" value="126631000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -690,28 +701,28 @@
     <frame x="-1" y="27" width="1368" height="742" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23787878" sideWeight="0.06902357" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.6745362" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3956229" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32659933" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3181818" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32491583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931036" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25075758" sideWeight="0.22558923" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23787878" sideWeight="0.6750842" order="0" side_tool="true" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32491583" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23787878" sideWeight="0.06902357" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23787878" sideWeight="0.6762712" order="0" side_tool="true" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3237288" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3242424" sideWeight="0.6745362" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6712538" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32154882" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31871837" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -758,7 +769,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Pruebas con Parse en Producto.java" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Buggy]   : Mostrar Descuentos en menu desplegable&#10;[Pending] : Excedentes&#10;[Done]    : Establecer Descuento Manual" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -777,135 +788,135 @@
     <MESSAGE value="error en setAdapter de Spinner" />
     <MESSAGE value="Listo getClientes para el Spinner en Catalogo" />
     <MESSAGE value="Pruebas con Parse en Producto.java" />
+    <MESSAGE value="[Buggy]   : Mostrar Descuentos en menu desplegable&#10;[Pending] : Excedentes&#10;[Done]    : Establecer Descuento Manual" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/layout/parent_layout.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/producto_descuento_manual_popup.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/row_cliente_marca_layout.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/row_cliente_pedido_layout.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/row_cliente_porcentaje_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/banner_producto_carrito_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/carrito_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/dashboard_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/catalogo_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/banner_producto_catalogo_layout.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="47" selection-start="2056" selection-end="2056" vertical-scroll-proportion="-1.0441989" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/parent_menu_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="90" column="12" selection-start="3374" selection-end="3374" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="90" column="12" selection-start="3374" selection-end="3374" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="150" column="31" selection-start="5149" selection-end="5149" vertical-scroll-proportion="0.331565">
+        <state line="150" column="31" selection-start="5149" selection-end="5149" vertical-scroll-proportion="0.331565" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="12" selection-start="752" selection-end="752" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/banner_producto_catalogo_layout.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="113" column="42" selection-start="4507" selection-end="4519" vertical-scroll-proportion="1.0371429" vertical-offset="0" max-vertical-offset="0" />
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="88" column="51" selection-start="4202" selection-end="4202" vertical-scroll-proportion="0.27027026">
+        <state line="280" column="54" selection-start="10051" selection-end="10051" vertical-scroll-proportion="6.217033" vertical-offset="0" max-vertical-offset="0">
           <folding>
-            <element signature="e#4822#4823#0" expanded="true" />
+            <element signature="method#onCreate#0;class#ParentMenuActivity#0" expanded="false" />
+            <element signature="e#4666#4771#0" expanded="false" />
+            <element signature="method#getClientesFromParse#0;class#ParentMenuActivity#0" expanded="false" />
+            <element signature="e#10168#10176#0" expanded="true" />
+            <element signature="e#10253#10904#0" expanded="true" />
+            <element signature="e#10893#10894#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
+    <entry file="file://$PROJECT_DIR$/../../sdk/sources/android-17/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="8" selection-start="2683" selection-end="2683" vertical-scroll-proportion="0.0">
+        <state line="2165" column="16" selection-start="94469" selection-end="94469" vertical-scroll-proportion="0.33425415" vertical-offset="0" max-vertical-offset="0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="282" column="8" selection-start="8622" selection-end="8622" vertical-scroll-proportion="0.0">
+        <state line="265" column="43" selection-start="8449" selection-end="8449" vertical-scroll-proportion="0.0" vertical-offset="3960" max-vertical-offset="5070">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="173" column="38" selection-start="6933" selection-end="6933" vertical-scroll-proportion="0.0" vertical-offset="2580" max-vertical-offset="3870">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Carrito.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="25" selection-start="339" selection-end="339" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="1590">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="217" column="38" selection-start="7363" selection-end="7363" vertical-scroll-proportion="0.026929982">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="348" column="49" selection-start="12987" selection-end="12987" vertical-scroll-proportion="0.0" vertical-offset="5205" max-vertical-offset="5625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="13" selection-start="730" selection-end="730" vertical-scroll-proportion="0.20107238" vertical-offset="0" max-vertical-offset="2115">
+          <folding />
         </state>
       </provider>
     </entry>

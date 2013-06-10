@@ -1,13 +1,8 @@
 package com.grupoidea.ideaapp.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,6 +23,12 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CatalogoActivity extends ParentMenuActivity {
 	/** Elemento que permite mostrar Views en forma de grid.*/
@@ -56,10 +57,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		if(clienteNombre != null) {
 			setMenuTittle(clienteNombre);
 		}
-		
+
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
-		
 	}
 	
 	private Producto retrieveProducto(ParseObject producto){
@@ -70,14 +70,52 @@ public class CatalogoActivity extends ParentMenuActivity {
 		String objectId = producto.getObjectId();
 		
 		Producto prod = new Producto(objectId,codigo, nombre, precio);
+        prod.setExistencia(producto.getInt("existencia"));
 
 		ParseObject marca = producto.getParseObject("marca");
 		prod.setIdMarca(marca.getObjectId());
 		prod.setNombreMarca(marca.getString("nombre"));
 		prod.setClaseMarca(marca.getString("clase"));
+        final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
+        Log.d("CatalogoActivity", "-----------------------------------------------------------");
+        Log.d("CatalogoActivity", prod.getNombre());
 
-        prod.setDescuentosFromParse();
+        //Obtener marcas
+        final ParseQuery query = new ParseQuery("Marca");
+        query.whereEqualTo("nombre", prod.getNombreMarca());
+        query.whereEqualTo("clase", prod.getClaseMarca());
+        query.findInBackground(new FindCallback() {
+            public void done(List<ParseObject> marcas, ParseException e) {
+                if(e == null && marcas != null){
+                    Log.d("CatalogoActivity", "Marcas obtenidas: "+String.valueOf(marcas.size()));
 
+                    //Obtener descuentos para marcas
+                    for (ParseObject marcaObj : marcas) {
+                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
+                        descuentosQuery.findInBackground(new FindCallback() {
+                            public void done(List<ParseObject> descuentos, ParseException e) {
+                                if(e == null && descuentos != null){
+                                    Log.d("CatalogoActivity", "Descuentos recuperados para este producto: "+descuentos.size());
+                                    for(ParseObject descuento: descuentos){
+                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
+                                    }
+                                    for(int i=0, size=tablaDescuentos.size(); i<size; i++){
+                                        Log.d("CatalogoActivity","cant: " + tablaDescuentos.keyAt(i) + ", porc: " + tablaDescuentos.valueAt(i).toString());
+                                    }
+                                }else{
+                                    Log.d("CatalogoActivity", "No se recuperaron descuentos para este producto");
+                                }
+                            }
+                        });
+                    }
+                }else{
+                    Log.d("CatalogoActivity", "result: null");
+                }
+            }
+        });
+        //Almacenar tabla de descuentos en el Producto
+        prod.setTablaDescuentos(tablaDescuentos);
+        
         return prod;
 	}
 	 
@@ -91,8 +129,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		RelativeLayout menuRight;
 		RelativeLayout relativeLayout;
 		ListView listCarrito = null;
-		
-		for (ParseObject parseObject : productosParse) {	
+
+        //cargar productos desde Parse
+		for (ParseObject parseObject : productosParse) {
 			producto = retrieveProducto(parseObject);
 			productos.add(producto);
 		}
