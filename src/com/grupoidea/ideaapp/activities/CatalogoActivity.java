@@ -11,7 +11,6 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
@@ -23,8 +22,8 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -156,7 +155,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 							
 							dispatchActivity(GestionPedidosActivity.class, bundle, false);
 						}else{
-							Toast.makeText(getApplicationContext(), "Debe agregar elementos en el carrito.", Toast.LENGTH_LONG).show();
+							Toast.makeText(getApplicationContext(), "Debe agregar elementos en el carrito", Toast.LENGTH_LONG).show();
 						}
 					}
 				});
@@ -221,15 +220,22 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 	protected String productsToJSON() {
 		String productos = "";
-		
 		JSONArray productosArray = new JSONArray();
 		JSONObject producto = new JSONObject();
-		
-		for (int i = 0; i < carrito.count(); i++) {
-			
-		}
-		
-		return productos;
+        ArrayList<Producto> prodsCarrito = carrito.getProductos();
+
+        try {
+            for (int i = 0, count = carrito.count(); i < count; i++) {
+                producto = prodsCarrito.get(i).toJSON();
+                productosArray.put(producto);
+            }
+            productos = productosArray.toString();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("DEBUG", "productosJSONtoString: "+productos);
+        return productos;
 	}
 
 	@Override

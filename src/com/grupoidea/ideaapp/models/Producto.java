@@ -3,9 +3,7 @@ package com.grupoidea.ideaapp.models;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
-
 import com.parse.ParseRelation;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -115,9 +113,17 @@ public class Producto {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public double getPrecio() {
-		return precio;
-	}
+
+    /** Funcion que devuelve el precio del producto (tomando en cuenta si un descuento manual fue aplicado)
+     * @return Precio del producto
+     */
+    public double getPrecio(){
+        if(descuento == 0){
+            return precio;
+        }else{
+            return precio * descuento/100.0;
+        }
+    }
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
@@ -196,7 +202,6 @@ public class Producto {
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {
 		double precioTotal, desc= 1.0 - getDescuentoCantidad();
-        Log.d("DEBUG", String.valueOf(descuento));
         precioTotal = cantidad * precio * desc;
         Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precio)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
 		return precioTotal;
@@ -207,7 +212,7 @@ public class Producto {
 	}
 	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
-		return precioDenominacionToString(this.precio);
+		return precioDenominacionToString(getPrecio());
 	}
 	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
 	public void addCantidad() {
@@ -220,12 +225,13 @@ public class Producto {
 			this.cantidad = 0;
 		}
 	}
+
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
 	public static String precioDenominacionToString(double precio) {
 		StringBuffer stringBuffer;
 		String strValue = null;
-		
-		strValue = Double.toString(precio);
+        strValue = String.valueOf(precio);
+
 		stringBuffer = new StringBuffer(strValue).append(" ").append(denominacion);
 		if(stringBuffer != null) {
 			strValue = stringBuffer.toString();
@@ -254,7 +260,6 @@ public class Producto {
 	
 	public double getDescuentoCantidad(){
         if(descuento==0){
-            Log.d("DEBUG", "entrando a if: "+ String.valueOf(descuento));
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
@@ -263,7 +268,6 @@ public class Producto {
                 }
             }
         }else{
-            Log.d("DEBUG", "entrando a else: "+ String.valueOf(descuento));
             return descuento/100.0;
         }
         return 0.0;

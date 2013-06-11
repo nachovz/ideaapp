@@ -15,15 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Producto;
@@ -35,10 +28,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	/** Listado de elementos del carrito*/
 	private ListView listCarrito;
 	/** Arreglo de productos.*/
-	private ArrayList<Producto> productos;
+	private static ArrayList<Producto> productos;
 	/** ViewGroup que permite mostrar el menu del producto.*/
 	private LinearLayout menu;
 	protected Producto producto;
+    protected Double descMan;
 	private BannerProductoCatalogo adapter;
 	private Context mContext;
 
@@ -52,7 +46,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
 		super(context);
 		this.productos = productos;
-//        this.menusProductos = generateMenusProductos();
 		this.listCarrito = listCarrito;
 		this.adapter = this;
 		this.mContext = context;
@@ -171,9 +164,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					
 					//Muestra el carrito de compras.
 					showCarrito();
+
 					//Agrega el producto clickeado al carrito de compras.
 					producto = productos.get(position);
-					
 					addProductoFlagCarrito(producto);
 					adapter.notifyDataSetChanged();
 					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
@@ -223,7 +216,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
             menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
-            //TODO fix: Agregar Listener para cuando se pierda el foco
+            //TODO fix: Listener para cuando se pierda el foco
             menu.setOnFocusChangeListener(new View.OnFocusChangeListener(){
                 LayoutParams layoutParams;
                 @Override
@@ -263,7 +256,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				menu.setVisibility(LinearLayout.GONE);
 			}
 
-            /** Imagen de menu emergente de producto*/
+            // Imagen de menu emergente de producto
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				LayoutParams layoutParams;
@@ -294,11 +287,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				}
 			});
 
+            // Boton de descuento manual
             TextView prodMenuText = (TextView) view.findViewById(R.id.banner_producto_menu_item_descuento_manual);
             prodMenuText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setValorDescuentoManual();
+                    setValorDescuentoManual(producto);
                 }
             });
 
@@ -326,9 +320,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
     }
 
     /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
-    public void setValorDescuentoManual(){
+    public void setValorDescuentoManual(final Producto producto){
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
         final EditText input = new EditText(mContext);
         input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);    //seteandolo para numeros solamente
         input.setMaxLines(1);
@@ -344,15 +337,14 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             public void onClick(DialogInterface dialog, int id) {
                 // Valor de Descuento ingresado
                 Double valor = Double.parseDouble(input.getText().toString());
-                //TODO boundaries como final (meterlos en algun xml)
                 if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
+                    Log.d("DEBUG", valor.toString());
                     producto.setDescuento(valor);
-                    Log.d("descuento_manual", valor.toString());
+                    adapter.notifyDataSetChanged();
                     Toast.makeText(mContext, "Porcentaje de descuento manual asignado", 3000).show();
                 } else {
                     Toast.makeText(mContext, "Porcentaje de descuento manual no valido", 3000).show();
-                    setValorDescuentoManual();
-                    Log.d("descuento_manual", "porcentaje no valido");
+                    Log.d("DEBUG", "porcentaje no valido");
                 }
             }
         })
