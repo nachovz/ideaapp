@@ -2,14 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/detalle_menu_selector" >
+    android:layout_height="match_parent" >
 
     <RelativeLayout
         android:id="@+id/detalle_producto_inflated"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/detalle_menu_selector"
+        android:padding="20dp">
 
+        <!--Titulo Activity-->
         <RelativeLayout
             android:id="@+id/gestion_header_layout"
             android:layout_width="fill_parent"
@@ -36,13 +38,296 @@
 
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/gestion_pedido_dummy_img"
+        <!--Encabezado de pedido-->
+        <TableLayout
+            android:id="@+id/encabezado_pedido_table"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gestion_header_layout">
+
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_span="2"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"/>
+            </TableRow>
+
+            <!--Fecha   DD/MM/YYYY-->
+            <TableRow>
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fecha"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DD/MM/YYYY"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"
+                        style="@style/encabezado"/>
+            </TableRow>
+
+            <!--ID de Cliente-->
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/idCliente"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="#id"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"
+                        style="@style/encabezado"/>
+            </TableRow>
+
+            <!--Nombre de Cliente-->
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/nombreCliente"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cliente Apellido"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"
+                        style="@style/encabezado"/>
+            </TableRow>
+
+            <!--Orden de Compra     #orden-->
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/numeroOrdenCompra"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="#orden"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"
+                        style="@style/encabezado"/>
+            </TableRow>
+
+            <!--Direccion de Envío-->
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/direccionEnvio"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.3"
+                        style="@style/encabezado"/>
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Calle, Avenida, Ciudad"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"
+                        style="@style/edit-text"/>
+            </TableRow>
+
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_span="2"
+                        android:padding="18dip"/>
+            </TableRow>
+        </TableLayout>
+
+        <!--Listado de productos del pedido-->
+        <TableLayout
+            android:id="@+id/listado_productos_pedido_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/encabezado_pedido_table"
+        >
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/producto"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/cantidad"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/precioUnitario"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/precioTotal"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+            </TableRow>
+
+            <TableRow>
+                android:layout_height="40dp">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_span="2"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"/>
+            </TableRow>
+        </TableLayout>
+
+        <!--Totales del pedido-->
+        <TableLayout
+            android:id="@+id/totales_pedido_table"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/gestion_header_layout"
-            android:src="@drawable/pantalla_pedidos" />
+            android:layout_below="@id/listado_productos_pedido_table"
+        >
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/subtotal"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
 
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/descComercial"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/flete"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/misc"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/impuesto"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:text="@string/total"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/encabezado"/>
+                <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:text="Double Bs"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        style="@style/value_light"/>
+            </TableRow>
+
+        </TableLayout>
     </RelativeLayout>
 
 </RelativeLayout>

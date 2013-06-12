@@ -13,4 +13,21 @@
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
     <string name="excedentes">Excedentes: </string>
+
+    <string name="fecha">Fecha</string>
+    <string name="idCliente">ID de Cliente</string>
+    <string name="nombreCliente">Nombre de Cliente</string>
+    <string name="numeroOrdenCompra">Orden de compra #</string>
+    <string name="direccionEnvio">Dirección de Envío</string>
+    <string name="producto">Producto</string>
+    <string name="cantidad">Cantidad</string>
+    <string name="precioUnitario">Precio Unitario</string>
+    <string name="precioTotal">Precio Total</string>
+    <string name="subtotal">Subtotal</string>
+    <string name="descComercial">Desc. Comercial</string>
+    <string name="flete">Flete</string>
+    <string name="misc">Miscelaneos</string>
+    <string name="impuesto">Impuesto</string>
+    <string name="total">TOTAL</string>
+
 </resources>

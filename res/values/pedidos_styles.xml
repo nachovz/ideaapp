@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="encabezado">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#808080</item>
+    </style>
+
+    <style name="titulo">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#808080</item>
+    </style>
+
+    <style name="value_light">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="value_dark">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#d9d9d9</item>
+    </style>
+
+    <style name="edit-text">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:background">#ffffff</item>
+    </style>
+</resources>
