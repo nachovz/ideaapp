@@ -1,23 +1,25 @@
 package com.grupoidea.ideaapp.components;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.TextView;
+
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Producto;
 
@@ -28,7 +30,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	/** Listado de elementos del carrito*/
 	private ListView listCarrito;
 	/** Arreglo de productos.*/
-	private static ArrayList<Producto> productos;
+	private ArrayList<Producto> productos;
 	/** ViewGroup que permite mostrar el menu del producto.*/
 	private LinearLayout menu;
 	protected Producto producto;
@@ -175,31 +177,31 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					index = adapterCarrito.getCarrito().findProductoIndex(producto.getId());
 					adapterCarrito.notifyDataSetChanged();
 		        	
-//					tarea = new AsyncTask<Object, Object, Object>() {
-//						RelativeLayout relativeLayout;
-//						@Override
-//						protected void onPreExecute() {
-//							relativeLayout = (RelativeLayout) listCarrito.getChildAt(index);
-//							if(relativeLayout != null) {
-//								relativeLayout.setBackgroundColor(0xFF00FF00);
-//							}
-//						}
-//						@Override
-//						protected Object doInBackground(Object... params) {
-//							try {
-//								Thread.sleep(3000);
-//							} catch (InterruptedException e) {
-//								e.printStackTrace();
-//							}
-//							return null;
-//						}
-//						@Override
-//						protected void onPostExecute(Object result) {
-//							if(relativeLayout != null) {
-//								relativeLayout.setBackgroundColor(0x00000000);
-//							}
-//						}
-//					};
+/*					tarea = new AsyncTask<Object, Object, Object>() {
+						RelativeLayout relativeLayout;
+						@Override
+						protected void onPreExecute() {
+							relativeLayout = (RelativeLayout) listCarrito.getChildAt(index);
+							if(relativeLayout != null) {
+								relativeLayout.setBackgroundColor(0xFF00FF00);
+							}
+						}
+						@Override
+						protected Object doInBackground(Object... params) {
+							try {
+								Thread.sleep(3000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							return null;
+						}
+						@Override
+						protected void onPostExecute(Object result) {
+							if(relativeLayout != null) {
+								relativeLayout.setBackgroundColor(0x00000000);
+							}
+						}
+					};*/
 					
 					listCarrito.post(new Runnable() {
 				        public void run() {
@@ -216,6 +218,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
             menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
+            menu.setTag(producto);
+
             //TODO fix: Listener para cuando se pierda el foco
             menu.setOnFocusChangeListener(new View.OnFocusChangeListener(){
                 LayoutParams layoutParams;
@@ -235,6 +239,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 }
             });
 
+            //Actualizar Excedentes
             TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
             if (exced == null) {
                 throw new AssertionError();
@@ -256,12 +261,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				menu.setVisibility(LinearLayout.GONE);
 			}
 
-            // Imagen de menu emergente de producto
+            // Imagen (Flecha) de menu emergente de producto
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
 			imageView.setOnClickListener(new View.OnClickListener() {
-				LayoutParams layoutParams;
 				@Override
 				public void onClick(View view) {
+                    LayoutParams layoutParams;
 					Producto producto;
 					producto = productos.get(position);
 					
@@ -292,7 +297,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             prodMenuText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setValorDescuentoManual(producto);
+                    View view2 = (View) view.getParent();
+                    ((CatalogoActivity)menuActivity).setValorDescuentoManual((Producto)view2.getTag());
                 }
             });
 
@@ -320,7 +326,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
     }
 
     /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
-    public void setValorDescuentoManual(final Producto producto){
+    /*public void setValorDescuentoManual(Producto producto1){
+        final Producto producto = producto1;
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final EditText input = new EditText(mContext);
         input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);    //seteandolo para numeros solamente
@@ -356,6 +363,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         });
         builder.create();
         builder.show();
-    }
+    }*/
 
 }

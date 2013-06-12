@@ -25,7 +25,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private ImageView logOff;
 	private ImageView menuIcon;
 	private ImageView carrito;
-	private Spinner clienteSpinner;
+	protected Spinner clienteSpinner;
 	private RelativeLayout frontLayout;
 	
 	private ViewGroup menuRight;
@@ -75,7 +75,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		super.setContentView(R.layout.parent_menu_layout);
 		
 		setParentLayoutVisibility(View.GONE);
-		
+
 		menuRightShowed = false;
 		menuLeftShowed = false;
 		

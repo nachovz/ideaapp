@@ -1,8 +1,5 @@
 package com.grupoidea.ideaapp.activities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,8 +11,10 @@ import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DashboardActivity extends ParentMenuActivity {
 	/** Elemento que contiene la sesion del usuario actual*/ 
@@ -90,8 +89,8 @@ public class DashboardActivity extends ParentMenuActivity {
 		List<ParseObject> clientesParse = (List<ParseObject>) response.getResponse();
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
 		Cliente cliente;
-		
-		for (ParseObject parseObject : clientesParse) {	
+
+		for (ParseObject parseObject : clientesParse) {
 			cliente = retrieveCliente(parseObject);
 			clientes.add(cliente);
 		}
@@ -101,14 +100,15 @@ public class DashboardActivity extends ParentMenuActivity {
 	@Override
 	protected Request getRequestAction() {
 		// TODO Crear consulta a la data del Dashboard.
-		
-		Request req = new Request(Request.PARSE_REQUEST);
-		
-		ParseQuery query = new ParseQuery("Cliente");
-		
-		req.setRequest(query);
-		
-		return req;
+//
+//		Request req = new Request(Request.PARSE_REQUEST);
+//
+//		ParseQuery query = new ParseQuery("Cliente");
+//
+//		req.setRequest(query);
+//
+//		return req;
+        return null;
 	}
 	
 	public void createNewPedido(View view){

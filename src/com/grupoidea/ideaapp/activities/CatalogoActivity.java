@@ -1,16 +1,25 @@
 package com.grupoidea.ideaapp.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
@@ -22,6 +31,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +52,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 	public BannerProductoCarrito adapterCarrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
 	public BannerProductoCatalogo adapterCatalogo;
+
+    public Producto producto2;
 	
 	public CatalogoActivity() {
 		super(true, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
@@ -237,6 +249,46 @@ public class CatalogoActivity extends ParentMenuActivity {
         Log.d("DEBUG", "productosJSONtoString: "+productos);
         return productos;
 	}
+
+    public void setValorDescuentoManual(final Producto producto){
+        final Context oThis = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);    //seteandolo para numeros solamente
+        input.setMaxLines(1);
+        input.setHint(R.string.descuento_manual);
+        builder.setView(input);
+        TextView title = new TextView(this);
+        title.setText(R.string.titulo_descuento_manual);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+        builder.setCustomTitle(title);
+        builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Valor de Descuento ingresado
+                Double valor = Double.parseDouble(input.getText().toString());
+                if (valor >= 0.1 && valor <= 100.0) {
+                    Log.d("DEBUG", valor.toString());
+                    producto.setDescuento(valor);
+                    adapterCatalogo.notifyDataSetChanged();
+                    adapterCarrito.notifyDataSetChanged();
+                    Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();
+                } else {
+                    Toast.makeText(oThis, "Porcentaje de descuento manual no valido", 3000).show();
+                    Log.d("DEBUG", "porcentaje no valido");
+                }
+            }
+        })
+                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // Dialogo cancelado
+                        Toast.makeText(oThis, "Descuento manual no establecido", 3000).show();
+                    }
+                });
+        builder.create();
+        builder.show();
+    }
 
 	@Override
 	protected Request getRequestAction() {
