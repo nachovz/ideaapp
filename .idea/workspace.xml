@@ -52,16 +52,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de1dfa05-1878-4387-a201-2e6b4246e7d6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="IDEAApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1370988943799" ignored="false" />
+    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371009704546" ignored="false" />
     <file path="/fragment.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371005950521" ignored="false" />
     <file path="/BannerProductoCatalogo.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371008029892" ignored="false" />
     <file path="/CatalogoActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371009457197" ignored="false" />
@@ -137,13 +133,14 @@
       <file leaf-file-name="CatalogoActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="49" selection-start="2574" selection-end="2574" vertical-scroll-proportion="0.0">
+            <state line="72" column="49" selection-start="2507" selection-end="2507" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#5667#5697#1" expanded="true" />
-                <element signature="e#10044#10879#0" expanded="true" />
-                <element signature="e#10868#10869#0" expanded="true" />
-                <element signature="e#10935#11228#0" expanded="true" />
-                <element signature="e#11209#11210#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#5600#5630#1" expanded="true" />
+                <element signature="e#9977#10812#0" expanded="true" />
+                <element signature="e#10801#10802#0" expanded="true" />
+                <element signature="e#10868#11161#0" expanded="true" />
+                <element signature="e#11142#11143#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -152,13 +149,14 @@
       <file leaf-file-name="BannerProductoCatalogo.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="299" column="87" selection-start="10919" selection-end="10919" vertical-scroll-proportion="-8.12">
+            <state line="300" column="87" selection-start="10938" selection-end="10938" vertical-scroll-proportion="-8.12">
               <folding>
-                <element signature="e#8725#8766#0" expanded="true" />
-                <element signature="e#9612#10466#0" expanded="true" />
-                <element signature="e#10460#10461#0" expanded="true" />
-                <element signature="e#10670#10967#0" expanded="true" />
-                <element signature="e#10952#10953#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#8744#8785#0" expanded="true" />
+                <element signature="e#9631#10485#0" expanded="true" />
+                <element signature="e#10479#10480#0" expanded="true" />
+                <element signature="e#10689#10986#0" expanded="true" />
+                <element signature="e#10971#10972#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -188,9 +186,10 @@
       <file leaf-file-name="DashboardActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="75" column="9" selection-start="2539" selection-end="2539" vertical-scroll-proportion="0.0">
+            <state line="74" column="9" selection-start="2510" selection-end="2510" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#3005#3014#0" expanded="true" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#2976#2985#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -322,90 +321,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="activities" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -640,7 +555,7 @@
       <workItem from="1370921935605" duration="366000" />
       <workItem from="1370983640720" duration="15000" />
       <workItem from="1370987349814" duration="887000" />
-      <workItem from="1370988940605" duration="14975000" />
+      <workItem from="1370988940605" duration="15772000" />
     </task>
     <task id="LOCAL-00001" summary="Pruebas con dialogo para descuento manual">
       <created>1369757369510</created>
@@ -678,11 +593,15 @@
       <created>1370884104179</created>
       <updated>1370884104179</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="[Done] Menu de Producto con descuentos y existencia desde Parse&#10;[Done] Reflejar descuento manual en productos de carrito">
+      <created>1371009729772</created>
+      <updated>1371009729772</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142874000" />
+    <option name="totallyTimeSpent" value="143671000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -802,7 +721,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="[Done] Menu de Producto con descuentos y existencia desde Parse&#10;[Buggy] Reflejar descuento manual en productos de carrito" />
+    <option name="LAST_COMMIT_MESSAGE" value="[Done] Menu de Producto con descuentos y existencia desde Parse&#10;[Done] Reflejar descuento manual en productos de carrito" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -823,6 +742,7 @@
     <MESSAGE value="Pruebas con Parse en Producto.java" />
     <MESSAGE value="[Buggy]   : Mostrar Descuentos en menu desplegable&#10;[Pending] : Excedentes&#10;[Done]    : Establecer Descuento Manual" />
     <MESSAGE value="[Done] Menu de Producto con descuentos y existencia desde Parse&#10;[Buggy] Reflejar descuento manual en productos de carrito" />
+    <MESSAGE value="[Done] Menu de Producto con descuentos y existencia desde Parse&#10;[Done] Reflejar descuento manual en productos de carrito" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -890,13 +810,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="299" column="87" selection-start="10919" selection-end="10919" vertical-scroll-proportion="-8.12">
+        <state line="300" column="87" selection-start="10938" selection-end="10938" vertical-scroll-proportion="-8.12">
           <folding>
-            <element signature="e#8725#8766#0" expanded="true" />
-            <element signature="e#9612#10466#0" expanded="true" />
-            <element signature="e#10460#10461#0" expanded="true" />
-            <element signature="e#10670#10967#0" expanded="true" />
-            <element signature="e#10952#10953#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#8744#8785#0" expanded="true" />
+            <element signature="e#9631#10485#0" expanded="true" />
+            <element signature="e#10479#10480#0" expanded="true" />
+            <element signature="e#10689#10986#0" expanded="true" />
+            <element signature="e#10971#10972#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -931,22 +852,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="9" selection-start="2539" selection-end="2539" vertical-scroll-proportion="0.0">
+        <state line="74" column="9" selection-start="2510" selection-end="2510" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#3005#3014#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#2976#2985#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="49" selection-start="2574" selection-end="2574" vertical-scroll-proportion="0.0">
+        <state line="72" column="49" selection-start="2507" selection-end="2507" vertical-scroll-proportion="0.0">
           <folding>
-            <element signature="e#5667#5697#1" expanded="true" />
-            <element signature="e#10044#10879#0" expanded="true" />
-            <element signature="e#10868#10869#0" expanded="true" />
-            <element signature="e#10935#11228#0" expanded="true" />
-            <element signature="e#11209#11210#0" expanded="true" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#5600#5630#1" expanded="true" />
+            <element signature="e#9977#10812#0" expanded="true" />
+            <element signature="e#10801#10802#0" expanded="true" />
+            <element signature="e#10868#11161#0" expanded="true" />
+            <element signature="e#11142#11143#0" expanded="true" />
           </folding>
         </state>
       </provider>
