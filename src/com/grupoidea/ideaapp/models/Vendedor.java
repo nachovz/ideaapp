@@ -8,6 +8,7 @@ public class Vendedor {
 	private ArrayList<Meta> metas;
 	/** ArrayList de clientes disponibles para este vendedor*/
 	private ArrayList<Cliente> clientes;
+    private String parseId;
 	public String getNombre() {
 		return nombre;
 	}
@@ -26,4 +27,12 @@ public class Vendedor {
 	public void setClientes(ArrayList<Cliente> clientes) {
 		this.clientes = clientes;
 	}
+
+    public String getParseId() {
+        return parseId;
+    }
+
+    public void setParseId(String parseId) {
+        this.parseId = parseId;
+    }
 }

@@ -300,6 +300,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         cliente = new Cliente(parseObj.getString("nombre"));
                         cliente.setId(parseObj.getString("codigo"));
                         cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
+                        cliente.setParseId(parseObj.getObjectId());
                         //Almacenar clientes directamente en el adapter
                         clientes.add(cliente);
                         adapter.add(cliente.getNombre());

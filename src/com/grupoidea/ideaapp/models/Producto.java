@@ -154,7 +154,7 @@ public class Producto {
 		this.id = id;
 	}
 	
-	public double getDescuento() {
+	public double getDescuentoManual() {
 		return descuento;
 	}
 
@@ -205,7 +205,7 @@ public class Producto {
 
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {
-		double precioTotal, desc= 1.0 - getDescuentoCantidad();
+		double precioTotal, desc= 1.0 - getDescuento();
         precioTotal = cantidad * precio * desc;
         Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precio)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
 		return precioTotal;
@@ -253,7 +253,7 @@ public class Producto {
 		productoJSON.put("precio", getPrecio());
 		productoJSON.put("cantidad", getCantidad());
 		productoJSON.put("total", getPrecioTotal());
-		productoJSON.put("descuento", getDescuento());
+		productoJSON.put("descuento", getDescuentoManual());
 		
 		return productoJSON;
 	}
@@ -278,7 +278,7 @@ public class Producto {
 		tablaDescuentos.append(c, d);
 	}
 	
-	public double getDescuentoCantidad(){
+	public double getDescuento(){
         if(descuento==0){
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){

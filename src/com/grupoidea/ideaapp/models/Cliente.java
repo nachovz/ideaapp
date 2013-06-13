@@ -7,6 +7,7 @@ public class Cliente {
 	private String nombre;
     private String id;
     private double descuento;
+    private String parseId;
 	/** Listado de marcas previamente adquiridas por un cliente*/
 	private ArrayList<Marca> marcas;
 	
@@ -41,5 +42,13 @@ public class Cliente {
 
     public void setDescuento(double descuento) {
         this.descuento = descuento;
+    }
+
+    public String getParseId() {
+        return parseId;
+    }
+
+    public void setParseId(String parseId) {
+        this.parseId = parseId;
     }
 }

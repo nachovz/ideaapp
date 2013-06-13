@@ -3,14 +3,11 @@ package com.grupoidea.ideaapp.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 
 import com.grupoidea.ideaapp.R;
@@ -19,23 +16,29 @@ import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
 
+import com.parse.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class GestionPedidosActivity extends ParentMenuActivity {
     protected Context mContext;
     protected JSONArray productosJSON;
     protected double subtotal, desc, flete, misc, imp, total;
     protected DecimalFormat df = new DecimalFormat("#.##");
-    protected String denom;
-    Cliente cliente;
+    protected String denom, direccion;
+    protected ParseUser vendedor;
+    protected Cliente cliente;
     /** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
-    private ArrayList<Producto> productos;
-	public GestionPedidosActivity() {
+    protected ArrayList<Producto> productos;
+    protected String numPedido;
+
+    public GestionPedidosActivity() {
 		super(false, false);
 	}
 	
@@ -47,12 +50,14 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         denom = new String();
         productos = new ArrayList<Producto>();
+        vendedor = ParseUser.getCurrentUser();
         try {
             Intent intent = getIntent();
             String jsonStr = intent.getStringExtra("Productos");
             cliente = new Cliente(intent.getStringExtra("Cliente"));
             cliente.setId(intent.getStringExtra("ClienteId"));
             cliente.setDescuento(intent.getDoubleExtra("Descuento", 0.0));
+            cliente.setParseId(intent.getStringExtra("parseId"));
             productosJSON = new JSONArray(jsonStr);
             llenarProductosfromJSON(productosJSON);
             denom = productos.get(0).getDenominacion();
@@ -139,7 +144,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
                 t3.setLayoutParams(params);
                 t3.setTextColor(Color.parseColor("#262626"));
-                t3.setPadding(18,18,18,18);
+                t3.setPadding(18, 18, 18, 18);
                 t3.setText(prod.getStringPrecio());
                 tr.addView(t3);
                 if(darkBackground) t3.setBackgroundColor(Color.parseColor("#FFFFFF"));
@@ -174,7 +179,55 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
     public void commitPedido(View view) {
         Log.d("DEBUG", "Button clicked");
-        //TODO String envioAddress = //en el onclick
+        EditText direccionET = (EditText) findViewById(R.id.direccion_envio_edit);
+        direccion = ""+String.valueOf(direccionET.getText());
+
+        //Pedido
+        final ParseObject pedido = new ParseObject("Pedido");
+        pedido.put("asesor", vendedor.getObjectId());
+        pedido.put("cliente", cliente.getParseId());
+        pedido.put("direccion", direccion);
+        pedido.put("estado", 0);
+        Random rand = new Random();
+        numPedido= String.valueOf(56000+rand.nextInt(10000));
+        Log.d("DEBUG", "numPedido: "+numPedido);
+        pedido.put("num_pedido", numPedido);
+        pedido.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+//                if (e!=null){
+                    e.printStackTrace();
+                    ParseQuery queryIdPedido = new ParseQuery("Pedido");
+                    queryIdPedido.whereEqualTo("num_pedido", numPedido);
+                    queryIdPedido.findInBackground(new FindCallback() {
+                        @Override
+                        public void done(List<ParseObject> parseObjectList, ParseException e) {
+//                            e.printStackTrace();
+//                            if(e!=null){
+//                                ParseObject parseObject = parseObjectList.get((0));
+//                                for (ParseObject p : parseObjectList) {
+//                                    if (p.get("num_pedido") == numPedido) {
+//                                        parseObject = p;
+//                                    }
+//                                }
+                                Log.d("DEBUG", "tamaño lista: "+parseObjectList.size());
+                                for (Producto prod : productos) {
+                                    ParseObject pedidoHasProducto = new ParseObject("PedidoHasProductos");
+                                    pedidoHasProducto.put("cantidad", prod.getCantidad());
+                                    pedidoHasProducto.put("descuento", prod.getDescuento());
+//                                    pedidoHasProducto.put("pedido", parseObject.getObjectId());
+                                    pedidoHasProducto.put("producto", prod.getId());
+                                    pedidoHasProducto.saveInBackground();
+                                }
+//                            }
+                        }
+                    });
+//                  }
+            }
+        });
+
+
+
     }
 
     public Double getSubtotal(){

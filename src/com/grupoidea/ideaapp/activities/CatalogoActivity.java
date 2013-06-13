@@ -189,6 +189,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                             bundle.putString("Cliente", clienteM.getNombre());
                             bundle.putString("ClienteId", clienteM.getId());
                             bundle.putDouble("Descuento", clienteM.getDescuento());
+                            bundle.putString("parseId", clienteM.getParseId());
 
 							
 							dispatchActivity(GestionPedidosActivity.class, bundle, false);
