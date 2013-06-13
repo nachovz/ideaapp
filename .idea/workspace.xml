@@ -71,15 +71,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de1dfa05-1878-4387-a201-2e6b4246e7d6" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Marca.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Marca.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Meta.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Meta.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/dashboard_layout.xml" afterPath="$PROJECT_DIR$/res/layout/dashboard_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/row_meta_producto_layout.xml" afterPath="$PROJECT_DIR$/res/layout/row_meta_producto_layout.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="IDEAApp.iws" />
@@ -189,7 +180,7 @@
       <file leaf-file-name="RowClientePedido.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="31" selection-start="3252" selection-end="3252" vertical-scroll-proportion="0.43942994" vertical-offset="1045" max-vertical-offset="1890">
+            <state line="103" column="31" selection-start="3252" selection-end="3252" vertical-scroll-proportion="0.44902912" vertical-offset="1045" max-vertical-offset="1890">
               <folding />
             </state>
           </provider>
@@ -733,7 +724,11 @@
       <created>1371094100105</created>
       <updated>1371094100105</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Metas en el dashboard">
+      <created>1371112623069</created>
+      <updated>1371112623069</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -764,7 +759,7 @@
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.06902357" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32721713" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32348484" sideWeight="0.68350166" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6712538" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -773,13 +768,13 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31345567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31345567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3180428" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24878444" sideWeight="0.40978593" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24878444" sideWeight="0.68654436" order="0" side_tool="true" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24878444" sideWeight="0.6727829" order="0" side_tool="true" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3149847" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1005,7 +1000,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="31" selection-start="3252" selection-end="3252" vertical-scroll-proportion="0.43942994" vertical-offset="1045" max-vertical-offset="1890">
+        <state line="103" column="31" selection-start="3252" selection-end="3252" vertical-scroll-proportion="0.44902912" vertical-offset="1045" max-vertical-offset="1890">
           <folding />
         </state>
       </provider>
