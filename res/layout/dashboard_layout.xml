@@ -15,17 +15,39 @@
                 android:id="@+id/metas_layout">
 
             <Spinner
-                    android:layout_width="600dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:id="@+id/metas_spinner"
                     android:layout_gravity="center"
-                    android:layout_centerHorizontal="true"/>
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    />
 
             <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:id="@+id/metas_scroll_view"
-                    android:layout_below="@+id/metas_spinner"/>
+                    android:layout_below="@+id/metas_spinner">
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:id="@+id/meta_list_elements"
+                        android:focusableInTouchMode="true"
+                        android:focusable="false">
+                </LinearLayout>
+            </ScrollView>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Metas"
+                    android:id="@+id/textView"
+                    android:textSize="60dp"
+                    android:layout_above="@+id/metas_scroll_view"
+                    android:layout_toRightOf="@+id/metas_spinner"
+                    android:layout_marginLeft="25dp"/>
 
         </RelativeLayout>
 
@@ -53,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="60dp"
-                android:text="Clientes"
+                android:text="Pedidos"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 android:textStyle="bold" />

@@ -27,4 +27,6 @@ public class Marca {
 	public void setProductos(ArrayList<Producto> productos) {
 		this.productos = productos;
 	}
+
+
 }

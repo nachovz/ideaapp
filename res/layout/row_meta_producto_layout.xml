@@ -5,14 +5,16 @@
     android:layout_height="60dp" >
 
     <TextView
-        android:id="@+id/producto_codigo_text_view"
+        android:id="@+id/meta_producto_codigo_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:text="CodigoProd"
         android:textColor="#646464"
         android:textSize="23sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        style="@style/value_light"
+        android:layout_marginLeft="20dp"/>
 
     <TextView
             android:id="@+id/meta_numero_text_view"
@@ -23,8 +25,9 @@
             android:textColor="#646464"
             android:textSize="23sp"
             android:textStyle="bold|italic"
-            android:layout_toRightOf="@+id/producto_codigo_text_view"
-            android:layout_marginLeft="10dp"/>
+            android:layout_toRightOf="@+id/meta_producto_codigo_text_view"
+            android:layout_marginLeft="10dp"
+            style="@style/value_light"/>
 
     <TextView
             android:id="@+id/meta_actual_text_view"
@@ -36,6 +39,7 @@
             android:textSize="23sp"
             android:textStyle="bold|italic"
             android:layout_toRightOf="@+id/meta_numero_text_view"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            style="@style/value_light"/>
 
 </RelativeLayout>
