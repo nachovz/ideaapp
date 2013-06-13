@@ -151,7 +151,7 @@
                         android:id="@+id/direccion_envio_edit"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Calle, Avenida, Ciudad"
+                        android:hint="Calle, Avenida, Ciudad"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
