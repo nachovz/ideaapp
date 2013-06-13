@@ -101,7 +101,7 @@ public class RowClientePedido extends RelativeLayout {
 		
 		textView = new TextView(context);
 		textView.setText(status);
-		textView.setTextSize(20);
+		textView.setTextSize(18);
 		textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
