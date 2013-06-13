@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
+import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
 
 import org.json.JSONArray;
@@ -25,6 +26,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     protected JSONArray productosJSON;
     protected double subtotal, desc, flete, misc, imp, total;
     protected String denom;
+    Cliente cliente;
     /** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
     private ArrayList<Producto> productos;
 	public GestionPedidosActivity() {
@@ -42,6 +44,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         try {
             Intent intent = getIntent();
             String jsonStr = intent.getStringExtra("Productos");
+            cliente = new Cliente(intent.getStringExtra("Cliente"));
+            cliente.setId(intent.getStringExtra("ClienteId"));
+            cliente.setDescuento(intent.getDoubleExtra("Descuento", 0.0));
             productosJSON = new JSONArray(jsonStr);
             llenarProductosfromJSON(productosJSON);
             denom = productos.get(0).getDenominacion();
@@ -51,21 +56,26 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 Time now = new Time(); now.setToNow();
                 text.setText(now.monthDay + "/" + now.month + "/" + now.year);
 
-            Log.d("DEBUG", String.valueOf(clienteSelected));
             //ID Cliente
                 text = (TextView) findViewById(R.id.id_cliente_edit);
-                text.setText(clientes.get(clienteSelected).getId());
+                text.setText(cliente.getId());
             //Nombre Cliente
                 text = (TextView) findViewById(R.id.nombre_cliente_edit);
-                text.setText(clientes.get(clienteSelected).getNombre());
+                text.setText(cliente.getNombre());
             //# Orden Compra
                 //TODO convertir a funcion
-                text = (TextView) findViewById(R.id.nombre_cliente_edit);
+                text = (TextView) findViewById(R.id.numero_orden_compra_edit);
                 text.setText("#0019587");
+
             //Subtotal
+                subtotal = getSubtotal();
+                text = (TextView) findViewById(R.id.subtotal_edit);
+                text.setText(subtotal+denom);
 
             //Descuento Comercial
-                desc=clientes.get(clienteSelected).getDescuento();
+                desc=cliente.getDescuento()/100.0;
+                Log.d("DEBUG", desc+"");
+                desc = subtotal *desc;
                 text = (TextView) findViewById(R.id.desc_comercial_edit);
                 text.setText(desc+denom);
             //Flete
@@ -85,7 +95,10 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 text.setText(imp+denom);
 
             //Total
-                //subtotal + impuestos -desc comercial y bla bla
+                total=subtotal-desc; //TODO + impuestos flete y eso
+                text = (TextView) findViewById(R.id.total_edit);
+                text.setText(total+denom);
+
 
 
         } catch (JSONException e) {
@@ -105,6 +118,15 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     public void commitPedido(View view) {
         Log.d("DEBUG", "Button clicked");
         //TODO String envioAddress = //en el onclick
+    }
+
+    public Double getSubtotal(){
+        Double sub=0.0;
+        for(Producto prod:productos){
+            sub += prod.getPrecioTotal();
+        }
+
+        return sub;
     }
 
     public void llenarProductosfromJSON(JSONArray json){

@@ -289,6 +289,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
      */
     public ArrayAdapter<String> getClientesFromParse(){
         ParseQuery query = new ParseQuery("Cliente");
+        clientes = new ArrayList<Cliente>();
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> listaClientes, ParseException e) {
@@ -300,6 +301,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         cliente.setId(parseObj.getString("codigo"));
                         cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
                         //Almacenar clientes directamente en el adapter
+                        clientes.add(cliente);
                         adapter.add(cliente.getNombre());
                     }
                 } else {

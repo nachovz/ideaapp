@@ -27,6 +27,7 @@ import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
+import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -182,6 +183,13 @@ public class CatalogoActivity extends ParentMenuActivity {
 							Bundle bundle = new Bundle();
 							
 							bundle.putString("Productos", productos);
+
+                            Cliente clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
+
+                            bundle.putString("Cliente", clienteM.getNombre());
+                            bundle.putString("ClienteId", clienteM.getId());
+                            bundle.putDouble("Descuento", clienteM.getDescuento());
+
 							
 							dispatchActivity(GestionPedidosActivity.class, bundle, false);
 						}else{
