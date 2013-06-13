@@ -2,12 +2,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="wrap_content" >
 
     <RelativeLayout
         android:id="@+id/detalle_producto_inflated"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="fill_parent"
         android:background="@drawable/detalle_menu_selector"
         android:padding="20dp">
 
@@ -174,7 +174,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/encabezado_pedido_table"
         >
-            <TableRow>
+            <TableRow
+                    android:id="@+id/row_productos">
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -347,14 +348,24 @@
                         style="@style/value_light"/>
             </TableRow>
 
+            <TableRow>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_span="2"
+                        android:padding="18dip"
+                        android:layout_weight="0.6"/>
+            </TableRow>
+
         </TableLayout>
 
         <Button
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_below="@id/totales_pedido_table"
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
+                android:textSize="30dp"
                 android:text="@string/botonPedido"
                 android:onClick="commitPedido" />
     </RelativeLayout>

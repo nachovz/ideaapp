@@ -213,7 +213,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			});
 
             //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
-            menu = new LinearLayout(menuActivity);
+//            menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
             menu.setTag(producto);
 

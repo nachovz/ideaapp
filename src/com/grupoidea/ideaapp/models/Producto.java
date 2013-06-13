@@ -9,6 +9,7 @@ import com.parse.ParseRelation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /** Clase que contiene la representaci�n de un producto*/
@@ -47,6 +48,7 @@ public class Producto {
 	private int cantidad;
 	/** Double que representa el descuento aplicado al producto (manualmente) */
 	private double descuento;
+    protected static DecimalFormat df = new DecimalFormat("#.##");
 
     /** Boolean que permite determinar si el menu del producto es visible al usuario*/
 	private Boolean isMenuOpen;
@@ -232,7 +234,7 @@ public class Producto {
 	public static String precioDenominacionToString(double precio) {
 		StringBuffer stringBuffer;
 		String strValue = null;
-        strValue = String.valueOf(precio);
+        strValue = df.format(precio);
 
 		stringBuffer = new StringBuffer(strValue).append(" ").append(denominacion);
 		if(stringBuffer != null) {
