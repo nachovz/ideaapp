@@ -63,7 +63,6 @@ public class DashboardActivity extends ParentMenuActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		RowClientePedido row;
         metas = new ArrayList<Meta>();
         marcas = new HashSet<String>();
 		mContext = this;
@@ -74,12 +73,32 @@ public class DashboardActivity extends ParentMenuActivity {
 		//clienteList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 
-		row = new RowClientePedido(this, "Centro Comercial Lider", Pedido.ESTADO_VERIFICANDO);
+        ParseQuery queryPedidos = new ParseQuery("Pedido");
+        queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
+        queryPedidos.include("cliente");
+        queryPedidos.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if (e == null) {
+                    RowClientePedido row;
+                    for (ParseObject parseObject : parseObjects) {
+                        ParseObject cliente = parseObject.getParseObject("cliente");
+                        row = new RowClientePedido(mContext, cliente.getString("nombre"), cliente.getInt("estado"));
+                        pedidosList.addView(row);
+                    }
+                    Log.d("DEBUG", "Carga de pedidos completa");
+                } else {
+                    Log.d("PARSE", e.toString());
+                }
+            }
+        });
+
+		/*row = new RowClientePedido(this, "Centro Comercial Lider", Pedido.ESTADO_VERIFICANDO);
 		pedidosList.addView(row);
 		row = new RowClientePedido(this, "Restaurant Tamarindo", Pedido.ESTADO_APROBADO);
 		pedidosList.addView(row);
 		row = new RowClientePedido(this, "Makro", Pedido.ESTADO_RECHAZADO);
-		pedidosList.addView(row);
+		pedidosList.addView(row);*/
 		
 		user = ParseUser.getCurrentUser();
 		if(user != null) {
