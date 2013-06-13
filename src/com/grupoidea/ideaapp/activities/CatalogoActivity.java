@@ -265,7 +265,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         try {
             for (int i = 0, count = prodsCarrito.size(); i < count; i++) {
                 productoJSONObj = prodsCarrito.get(i).toJSON();
-//                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
+                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
                 productosJSONArray.put(productoJSONObj);
             }
             productos = productosJSONArray.toString();
