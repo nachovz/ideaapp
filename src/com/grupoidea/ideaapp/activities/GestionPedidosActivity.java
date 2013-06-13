@@ -36,12 +36,12 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 		setContentView(R.layout.gestion_pedidos_layout);
         mContext=this;
         denom = new String();
-        try {
+//        try {
             Intent intent = getIntent();
             String json = intent.getStringExtra("Productos");
-            productosJSON = new JSONArray(json);
-            llenarProductosfromJSON(productosJSON);
-            denom = productos.get(0).getDenominacion();
+//            productosJSON = new JSONArray(json);
+//            llenarProductosfromJSON(productosJSON);
+//            denom = productos.get(0).getDenominacion();
             ScrollView view = new ScrollView(this);
 
 //          Fecha
@@ -50,9 +50,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             Log.d("DEBUG", now.monthDay+"/"+now.month+"/"+now.year);
 
             text.setText(now.monthDay+"/"+now.month+"/"+now.year);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 	}
 
 	@Override
