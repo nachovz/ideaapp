@@ -9,28 +9,43 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <ImageView
-            android:id="@+id/indicadores_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dash_img_velocimetro_temp" />
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="450dp"
+                android:id="@+id/metas_layout">
+
+            <Spinner
+                    android:layout_width="600dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/metas_spinner"
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"/>
+
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:id="@+id/metas_scroll_view"
+                    android:layout_below="@+id/metas_spinner"/>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/dashboard_resumen_text_view"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:layout_below="@id/indicadores_image_view"
             android:layout_centerHorizontal="true"
             android:gravity="center_vertical|center_horizontal"
             android:text="Actual: 100.000 - Meta: 150.000 - Restan:50.000"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:layout_alignParentEnd="false"
+            android:layout_below="@+id/metas_layout"/>
 
         <RelativeLayout
             android:id="@+id/cliente_relative_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/indicadores_image_view"
-            android:background="@drawable/dash_bkg_banner_inferior" >
+            android:background="@drawable/dash_bkg_banner_inferior"
+            android:layout_below="@+id/metas_layout">
 
             <TextView
                 android:id="@+id/cliente_tag_text_view"
@@ -67,7 +82,7 @@
             android:id="@+id/cliente_scroll_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@id/cliente_nuevo_pedido_boton" >
+            android:layout_below="@+id/cliente_nuevo_pedido_boton" >
 
             <LinearLayout
                 android:id="@+id/client_list_linear_layout"

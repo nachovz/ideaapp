@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row_"
+    android:layout_width="match_parent"
+    android:layout_height="60dp" >
+
+    <TextView
+        android:id="@+id/producto_codigo_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="CodigoProd"
+        android:textColor="#646464"
+        android:textSize="23sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+            android:id="@+id/meta_numero_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="MetaNum"
+            android:textColor="#646464"
+            android:textSize="23sp"
+            android:textStyle="bold|italic"
+            android:layout_toRightOf="@+id/producto_codigo_text_view"
+            android:layout_marginLeft="10dp"/>
+
+    <TextView
+            android:id="@+id/meta_actual_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="MetaActual"
+            android:textColor="#646464"
+            android:textSize="23sp"
+            android:textStyle="bold|italic"
+            android:layout_toRightOf="@+id/meta_numero_text_view"
+            android:layout_marginLeft="10dp"/>
+
+</RelativeLayout>
