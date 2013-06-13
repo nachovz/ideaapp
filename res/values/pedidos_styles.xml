@@ -28,7 +28,7 @@
         <item name="android:background">#d9d9d9</item>
     </style>
 
-    <style name="edit-text">
+    <style name="edit_text">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">#000000</item>
         <item name="android:textStyle">normal</item>

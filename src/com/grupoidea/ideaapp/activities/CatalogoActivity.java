@@ -52,8 +52,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 	public BannerProductoCarrito adapterCarrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
 	public BannerProductoCatalogo adapterCatalogo;
-
-    public Producto producto2;
+    /** Minimo y maximo valor para descuentos manueales*/
+    public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
 	
 	public CatalogoActivity() {
 		super(true, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
@@ -233,7 +233,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	protected String productsToJSON() {
 		String productos = "";
 		JSONArray productosArray = new JSONArray();
-		JSONObject producto = new JSONObject();
+		JSONObject producto;
         ArrayList<Producto> prodsCarrito = carrito.getProductos();
 
         try {
@@ -250,6 +250,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         return productos;
 	}
 
+    /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
     public void setValorDescuentoManual(final Producto producto){
         final Context oThis = this;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -268,7 +269,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             public void onClick(DialogInterface dialog, int id) {
                 // Valor de Descuento ingresado
                 Double valor = Double.parseDouble(input.getText().toString());
-                if (valor >= 0.1 && valor <= 100.0) {
+                if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
                     Log.d("DEBUG", valor.toString());
                     producto.setDescuento(valor);
                     adapterCatalogo.notifyDataSetChanged();

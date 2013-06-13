@@ -29,5 +29,6 @@
     <string name="misc">Miscelaneos</string>
     <string name="impuesto">Impuesto</string>
     <string name="total">TOTAL</string>
+    <string name="botonPedido">Finalizar Pedido</string>
 
 </resources>

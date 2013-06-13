@@ -34,11 +34,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	/** ViewGroup que permite mostrar el menu del producto.*/
 	private LinearLayout menu;
 	protected Producto producto;
-    protected Double descMan;
 	private BannerProductoCatalogo adapter;
 	private Context mContext;
-
-    public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
 	
 	protected AsyncTask<Object, Object, Object> tarea;
 	
@@ -324,45 +321,5 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
         return descProd;
     }
-
-    /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
-    /*public void setValorDescuentoManual(Producto producto1){
-        final Producto producto = producto1;
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        final EditText input = new EditText(mContext);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);    //seteandolo para numeros solamente
-        input.setMaxLines(1);
-        input.setHint(R.string.descuento_manual);
-        builder.setView(input);
-        TextView title = new TextView(mContext);
-        title.setText(R.string.titulo_descuento_manual);
-        title.setGravity(Gravity.CENTER);
-        title.setTextColor(Color.WHITE);
-        title.setTextSize(20);
-        builder.setCustomTitle(title);
-        builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // Valor de Descuento ingresado
-                Double valor = Double.parseDouble(input.getText().toString());
-                if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-                    Log.d("DEBUG", valor.toString());
-                    producto.setDescuento(valor);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(mContext, "Porcentaje de descuento manual asignado", 3000).show();
-                } else {
-                    Toast.makeText(mContext, "Porcentaje de descuento manual no valido", 3000).show();
-                    Log.d("DEBUG", "porcentaje no valido");
-                }
-            }
-        })
-        .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                // Dialogo cancelado
-                Toast.makeText(mContext, "Descuento manual no establecido", 3000).show();
-            }
-        });
-        builder.create();
-        builder.show();
-    }*/
 
 }
