@@ -70,10 +70,13 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="DEBUG" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de1dfa05-1878-4387-a201-2e6b4246e7d6" name="Default" comment="" />
+    <list default="true" id="de1dfa05-1878-4387-a201-2e6b4246e7d6" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="IDEAApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371094094501" ignored="false" />
+    <file path="/Dummy.txt" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371113333991" ignored="false" />
     <file path="/fragment.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371080131718" ignored="false" />
     <file path="/BannerProductoCatalogo.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371008029892" ignored="false" />
     <file path="/CatalogoActivity.java" changelist="de1dfa05-1878-4387-a201-2e6b4246e7d6" time="1371078008308" ignored="false" />
@@ -105,7 +108,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -159,36 +161,7 @@
             <state />
           </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state line="153" column="37" selection-start="6662" selection-end="6662" vertical-scroll-proportion="-2.72">
-              <folding>
-                <element signature="tag#RelativeLayout#0;tag#RelativeLayout#0;tag#ScrollView#0" expanded="false" />
-                <element signature="e#2448#2463#0" expanded="true" />
-                <element signature="e#3328#3347#0" expanded="true" />
-                <element signature="e#4265#4288#0" expanded="true" />
-                <element signature="e#5232#5259#0" expanded="true" />
-                <element signature="e#6190#6214#0" expanded="true" />
-                <element signature="e#7725#7743#0" expanded="true" />
-                <element signature="e#8128#8146#0" expanded="true" />
-                <element signature="e#8531#8555#0" expanded="true" />
-                <element signature="e#8941#8962#0" expanded="true" />
-                <element signature="tag#TableRow#1;tag#TableLayout#1;tag#RelativeLayout#0;tag#ScrollView#0" expanded="false" />
-                <element signature="e#10090#10108#0" expanded="true" />
-                <element signature="e#10889#10912#0" expanded="true" />
-                <element signature="e#11698#11713#0" expanded="true" />
-                <element signature="e#12098#12109#0" expanded="true" />
-                <element signature="e#12659#12673#0" expanded="true" />
-                <element signature="e#13618#13636#0" expanded="true" />
-                <element signature="e#14774#14789#0" expanded="true" />
-                <element signature="e#15693#15714#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Producto.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="13" selection-start="321" selection-end="321" vertical-scroll-proportion="-6.023423">
+            <state line="153" column="37" selection-start="6662" selection-end="6662" vertical-scroll-proportion="-0.6">
               <folding />
             </state>
           </provider>
@@ -197,10 +170,8 @@
       <file leaf-file-name="GestionPedidosActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="45" column="0" selection-start="1494" selection-end="1494" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="45" column="0" selection-start="1487" selection-end="1487" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -208,13 +179,17 @@
       <file leaf-file-name="CatalogoActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="50" selection-start="1490" selection-end="1621" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#3248#3256#0" expanded="true" />
-                <element signature="e#5858#5868#0" expanded="true" />
-                <element signature="method#setValorDescuentoManual#0;class#CatalogoActivity#0" expanded="false" />
-                <element signature="method#getRequestAction#0;class#CatalogoActivity#0" expanded="false" />
-              </folding>
+            <state line="47" column="55" selection-start="1576" selection-end="1576" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ParentMenuActivity.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="22" selection-start="667" selection-end="667" vertical-scroll-proportion="-0.25405404">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -264,9 +239,10 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1280" />
-    <option name="height" value="774" />
+    <option name="x" value="-1" />
+    <option name="y" value="27" />
+    <option name="width" value="1368" />
+    <option name="height" value="742" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -318,6 +294,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -378,28 +355,6 @@
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="idea-app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="components" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
               <option name="myItemId" value="ideaapp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
@@ -434,64 +389,19 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="values" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ideaapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="res" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layout" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="SDKs" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
-    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
   </component>
   <component name="RunManager" selected="Android Application.ideaapp">
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
@@ -589,7 +499,7 @@
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
       <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="PREFERRED_AVD" value="Tabletx86" />
+      <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
       <option name="WIPE_USER_DATA" value="false" />
@@ -597,8 +507,6 @@
       <option name="NETWORK_SPEED" value="full" />
       <option name="NETWORK_LATENCY" value="none" />
       <option name="CLEAR_LOGCAT" value="false" />
-      <RunnerSettings RunnerId="AndroidDebugRunner" />
-      <ConfigurationWrapper RunnerId="AndroidDebugRunner" />
       <method />
     </configuration>
     <list size="1">
@@ -667,6 +575,7 @@
       <workItem from="1371064343430" duration="528000" />
       <workItem from="1371065381287" duration="10643000" />
       <workItem from="1371076946330" duration="30458000" />
+      <workItem from="1371113333352" duration="42000" />
     </task>
     <task id="LOCAL-00001" summary="Pruebas con dialogo para descuento manual">
       <created>1369757369510</created>
@@ -732,7 +641,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="185994000" />
+    <option name="totallyTimeSpent" value="186036000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -755,32 +664,31 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="774" extended-state="0" />
-    <editor active="false" />
+    <frame x="-1" y="27" width="1368" height="742" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.06902357" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32348484" sideWeight="0.68350166" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6712538" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3181818" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3939394" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3939394" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31345567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3180428" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24924242" sideWeight="0.4124579" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24924242" sideWeight="0.4124579" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24924242" sideWeight="0.5875421" order="0" side_tool="true" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3164983" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.06902357" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32348484" sideWeight="0.68350166" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3181818" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31345567" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -797,18 +705,18 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3946037" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3220339" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21725732" sideWeight="0.42783505" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3164983" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31871837" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32828283" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24980299" sideWeight="0.6053963" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23712121" sideWeight="0.93097645" order="0" side_tool="true" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3164983" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3164983" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -873,13 +781,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$APPLICATION_HOME_DIR$/sdk/platforms/android-17/android.jar!/android/view/View.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Carrito.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="9" column="46" selection-start="269" selection-end="269" vertical-scroll-proportion="0.23767605">
@@ -948,9 +849,7 @@
     </entry>
     <entry file="file://$USER_HOME$/.AndroidStudioPreview/system/compile-server/idea-app_81c69155/targets/java-production/idea-app/android/generated_sources/aapt/com/grupoidea/ideaapp/R.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="46" selection-start="7734" selection-end="7734" vertical-scroll-proportion="0.33157894">
-          <folding />
-        </state>
+        <state line="125" column="46" selection-start="7734" selection-end="7734" vertical-scroll-proportion="0.33157894" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Cliente.java">
@@ -960,23 +859,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="50" selection-start="1490" selection-end="1621" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#3248#3256#0" expanded="true" />
-            <element signature="e#5858#5868#0" expanded="true" />
-            <element signature="method#setValorDescuentoManual#0;class#CatalogoActivity#0" expanded="false" />
-            <element signature="method#getRequestAction#0;class#CatalogoActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="5" selection-start="274" selection-end="274" vertical-scroll-proportion="0.63380283">
-          <folding />
-        </state>
+        <state line="24" column="5" selection-start="274" selection-end="274" vertical-scroll-proportion="0.63380283" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/dashboard_layout.xml">
@@ -991,10 +876,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="45" column="0" selection-start="1494" selection-end="1494" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state line="45" column="0" selection-start="1487" selection-end="1487" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="0" selection-start="251" selection-end="251" vertical-scroll-proportion="0.027027028">
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1003,34 +893,21 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state line="153" column="37" selection-start="6662" selection-end="6662" vertical-scroll-proportion="-2.72">
-          <folding>
-            <element signature="tag#RelativeLayout#0;tag#RelativeLayout#0;tag#ScrollView#0" expanded="false" />
-            <element signature="e#2448#2463#0" expanded="true" />
-            <element signature="e#3328#3347#0" expanded="true" />
-            <element signature="e#4265#4288#0" expanded="true" />
-            <element signature="e#5232#5259#0" expanded="true" />
-            <element signature="e#6190#6214#0" expanded="true" />
-            <element signature="e#7725#7743#0" expanded="true" />
-            <element signature="e#8128#8146#0" expanded="true" />
-            <element signature="e#8531#8555#0" expanded="true" />
-            <element signature="e#8941#8962#0" expanded="true" />
-            <element signature="tag#TableRow#1;tag#TableLayout#1;tag#RelativeLayout#0;tag#ScrollView#0" expanded="false" />
-            <element signature="e#10090#10108#0" expanded="true" />
-            <element signature="e#10889#10912#0" expanded="true" />
-            <element signature="e#11698#11713#0" expanded="true" />
-            <element signature="e#12098#12109#0" expanded="true" />
-            <element signature="e#12659#12673#0" expanded="true" />
-            <element signature="e#13618#13636#0" expanded="true" />
-            <element signature="e#14774#14789#0" expanded="true" />
-            <element signature="e#15693#15714#0" expanded="true" />
-          </folding>
+        <state line="153" column="37" selection-start="6662" selection-end="6662" vertical-scroll-proportion="-0.6">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="13" selection-start="321" selection-end="321" vertical-scroll-proportion="-6.023423">
+        <state line="47" column="55" selection-start="1576" selection-end="1576" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentMenuActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="22" selection-start="667" selection-end="667" vertical-scroll-proportion="-0.25405404">
           <folding />
         </state>
       </provider>
