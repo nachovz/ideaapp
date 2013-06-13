@@ -30,7 +30,6 @@ public class DashboardActivity extends ParentMenuActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//RowClienteMarca row;
 		RowClientePedido row;
 		
 		super.onCreate(savedInstanceState);
@@ -38,30 +37,7 @@ public class DashboardActivity extends ParentMenuActivity {
 		
 		//clienteList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
-		
-		//Creacion de Rows dummy!
-		/*row = new RowClienteMarca(this, "Centro Comercial Lider");
-		row.addMarca("AirOn");
-		row.addMarca("Airston");
-		row.addMarca("Berloni");
-		row.addMarca("DeLonghi");
-		clienteList.addView(row);
-		row = new RowClienteMarca(this, "Restaurant Tamarindo");
-		row.addMarca("Samsung");
-		row.addMarca("Thermos");
-		row.addMarca("AirOn");
-		clienteList.addView(row);
-		row = new RowClienteMarca(this, "Central Madeirense");
-		row.addMarca("Samsung");
-		clienteList.addView(row);
-		row = new RowClienteMarca(this, "Makro");
-		row.addMarca("Samsung");
-		row.addMarca("AirOn");
-		row.addMarca("Airston");
-		row.addMarca("Thermos");
-		row.addMarca("Berloni");
-		row.addMarca("DeLonghi");
-		clienteList.addView(row);*/
+
 		row = new RowClientePedido(this, "Centro Comercial Lider", Pedido.ESTADO_VERIFICANDO);
 		pedidosList.addView(row);
 		row = new RowClientePedido(this, "Restaurant Tamarindo", Pedido.ESTADO_APROBADO);
