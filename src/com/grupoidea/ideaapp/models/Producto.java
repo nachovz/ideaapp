@@ -3,7 +3,9 @@ package com.grupoidea.ideaapp.models;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
+
 import com.parse.ParseRelation;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -253,6 +255,22 @@ public class Producto {
 		
 		return productoJSON;
 	}
+
+    public static Producto setFromJSON(JSONObject json){
+        try{
+            String id = json.getString("id");
+            String nombre = json.getString("nombre");
+            Double precio = json.getDouble("precio");
+            Producto producto = new Producto(id, nombre, precio, "Bs.");
+            producto.setCodigo(json.getString("codigo"));
+            producto.setCantidad(json.getInt("cantidad"));
+            producto.setDescuento(json.getDouble("descuento"));
+
+            return producto;
+        }catch(JSONException e){
+            return null;
+        }
+    }
 	
 	public void setCantidadDescuento(int c, double d){
 		tablaDescuentos.append(c, d);

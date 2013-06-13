@@ -63,7 +63,6 @@ public class DashboardActivity extends ParentMenuActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		//RowClienteMarca row;
 		RowClientePedido row;
         metas = new ArrayList<Meta>();
         marcas = new HashSet<String>();

@@ -12,12 +12,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.models.Cliente;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ParentMenuActivity extends ParentActivity {
@@ -26,6 +28,9 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private ImageView menuIcon;
 	private ImageView carrito;
 	protected Spinner clienteSpinner;
+    protected int clienteSelected;
+    protected ArrayAdapter<String> adapter;
+    protected ArrayList<Cliente> clientes;
 	private RelativeLayout frontLayout;
 	
 	private ViewGroup menuRight;
@@ -84,11 +89,13 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 
-        //Poblar Spinner de Clientes e inflar
+////        //Poblar Spinner de Clientes e inflar
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
-        ArrayAdapter<String> adapter = getClientesFromParse();
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		clienteSpinner.setAdapter(adapter);
+        clienteSpinner.setEnabled(false);
+        clienteSpinner.setVisibility(View.INVISIBLE);
+//        adapter = getClientesFromParse();
+//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		clienteSpinner.setAdapter(adapter);
 
         frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 
@@ -211,8 +218,8 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	protected void setMenuTittle(String titulo) {
 		if(menuTituloTextView != null && titulo != null) {
 			menuTituloTextView.setText(titulo);
-			clienteSpinner.setEnabled(false);
-			clienteSpinner.setVisibility(View.INVISIBLE);
+//			clienteSpinner.setEnabled(false);
+//			clienteSpinner.setVisibility(View.INVISIBLE);
 		}
 	}
 	
@@ -285,13 +292,15 @@ public abstract class ParentMenuActivity extends ParentActivity {
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> listaClientes, ParseException e) {
-                String cliente;
+                Cliente cliente;
                 if (e == null) {
                     Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
                     for (ParseObject parseObj:listaClientes){
-                        cliente = parseObj.getString("nombre");
+                        cliente = new Cliente(parseObj.getString("nombre"));
+                        cliente.setId(parseObj.getString("codigo"));
+                        cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
                         //Almacenar clientes directamente en el adapter
-                        adapter.add(cliente);
+                        adapter.add(cliente.getNombre());
                     }
                 } else {
                     Log.d("DEBUG", "Error: " + e.getMessage());

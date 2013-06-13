@@ -5,6 +5,8 @@ import java.util.ArrayList;
 public class Cliente {
 	/** Cadena de texto que contiene el nombre del cliente.*/
 	private String nombre;
+    private String id;
+    private double descuento;
 	/** Listado de marcas previamente adquiridas por un cliente*/
 	private ArrayList<Marca> marcas;
 	
@@ -24,4 +26,20 @@ public class Cliente {
 	public void setMarcas(ArrayList<Marca> marcas) {
 		this.marcas = marcas;
 	}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public double getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
 }

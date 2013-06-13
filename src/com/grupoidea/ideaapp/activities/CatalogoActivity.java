@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -71,6 +72,24 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
+        //Poblar Spinner de Clientes e inflar
+//        clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
+        adapter = getClientesFromParse();
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        clienteSpinner.setAdapter(adapter);
+        clienteSpinner.setEnabled(true);
+        clienteSpinner.setVisibility(View.VISIBLE);
+        clienteSpinner.setSelection(0);
+        clienteSelected=0;
+        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clienteSelected=i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
 	}
 	
 	private Producto retrieveProducto(ParseObject producto){
@@ -157,9 +176,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 				relativeLayout.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {
-						
-						String productos = productsToJSON();
-						
+						//lanzar GestionPedidosActivity
+						String productos = productsToJSONString();
 						if(productos != ""){
 							Bundle bundle = new Bundle();
 							
@@ -230,24 +248,26 @@ public class CatalogoActivity extends ParentMenuActivity {
 		
 	}
 
-	protected String productsToJSON() {
+	protected String productsToJSONString() {
 		String productos = "";
-		JSONArray productosArray = new JSONArray();
-		JSONObject producto;
+		JSONArray productosJSONArray = new JSONArray();
+		JSONObject productoJSONObj;
         ArrayList<Producto> prodsCarrito = carrito.getProductos();
 
         try {
-            for (int i = 0, count = carrito.count(); i < count; i++) {
-                producto = prodsCarrito.get(i).toJSON();
-                productosArray.put(producto);
+            for (int i = 0, count = prodsCarrito.size(); i < count; i++) {
+                productoJSONObj = prodsCarrito.get(i).toJSON();
+//                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
+                productosJSONArray.put(productoJSONObj);
             }
-            productos = productosArray.toString();
+            productos = productosJSONArray.toString();
+//            Log.d("DEBUG", "Result productosJSONtoString: "+productos);
+            return productos;
         } catch (JSONException e) {
             e.printStackTrace();
+            Log.d("DEBUG", e.getCause().toString() + e.getMessage());
         }
-
-        Log.d("DEBUG", "productosJSONtoString: "+productos);
-        return productos;
+        return  null;
 	}
 
     /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
