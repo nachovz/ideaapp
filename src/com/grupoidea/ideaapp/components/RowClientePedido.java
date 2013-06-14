@@ -69,7 +69,7 @@ public class RowClientePedido extends RelativeLayout {
 		
 		view = rowClienteLayout.findViewById(R.id.cliente_pedido_status_layout);
 		estatusLayout = (FrameLayout) view;
-		
+
 		estado = estadoParam;
 		this.addEstado(estado);
 		

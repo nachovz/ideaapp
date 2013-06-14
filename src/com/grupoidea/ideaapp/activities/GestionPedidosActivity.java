@@ -182,52 +182,59 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         EditText direccionET = (EditText) findViewById(R.id.direccion_envio_edit);
         direccion = ""+String.valueOf(direccionET.getText());
 
-        //Pedido
-        final ParseObject pedido = new ParseObject("Pedido");
-        pedido.put("asesor", vendedor.getObjectId());
-        pedido.put("cliente", cliente.getParseId());
-        pedido.put("direccion", direccion);
-        pedido.put("estado", 0);
-        Random rand = new Random();
-        numPedido= String.valueOf(56000+rand.nextInt(10000));
-        Log.d("DEBUG", "numPedido: "+numPedido);
-        pedido.put("num_pedido", numPedido);
-        pedido.saveInBackground(new SaveCallback() {
+        //Cliente
+        Log.d("DEBUG", "Pidiendo Cliente");
+        final ParseQuery clienteParseQuery = new ParseQuery("Cliente");
+        clienteParseQuery.whereEqualTo("nombre", cliente.getNombre());
+        clienteParseQuery.getFirstInBackground(new GetCallback() {
             @Override
-            public void done(ParseException e) {
-//                if (e!=null){
-                    e.printStackTrace();
-                    ParseQuery queryIdPedido = new ParseQuery("Pedido");
-                    queryIdPedido.whereEqualTo("num_pedido", numPedido);
-                    queryIdPedido.findInBackground(new FindCallback() {
-                        @Override
-                        public void done(List<ParseObject> parseObjectList, ParseException e) {
-//                            e.printStackTrace();
-//                            if(e!=null){
-//                                ParseObject parseObject = parseObjectList.get((0));
-//                                for (ParseObject p : parseObjectList) {
-//                                    if (p.get("num_pedido") == numPedido) {
-//                                        parseObject = p;
-//                                    }
-//                                }
-                                Log.d("DEBUG", "tamaño lista: "+parseObjectList.size());
-                                for (Producto prod : productos) {
-                                    ParseObject pedidoHasProducto = new ParseObject("PedidoHasProductos");
-                                    pedidoHasProducto.put("cantidad", prod.getCantidad());
-                                    pedidoHasProducto.put("descuento", prod.getDescuento());
-//                                    pedidoHasProducto.put("pedido", parseObject.getObjectId());
-                                    pedidoHasProducto.put("producto", prod.getId());
-                                    pedidoHasProducto.saveInBackground();
+            public void done(ParseObject clienteParse, ParseException e) {
+                Random rand = new Random();
+                numPedido = String.valueOf(56000 + rand.nextInt(10000));
+                Log.d("DEBUG", "numPedido: " + numPedido);
+
+                //Pedido
+                Log.d("DEBUG", "Pidiendo Pedido");
+                final ParseObject pedidoParse = new ParseObject("Pedido");
+                pedidoParse.put("asesor", ParseUser.getCurrentUser());
+                pedidoParse.put("cliente", clienteParse);
+                pedidoParse.put("direccion", direccion);
+                pedidoParse.put("estado", 0);
+                pedidoParse.put("num_pedido", numPedido);
+                pedidoParse.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        for (final Producto prod : productos) {
+                            //Producto
+                            Log.d("DEBUG", "Pidiendo Producto");
+                            ParseQuery productoParseQuery = new ParseQuery("Producto");
+                            productoParseQuery.whereEqualTo("codigo", prod.getNombre()); //TODO FIX Getters y Setters
+                            productoParseQuery.getFirstInBackground(new GetCallback() {
+                                @Override
+                                public void done(final ParseObject productoParse, ParseException e) {
+                                    if (e != null) Log.d("DEBUG", e.getMessage());
+                                    Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                                    final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
+                                    pedidoHasProductos.put("cantidad", prod.getCantidad());
+                                    pedidoHasProductos.put("descuento", prod.getDescuento());
+                                    pedidoHasProductos.put("pedido", pedidoParse);
+                                    pedidoHasProductos.put("producto", productoParse);
+                                    pedidoHasProductos.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e != null) e.printStackTrace();
+                                            Log.d("DEBUG", "Pedido: " + pedidoParse.getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                            Toast.makeText(mContext,R.string.pedidoCompletado,3000).show();
+                                            dispatchActivity(DashboardActivity.class, null, true);
+                                        }
+                                    });
                                 }
-//                            }
+                            });
                         }
-                    });
-//                  }
+                    }
+                });
             }
         });
-
-
-
     }
 
     public Double getSubtotal(){
@@ -235,7 +242,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         for(Producto prod:productos){
             sub += prod.getPrecioTotal();
         }
-
         return sub;
     }
 
@@ -252,5 +258,4 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             Log.d("DEBUG", "llenarProductosfromJSON: "+e.getMessage());
         }
     }
-
 }

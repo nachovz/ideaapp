@@ -1,5 +1,7 @@
 package com.grupoidea.ideaapp.models;
 
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 
 public class Cliente {
@@ -8,6 +10,7 @@ public class Cliente {
     private String id;
     private double descuento;
     private String parseId;
+    private ParseObject clienteParse;
 	/** Listado de marcas previamente adquiridas por un cliente*/
 	private ArrayList<Marca> marcas;
 	
@@ -50,5 +53,13 @@ public class Cliente {
 
     public void setParseId(String parseId) {
         this.parseId = parseId;
+    }
+
+    public ParseObject getClienteParse() {
+        return clienteParse;
+    }
+
+    public void setClienteParse(ParseObject clienteParse) {
+        this.clienteParse = clienteParse;
     }
 }
