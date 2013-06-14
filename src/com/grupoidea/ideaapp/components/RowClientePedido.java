@@ -51,7 +51,7 @@ public class RowClientePedido extends RelativeLayout {
 	 * @param nombreCliente
 	 *            Cadena de texto con el nombre (Razon Social) del cliente
 	 */
-	public RowClientePedido(Context context, String nombreCliente, int estadoParam) {
+	public RowClientePedido(Context context, String nombreCliente, int estadoParam, final String idPedido) {
 		super(context);
 		this.context = context;
 		
@@ -72,23 +72,23 @@ public class RowClientePedido extends RelativeLayout {
 
 		estado = estadoParam;
 		this.addEstado(estado);
-		
-		if (estado == Pedido.ESTADO_RECHAZADO) {
-			this.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
-					Bundle bundle;
-					// TODO: Enviar idCliente mediante el bundle para que el
-					// CatalogoActivity se encargue de consultar los productos
-					// destacados del cliente
-					bundle = new Bundle();
-					bundle.putString("clienteNombre", clienteNombre.getText()
-							.toString());
-					parent.dispatchActivity(CatalogoActivity.class, bundle,
-							false);
-				}
-			});
-		}
+
+        this.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Bundle bundle;
+                // TODO: Enviar idCliente mediante el bundle para que el
+                // CatalogoActivity se encargue de consultar los productos
+                // destacados del cliente
+
+                bundle = new Bundle();
+                bundle.putString("numPedido", idPedido);
+                bundle.putString("clienteNombre", clienteNombre.getText()
+                        .toString());
+                parent.dispatchActivity(CatalogoActivity.class, bundle,
+                        false);
+            }
+        });
 	}
 	
 	/**

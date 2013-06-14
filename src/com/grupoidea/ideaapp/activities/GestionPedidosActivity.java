@@ -216,7 +216,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     Log.d("DEBUG", "Agregando a PedidoHasProducto");
                                     final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
                                     pedidoHasProductos.put("cantidad", prod.getCantidad());
-                                    pedidoHasProductos.put("descuento", prod.getDescuento());
+                                    pedidoHasProductos.put("descuento", prod.getDescuentoManual());
                                     pedidoHasProductos.put("pedido", pedidoParse);
                                     pedidoHasProductos.put("producto", productoParse);
                                     pedidoHasProductos.saveInBackground(new SaveCallback() {

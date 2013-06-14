@@ -83,7 +83,7 @@ public class DashboardActivity extends ParentMenuActivity {
                     RowClientePedido row;
                     for (ParseObject parseObject : parseObjects) {
                         ParseObject cliente = parseObject.getParseObject("cliente");
-                        row = new RowClientePedido(mContext, cliente.getString("nombre"), cliente.getInt("estado"));
+                        row = new RowClientePedido(mContext, cliente.getString("nombre"), cliente.getInt("estado"), parseObject.getObjectId());
                         pedidosList.addView(row);
                     }
                     Log.d("DEBUG", "Carga de pedidos completa");

@@ -30,6 +30,7 @@ import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -54,6 +55,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	public BannerProductoCarrito adapterCarrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
 	public BannerProductoCatalogo adapterCatalogo;
+    public String modificarPedidoId;
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
 	
@@ -71,10 +73,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 			setMenuTittle(clienteNombre);
 		}
 
+        modificarPedidoId = getIntent().getExtras().getString("numPedido");
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
         //Poblar Spinner de Clientes e inflar
-//        clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         adapter = getClientesFromParse();
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         clienteSpinner.setAdapter(adapter);
@@ -108,8 +110,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 		prod.setNombreMarca(marca.getString("nombre"));
 		prod.setClaseMarca(marca.getString("clase"));
         final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
-        Log.d("CatalogoActivity", "-----------------------------------------------------------");
-        Log.d("CatalogoActivity", prod.getNombre());
 
         //Obtener marcas
         final ParseQuery query = new ParseQuery("Marca");
@@ -117,34 +117,23 @@ public class CatalogoActivity extends ParentMenuActivity {
         query.whereEqualTo("clase", prod.getClaseMarca());
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> marcas, ParseException e) {
-                if(e == null && marcas != null){
-                    Log.d("CatalogoActivity", "Marcas obtenidas: "+String.valueOf(marcas.size()));
-
-                    //Obtener descuentos para marcas
-                    for (ParseObject marcaObj : marcas) {
-                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
-                        descuentosQuery.findInBackground(new FindCallback() {
-                            public void done(List<ParseObject> descuentos, ParseException e) {
-                                if(e == null && descuentos != null){
-                                    Log.d("CatalogoActivity", "Descuentos recuperados para este producto: "+descuentos.size());
-                                    for(ParseObject descuento: descuentos){
-                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
-                                    }
-                                    for(int i=0, size=tablaDescuentos.size(); i<size; i++){
-                                        Log.d("CatalogoActivity","cant: " + tablaDescuentos.keyAt(i) + ", porc: " + tablaDescuentos.valueAt(i).toString());
-                                    }
-                                }else{
-                                    Log.d("CatalogoActivity", "No se recuperaron descuentos para este producto");
-                                }
+            if(e == null && marcas != null){
+                //Obtener descuentos para marcas
+                for (ParseObject marcaObj : marcas) {
+                    ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
+                    descuentosQuery.findInBackground(new FindCallback() {
+                        public void done(List<ParseObject> descuentos, ParseException e) {
+                        if(e == null && descuentos != null){
+                            for(ParseObject descuento: descuentos){
+                                tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
                             }
-                        });
-                    }
-                }else{
-                    Log.d("CatalogoActivity", "result: null");
+                        }
+                        }
+                    });
                 }
             }
+            }
         });
-        //Almacenar tabla de descuentos en el Producto
         prod.setTablaDescuentos(tablaDescuentos);
         
         return prod;
@@ -168,6 +157,39 @@ public class CatalogoActivity extends ParentMenuActivity {
 		}
 
 		carrito = new Carrito();
+        //Si vengo a modificar un pedido
+        //TODO llevar el codigo de pedido generado con el random como matrimonio obligado por todas las activities hasta el gestionar pedido
+        Log.d("DEBUG", "pedido a modificar "+modificarPedidoId);
+        if(modificarPedidoId != null){
+            final ArrayList<Producto> productos1=productos;
+            //Pedido Id
+            final ParseQuery pedido = new ParseQuery("Pedido");
+            pedido.whereEqualTo("objectId", modificarPedidoId);
+            pedido.getFirstInBackground(new GetCallback() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    //Productos en pedido
+                    final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+                    productosEnPedido.include("producto");
+                    productosEnPedido.findInBackground(new FindCallback() {
+                        @Override
+                        public void done(List<ParseObject> productosEnPedidoObj, ParseException e) {
+                            //Me muevo en los productos relacionados al pedido
+                            for(ParseObject producto: productosEnPedidoObj){
+                                //Agrego los relacionados al pedido en el carrito
+                                for(int i=0, size=productos1.size(); i<size; i++){
+                                    if(productos1.get(i).getNombre().equals(producto.get("codigo"))){
+                                       productos1.get(i).setCantidad(producto.getInt("cantidad"));
+                                        carrito.addProducto(productos1.get(i));
+                                        Log.d("DEBUG", "Agregando productos de pedido a modificar");
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
 		adapterCarrito = new BannerProductoCarrito(this, carrito);
 		menuRight = (RelativeLayout) getMenuRight();
 		if(menuRight != null) {
@@ -177,7 +199,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 				relativeLayout.setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View arg0) {
-						//lanzar GestionPedidosActivity
+
+                        //lanzar GestionPedidosActivity
 						String productos = productsToJSONString();
 						if(productos != ""){
 							Bundle bundle = new Bundle();
