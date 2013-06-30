@@ -46,8 +46,8 @@ public class Producto {
     private int existencia;
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
-	/** Double que representa el descuento aplicado al producto (manualmente) */
-	private double descuento;
+	/** Double que representa el descuentoManual aplicado al producto (manualmente) */
+	private double descuentoManual;
     protected static DecimalFormat df = new DecimalFormat("#.##");
 
     /** Boolean que permite determinar si el menu del producto es visible al usuario*/
@@ -87,7 +87,7 @@ public class Producto {
 		this.imagen = imagen;
 		this.codigo = codigo;
 		this.cantidad = 1;
-        this.descuento = 0.0;
+        this.descuentoManual = 0.0;
 		this.isInCarrito = false;
 		this.tablaDescuentos = new SparseArray<Double>();
 	}
@@ -118,14 +118,14 @@ public class Producto {
 		this.nombre = nombre;
 	}
 
-    /** Funcion que devuelve el precio del producto (tomando en cuenta si un descuento manual fue aplicado)
+    /** Funcion que devuelve el precio del producto (tomando en cuenta si un descuentoManual manual fue aplicado)
      * @return Precio del producto
      */
     public double getPrecio(){
-        if(descuento == 0){
+        if(descuentoManual == 0){
             return precio;
         }else{
-            return precio * descuento/100.0;
+            return precio * descuentoManual /100.0;
         }
     }
 	public void setPrecio(double precio) {
@@ -155,11 +155,11 @@ public class Producto {
 	}
 	
 	public double getDescuentoManual() {
-		return descuento;
+		return descuentoManual;
 	}
 
-	public void setDescuento(double descuento) {
-		this.descuento = descuento;
+	public void setDescuentoManual(double descuentoManual) {
+		this.descuentoManual = descuentoManual;
 	}
 	
 	public String getCodigo() {
@@ -205,7 +205,7 @@ public class Producto {
 
 	/** Permite calcular el precio de los productos del mismo tipo.*/
 	public double getPrecioTotal() {
-		double precioTotal, desc= 1.0 - getDescuento();
+		double precioTotal, desc= 1.0 - getDescuentoAplicado();
         precioTotal = cantidad * precio * desc;
         Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precio)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
 		return precioTotal;
@@ -253,7 +253,7 @@ public class Producto {
 		productoJSON.put("precio", getPrecio());
 		productoJSON.put("cantidad", getCantidad());
 		productoJSON.put("total", getPrecioTotal());
-		productoJSON.put("descuento", getDescuentoManual());
+		productoJSON.put("descuentoManual", getDescuentoManual());
 		
 		return productoJSON;
 	}
@@ -266,7 +266,7 @@ public class Producto {
             Producto producto = new Producto(id, nombre, precio, "Bs.");
             producto.setCodigo(json.getString("codigo"));
             producto.setCantidad(json.getInt("cantidad"));
-            producto.setDescuento(json.getDouble("descuento"));
+            producto.setDescuentoManual(json.getDouble("descuentoManual"));
 
             return producto;
         }catch(JSONException e){
@@ -278,8 +278,8 @@ public class Producto {
 		tablaDescuentos.append(c, d);
 	}
 	
-	public double getDescuento(){
-        if(descuento==0){
+	public double getDescuentoAplicado(){
+        if(descuentoManual ==0){
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
@@ -288,7 +288,7 @@ public class Producto {
                 }
             }
         }else{
-            return descuento/100.0;
+            return descuentoManual /100.0;
         }
         return 0.0;
 	}
@@ -328,8 +328,8 @@ public class Producto {
 //                                if(e == null && descuentos != null){
 //                                    Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
 //                                    int pos=0;
-//                                    for(ParseObject descuento: descuentos){
-//                                        tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
+//                                    for(ParseObject descuentoManual: descuentos){
+//                                        tablaDescuentos.append(descuentoManual.getInt("cantidad"),descuentoManual.getDouble("porcentaje"));
 //                                        pos = tablaDescuentos.size()-1;
 //                                        Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
 //                                    }

@@ -14,6 +14,11 @@
     <string name="cancelar">Cancelar</string>
     <string name="excedentes">Excedentes: </string>
 
+    <string name="codigo">Codigo</string>
+    <string name="meta">Meta</string>
+    <string name="pedidos">Pedidos</string>
+
+    <!--GestionPedido-->
     <string name="fecha">Fecha</string>
     <string name="idCliente">ID de Cliente</string>
     <string name="nombreCliente">Nombre de Cliente</string>

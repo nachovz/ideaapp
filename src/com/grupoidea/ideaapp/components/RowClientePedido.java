@@ -20,6 +20,9 @@ import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.ParentActivity;
 import com.grupoidea.ideaapp.models.Pedido;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Clase que permite crear una fila con el nombre del cliente con el estado y la
  * fecha del pedido que se realizo
@@ -51,7 +54,7 @@ public class RowClientePedido extends RelativeLayout {
 	 * @param nombreCliente
 	 *            Cadena de texto con el nombre (Razon Social) del cliente
 	 */
-	public RowClientePedido(Context context, String nombreCliente, int estadoParam) {
+	public RowClientePedido(Context context, String nombreCliente, int estadoParam, Date creationDate) {
 		super(context);
 		this.context = context;
 		
@@ -66,6 +69,10 @@ public class RowClientePedido extends RelativeLayout {
 		view = rowClienteLayout.findViewById(R.id.cliente_nombre_pedido_textview);
 		clienteNombre = (TextView) view;
 		clienteNombre.setText(nombreCliente);
+
+        view = rowClienteLayout.findViewById(R.id.cliente_pedido_date_textview);
+        fechaPedido = (TextView) view;
+        fechaPedido.setText(DateFormat.getDateInstance().format(creationDate));
 		
 		view = rowClienteLayout.findViewById(R.id.cliente_pedido_status_layout);
 		estatusLayout = (FrameLayout) view;
@@ -95,9 +102,7 @@ public class RowClientePedido extends RelativeLayout {
 	 * Metodo privado que permite crear un TextView con el estado actual del pedido.
 	 * @param status Cadena de texto con el estado actual.*/
 	private View createStatusTag(String status) {
-		FrameLayout.LayoutParams layoutParams;
 		TextView textView;
-		Drawable drawable;
 		
 		textView = new TextView(context);
 		textView.setText(status);
@@ -105,13 +110,7 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-		/*drawable = getResources().getDrawable(R.drawable.client_img_pastilla);
-		textView.setBackgroundDrawable(drawable);*/
-        /** Lo comentado fue reemplazado por llamada a setBackgroundResource -- Fernando*/
         textView.setBackgroundResource(R.drawable.client_img_pastilla);
-		//layoutParams = new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		//layoutParams.setMargins(7, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
-		//textView.setLayoutParams(layoutParams);
 	    
 		return textView;
 	}

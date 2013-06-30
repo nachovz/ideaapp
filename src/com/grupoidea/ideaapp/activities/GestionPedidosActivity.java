@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
@@ -114,7 +113,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             TableLayout tl = (TableLayout)findViewById(R.id.listado_productos_pedido_table);
             TableRow tr;
             TextView t1,t2,t3,t4;
-            LayoutInflater inflater = this.getLayoutInflater();
             Boolean darkBackground = true;
             TableRow.LayoutParams params;
 
@@ -159,7 +157,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 if(darkBackground) t4.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
                 //Añadir a TableLayout de productos
-                tl.addView(tr, tl.getChildCount() - 1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                tl.addView(tr, tl.getChildCount(), new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                 darkBackground=!darkBackground;
             }
 
@@ -195,34 +193,22 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         pedido.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-//                if (e!=null){
                     e.printStackTrace();
                     ParseQuery queryIdPedido = new ParseQuery("Pedido");
                     queryIdPedido.whereEqualTo("num_pedido", numPedido);
                     queryIdPedido.findInBackground(new FindCallback() {
                         @Override
                         public void done(List<ParseObject> parseObjectList, ParseException e) {
-//                            e.printStackTrace();
-//                            if(e!=null){
-//                                ParseObject parseObject = parseObjectList.get((0));
-//                                for (ParseObject p : parseObjectList) {
-//                                    if (p.get("num_pedido") == numPedido) {
-//                                        parseObject = p;
-//                                    }
-//                                }
                                 Log.d("DEBUG", "tamaño lista: "+parseObjectList.size());
                                 for (Producto prod : productos) {
                                     ParseObject pedidoHasProducto = new ParseObject("PedidoHasProductos");
                                     pedidoHasProducto.put("cantidad", prod.getCantidad());
-                                    pedidoHasProducto.put("descuento", prod.getDescuento());
-//                                    pedidoHasProducto.put("pedido", parseObject.getObjectId());
+                                    pedidoHasProducto.put("descuento", prod.getDescuentoAplicado());
                                     pedidoHasProducto.put("producto", prod.getId());
                                     pedidoHasProducto.saveInBackground();
                                 }
-//                            }
                         }
                     });
-//                  }
             }
         });
 

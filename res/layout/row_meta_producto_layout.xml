@@ -13,7 +13,7 @@
         android:textColor="#646464"
         android:textSize="23sp"
         android:textStyle="bold|italic"
-        style="@style/value_light"
+        style="@style/row_light"
         android:layout_marginLeft="20dp"/>
 
     <TextView
@@ -27,7 +27,7 @@
             android:textStyle="bold|italic"
             android:layout_toRightOf="@+id/meta_producto_codigo_text_view"
             android:layout_marginLeft="10dp"
-            style="@style/value_light"/>
+            style="@style/row_light"/>
 
     <TextView
             android:id="@+id/meta_actual_text_view"
@@ -40,6 +40,6 @@
             android:textStyle="bold|italic"
             android:layout_toRightOf="@+id/meta_numero_text_view"
             android:layout_marginLeft="10dp"
-            style="@style/value_light"/>
+            style="@style/row_light"/>
 
 </RelativeLayout>

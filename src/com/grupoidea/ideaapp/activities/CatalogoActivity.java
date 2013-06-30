@@ -300,7 +300,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 Double valor = Double.parseDouble(input.getText().toString());
                 if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
                     Log.d("DEBUG", valor.toString());
-                    producto.setDescuento(valor);
+                    producto.setDescuentoManual(valor);
                     adapterCatalogo.notifyDataSetChanged();
                     adapterCarrito.notifyDataSetChanged();
                     Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();

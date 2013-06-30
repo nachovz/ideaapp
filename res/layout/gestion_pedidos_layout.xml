@@ -158,13 +158,6 @@
                         style="@style/edit_text"/>
             </TableRow>
 
-            <TableRow>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_span="2"
-                        android:padding="18dip"/>
-            </TableRow>
         </TableLayout>
 
         <!--Listado de productos del pedido-->
@@ -173,6 +166,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/encabezado_pedido_table"
+            android:paddingTop="35dp"
+            android:paddingBottom="35dp"
         >
             <TableRow
                     android:id="@+id/row_productos">
@@ -210,14 +205,6 @@
                         style="@style/encabezado"/>
             </TableRow>
 
-            <TableRow>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_span="2"
-                        android:padding="18dip"
-                        android:layout_weight="0.6"/>
-            </TableRow>
         </TableLayout>
 
         <!--Totales del pedido-->
@@ -226,6 +213,7 @@
             android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="35dp"
             android:layout_below="@id/listado_productos_pedido_table"
         >
             <TableRow>
@@ -243,7 +231,7 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
 
             <TableRow>
@@ -261,7 +249,7 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
             <TableRow>
                 <TextView
@@ -278,7 +266,7 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
             <TableRow
                     android:layout_width="match_parent"
@@ -298,7 +286,7 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
             <TableRow
                     android:layout_width="match_parent"
@@ -318,7 +306,7 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
 
             <TableRow>
@@ -345,17 +333,9 @@
                         android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/value_light"/>
+                        style="@style/row_light"/>
             </TableRow>
 
-            <TableRow>
-                <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_span="2"
-                        android:padding="18dip"
-                        android:layout_weight="0.6"/>
-            </TableRow>
 
         </TableLayout>
 

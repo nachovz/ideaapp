@@ -14,14 +14,21 @@
         <item name="android:background">#808080</item>
     </style>
 
-    <style name="value_light">
+    <style name="row_light">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#808080</item>
         <item name="android:textStyle">bold|italic</item>
         <item name="android:background">#ffffff</item>
     </style>
 
-    <style name="value_dark">
+    <style name="row_medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#808080</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="row_dark">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#808080</item>
         <item name="android:textStyle">bold|italic</item>

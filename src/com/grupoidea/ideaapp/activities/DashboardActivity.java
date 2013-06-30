@@ -6,14 +6,10 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowClientePedido;
@@ -42,15 +38,16 @@ public class DashboardActivity extends ParentMenuActivity {
 	private LinearLayout pedidosList;
 
     /** Lista de metas del usuario logueado */
-    //private List<ParseObject> metas;
     private ArrayList<Meta> metas;
+
+    private TableLayout tl;
+    private TableRow tr;
 
     /** Lista de Marcas disponibles para el Spinner */
     private HashSet<String> marcas;
 
-    /** Marcas Spinner */
+    /** Adapter para Spinner de marcas */
     ArrayAdapter<String> marcasAdapter;
-
     /** Spinner de marcas*/
     Spinner marcasSpinner;
 
@@ -70,7 +67,7 @@ public class DashboardActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_layout);
 		
-		//clienteList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
+		//Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 
         ParseQuery queryPedidos = new ParseQuery("Pedido");
@@ -83,7 +80,7 @@ public class DashboardActivity extends ParentMenuActivity {
                     RowClientePedido row;
                     for (ParseObject parseObject : parseObjects) {
                         ParseObject cliente = parseObject.getParseObject("cliente");
-                        row = new RowClientePedido(mContext, cliente.getString("nombre"), cliente.getInt("estado"));
+                        row = new RowClientePedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getCreatedAt());
                         pedidosList.addView(row);
                     }
                     Log.d("DEBUG", "Carga de pedidos completa");
@@ -92,19 +89,13 @@ public class DashboardActivity extends ParentMenuActivity {
                 }
             }
         });
-
-		/*row = new RowClientePedido(this, "Centro Comercial Lider", Pedido.ESTADO_VERIFICANDO);
-		pedidosList.addView(row);
-		row = new RowClientePedido(this, "Restaurant Tamarindo", Pedido.ESTADO_APROBADO);
-		pedidosList.addView(row);
-		row = new RowClientePedido(this, "Makro", Pedido.ESTADO_RECHAZADO);
-		pedidosList.addView(row);*/
 		
 		user = ParseUser.getCurrentUser();
 		if(user != null) {
 			setMenuTittle(user.getUsername());
 		}
 
+        //Carga de metas
         ParseQuery query = new ParseQuery("Metas");
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto.marca");
@@ -131,6 +122,7 @@ public class DashboardActivity extends ParentMenuActivity {
                         metas.add(meta);
                     }
 
+                    //Spinner de marcas con metas
                     final ArrayList<String> lista = new ArrayList<String>(marcas);
 
                     marcasAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, lista);
@@ -143,32 +135,67 @@ public class DashboardActivity extends ParentMenuActivity {
                     marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            View row;
-                            LayoutInflater inflador;
-                            TextView textView;
-                            LinearLayout scrollView = (LinearLayout)((Activity) mContext).findViewById(R.id.meta_list_elements);
-                            scrollView.removeAllViews();
+//                            LayoutInflater inflador;
+                            TextView tcod, tmeta, tpedido;
+//                            LinearLayout scrollView = (LinearLayout)((Activity) mContext).findViewById(R.id.metas_scroll_view);
+//                            scrollView.removeAllViews();
+//                            inflador = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                            Boolean darkBackground = true;
+                            tl = (TableLayout) findViewById(R.id.meta_list_elements);
+                            //limpiar TableLayout de metas
+                            if(tl.getChildCount()>1){
+                                tl.removeViews(1,tl.getChildCount()-1);
+                            }
 
                             for (Meta meta:metas){
                                 if (meta.getProducto().getNombreMarca().equalsIgnoreCase(lista.get(position))){
-                                    inflador = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                    row = (View)inflador.inflate(R.layout.row_meta_producto_layout, null);
-                                    textView = (TextView)row.findViewById(R.id.meta_producto_codigo_text_view);
-                                    textView.setText(meta.getProducto().getCodigo());
+                                    //Crear TableRow nuevo
+                                    TableRow.LayoutParams params;
+                                    tr = new TableRow(mContext);
+                                    tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    if(!darkBackground){
+                                        tr.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                                    }else{
+                                        tr.setBackgroundColor(Color.parseColor("#D9D9D9"));
+                                    }
 
-                                    textView = (TextView)row.findViewById(R.id.meta_numero_text_view);
-                                    textView.setText(String.valueOf(meta.getValorFinal()));
+                                    //Crear y agregar TextView de Codigo a TableRow
+                                    tcod = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    tcod.setLayoutParams(params);
+                                    tcod.setTextColor(Color.parseColor("#262626"));
+                                    tcod.setPadding(18, 18, 18, 18);
+                                    tcod.setText(meta.getProducto().getCodigo());
+                                    tr.addView(tcod);
 
-                                    textView = (TextView)row.findViewById(R.id.meta_actual_text_view);
-                                    textView.setText(String.valueOf(meta.getValorActual()));
+                                    //Crear y agregar TextView de Meta a TableRow
+                                    tmeta = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    tmeta.setLayoutParams(params);
+                                    tmeta.setTextColor(Color.parseColor("#262626"));
+                                    tmeta.setPadding(18, 18, 18, 18);
+                                    tmeta.setText(String.valueOf(meta.getValorFinal()));
+                                    tmeta.setGravity(Gravity.CENTER);
+                                    tr.addView(tmeta);
 
-                                    scrollView.addView(row);
+                                    //Crear y agregar TextView de Pedidos a TableRow
+                                    tpedido = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                                    tpedido.setLayoutParams(params);
+                                    tpedido.setTextColor(Color.parseColor("#262626"));
+                                    tpedido.setPadding(18, 18, 18, 18);
+                                    tpedido.setText(String.valueOf(meta.getValorActual()));
+                                    tpedido.setGravity(Gravity.CENTER);
+                                    tr.addView(tpedido);
+
+                                    //Añadir a TableLayout de metas
+                                    tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                                    darkBackground=!darkBackground;
 
                                 }
                             }
 
                         }
-
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
 
@@ -194,43 +221,10 @@ public class DashboardActivity extends ParentMenuActivity {
 	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
-		// TODO Mostrar el response de la consulta en los elementos del activity.
-		/*List<ParseObject> clientesParse = (List<ParseObject>) response.getResponse();
-		ArrayList<Cliente> clientes = new ArrayList<Cliente>();
-		Cliente cliente;
-
-		for (ParseObject parseObject : clientesParse) {
-			cliente = retrieveCliente(parseObject);
-			clientes.add(cliente);
-		}*/
-        /*int a = 5;
-        ParseObject categoria = (ParseObject)((ArrayList)response.getResponse()).get(0);
-
-        ParseObject categoriaMarca = new ParseObject("CategoriaMarca");
-        categoriaMarca.put("categoria", categoria);
-        categoriaMarca.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                Log.d("PARSE",e.toString());
-            }
-        });*/
 	}
 
 	@Override
 	protected Request getRequestAction() {
-		// TODO Crear consulta a la data del Dashboard.
-//
-//		Request req = new Request(Request.PARSE_REQUEST);
-//
-//		ParseQuery query = new ParseQuery("Cliente");
-//
-//		req.setRequest(query);
-//
-//		return req;
-        /*Request req = new Request(Request.PARSE_REQUEST);
-        ParseQuery query = new ParseQuery("Categoria");
-        req.setRequest(query);
-*/
         return null;
 	}
 	
