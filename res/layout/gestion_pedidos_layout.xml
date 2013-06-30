@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    style="@style/value_light">
 
     <RelativeLayout
         android:id="@+id/detalle_producto_inflated"
@@ -67,11 +68,11 @@
                 <TextView
                         android:id="@+id/fecha_edit"
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="fill_parent"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
             </TableRow>
 
             <!--ID de Cliente-->
@@ -87,12 +88,11 @@
                 <TextView
                         android:id="@+id/id_cliente_edit"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="#id"
+                        android:layout_height="fill_parent"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
             </TableRow>
 
             <!--Nombre de Cliente-->
@@ -108,12 +108,11 @@
                 <TextView
                         android:id="@+id/nombre_cliente_edit"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Cliente Apellido"
+                        android:layout_height="fill_parent"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
             </TableRow>
 
             <!--Orden de Compra     #orden-->
@@ -129,12 +128,11 @@
                 <TextView
                         android:id="@+id/numero_orden_compra_edit"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="#orden"
+                        android:layout_height="fill_parent"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
             </TableRow>
 
             <!--Direccion de Envío-->
@@ -151,7 +149,7 @@
                         android:id="@+id/direccion_envio_edit"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:hint="Calle, Avenida, Ciudad"
+                        android:hint="Local, Calle o Avenida, Ciudad"
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="0.6"
@@ -223,12 +221,11 @@
                         android:text="@string/subtotal"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/subtotal_edit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>
@@ -241,12 +238,11 @@
                         android:text="@string/descComercial"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/desc_comercial_edit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>
@@ -258,12 +254,11 @@
                         android:text="@string/flete"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/flete_edit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>
@@ -278,12 +273,11 @@
                         android:text="@string/misc"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/misc_edit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>
@@ -298,12 +292,11 @@
                         android:text="@string/impuesto"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/impuesto_edit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>
@@ -325,12 +318,11 @@
                         android:text="@string/total"
                         android:layout_span="1"
                         android:padding="18dip"
-                        style="@style/encabezado"/>
+                        style="@style/titulo"/>
                 <TextView
                         android:id="@+id/total_edit"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:text="Double Bs"
                         android:layout_span="1"
                         android:padding="18dip"
                         style="@style/row_light"/>

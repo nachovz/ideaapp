@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.parse.ParseObject;
 import com.parse.ParseRelation;
 
 import org.json.JSONException;
@@ -16,7 +17,9 @@ import java.util.ArrayList;
 public class Producto {
 	/** Long con el UID de serializacion*/
 	private static final long serialVersionUID = 7522501988094486252L;
-	/** Entero con el identificador unico del producto*/
+
+    private ParseObject productoParse;
+    /** Entero con el identificador unico del producto*/
 	private String id;
 	/** Cadena de texto que contiene el nombre del producto.*/
 	private String nombre;
@@ -353,4 +356,12 @@ public class Producto {
 	public void setDescuentosQuery(ParseRelation descuentosQuery) {
 		this.descuentosQuery = descuentosQuery;
 	}
+
+    public ParseObject getProductoParse() {
+        return productoParse;
+    }
+
+    public void setProductoParse(ParseObject productoParse) {
+        this.productoParse = productoParse;
+    }
 }
