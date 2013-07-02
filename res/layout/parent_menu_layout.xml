@@ -70,6 +70,16 @@
                 android:textSize="20sp"
                 android:textStyle="bold|italic" />
 
+            <Spinner
+                    android:id="@+id/menu_cliente_select_spinner"
+                    android:layout_width="320dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="105dp"
+                    android:layout_marginTop="10dp"
+                    android:focusable="false"
+                    />
+
             <ImageView
                 android:id="@+id/menu_logoff_image_view"
                 android:layout_width="wrap_content"
@@ -88,16 +98,7 @@
                 android:src="@drawable/client_tab_carrito"
                 android:visibility="gone" />
 
-            <Spinner
-                android:id="@+id/menu_cliente_select_spinner"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/menu_icon_image_view"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentLeft="false"
-                android:layout_toRightOf="@+id/menu_titulo_text_view"
-                android:focusable="false"
-                    />
+
 
         </RelativeLayout>
 

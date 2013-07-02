@@ -29,11 +29,7 @@ import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,13 +44,13 @@ public class CatalogoActivity extends ParentMenuActivity {
 	/** Cadena de texto que contiene el nombre del cliente*/
 	private String clienteNombre;
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
-	private ArrayList<Producto> catalogoProductos;
+	private static ArrayList<Producto> catalogoProductos;
 	/** Objeto que representa al carrito de compras del catalogo.*/
 	private Carrito carrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del carrito y el layout de cada producto*/
-	public BannerProductoCarrito adapterCarrito;
+	public static BannerProductoCarrito adapterCarrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
-	public BannerProductoCatalogo adapterCatalogo;
+	public static BannerProductoCatalogo adapterCatalogo;
     public String modificarPedidoId;
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
@@ -69,11 +65,11 @@ public class CatalogoActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 		
 		clienteNombre = getIntent().getExtras().getString("clienteNombre");
+        Log.d("DEBUG", "clientenombre: "+clienteNombre);
 		if(clienteNombre != null) {
 			setMenuTittle(clienteNombre);
 		}
-
-        modificarPedidoId = getIntent().getExtras().getString("numPedido");
+        modificarPedidoId= getIntent().getExtras().getString("numPedido");
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
         //Poblar Spinner de Clientes e inflar
@@ -87,61 +83,65 @@ public class CatalogoActivity extends ParentMenuActivity {
         clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                clienteSelected=i;
+                clienteSelected = i;
+                Log.d("DEBUG", "Cliente seleccionado: " + i);
+                updatePreciosComerciales();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 	}
 	
-	private Producto retrieveProducto(ParseObject producto){
+	private Producto retrieveProducto(final ParseObject producto){
 		
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
 		double precio = producto.getDouble("costo");
-		String objectId = producto.getObjectId();
+		final String objectId = producto.getObjectId();
 		
-		Producto prod = new Producto(objectId,codigo, nombre, precio);
-        prod.setExistencia(producto.getInt("existencia"));
+		final Producto prod = new Producto(objectId,codigo, nombre, precio);
 
-		ParseObject marca = producto.getParseObject("marca");
-		prod.setIdMarca(marca.getObjectId());
-		prod.setNombreMarca(marca.getString("nombre"));
-		prod.setClaseMarca(marca.getString("clase"));
-        final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
-
-        //Obtener marcas
-        final ParseQuery query = new ParseQuery("Marca");
-        query.whereEqualTo("nombre", prod.getNombreMarca());
-        query.whereEqualTo("clase", prod.getClaseMarca());
-        query.findInBackground(new FindCallback() {
-            public void done(List<ParseObject> marcas, ParseException e) {
-            if(e == null && marcas != null){
-                //Obtener descuentos para marcas
-                for (ParseObject marcaObj : marcas) {
-                    ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
-                    descuentosQuery.findInBackground(new FindCallback() {
-                        public void done(List<ParseObject> descuentos, ParseException e) {
-                        if(e == null && descuentos != null){
-                            for(ParseObject descuento: descuentos){
-                                tablaDescuentos.append(descuento.getInt("cantidad"),descuento.getDouble("porcentaje"));
-                            }
-                        }
-                        }
-                    });
+        //Obtener existencia
+        ParseQuery queryExistencia = new ParseQuery("UserHasProducto");
+        queryExistencia.whereEqualTo("usuario", ParseUser.getCurrentUser());
+        queryExistencia.whereEqualTo("producto",producto);
+        queryExistencia.getFirstInBackground(new GetCallback() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null) prod.setExistencia(parseObject.getInt("cantidad"));
+                else{
+                    e.printStackTrace();
+                    Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla UserHasProducto");
                 }
             }
+        });
+
+        ParseObject categoria = producto.getParseObject("categoria");
+		prod.setMarca(producto.getString("marca"));
+		prod.setCategoria(categoria.getString("nombre"));
+        prod.setIdCategoria(categoria.getObjectId());
+        final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
+
+        //Obtener categorias
+        ParseQuery descuentosQuery = categoria.getRelation("descuentos").getQuery();
+        descuentosQuery.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> descuentos, ParseException e) {
+                if (e == null && descuentos != null) {
+                    for (ParseObject descuento : descuentos) {
+                        tablaDescuentos.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+                    }
+                }
             }
         });
         prod.setTablaDescuentos(tablaDescuentos);
-        
         return prod;
 	}
 	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
-		// TODO Mostrar el response de la consulta en los elementos del activity.
 		@SuppressWarnings("unchecked")
 		List<ParseObject> productosParse = (List<ParseObject>) response.getResponse();
 		ArrayList<Producto> productos = new ArrayList<Producto>();
@@ -159,8 +159,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 		carrito = new Carrito();
         //Si vengo a modificar un pedido
         //TODO llevar el codigo de pedido generado con el random como matrimonio obligado por todas las activities hasta el gestionar pedido
-        Log.d("DEBUG", "pedido a modificar "+modificarPedidoId);
-        if(modificarPedidoId != null){
+        if(modificarPedidoId == null){
+            Log.d("DEBUG", "Pedido Nuevo");
+        }else{
+            Log.d("DEBUG", "Modificar Pedido "+modificarPedidoId);
             final ArrayList<Producto> productos1=productos;
             //Pedido Id
             final ParseQuery pedido = new ParseQuery("Pedido");
@@ -190,6 +192,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 }
             });
         }
+
 		adapterCarrito = new BannerProductoCarrito(this, carrito);
 		menuRight = (RelativeLayout) getMenuRight();
 		if(menuRight != null) {
@@ -217,7 +220,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 							
 							dispatchActivity(GestionPedidosActivity.class, bundle, false);
 						}else{
-							Toast.makeText(getApplicationContext(), "Debe agregar elementos en el carrito", Toast.LENGTH_LONG).show();
+							Toast.makeText(getApplicationContext(), getString(R.string.warning_agregar_elementos_carrito), Toast.LENGTH_LONG).show();
 						}
 					}
 				});
@@ -302,6 +305,24 @@ public class CatalogoActivity extends ParentMenuActivity {
         return  null;
 	}
 
+    public static void updatePreciosComerciales(){
+        Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
+        Double precio = 0.0;
+        for(Producto prod: catalogoProductos){
+            precio = prod.getPrecio();
+            prod.setPrecioComercial(precio - (precio * descCliente));
+        }
+        adapterCarrito.notifyDataSetChanged();
+        adapterCatalogo.notifyDataSetChanged();
+    }
+
+    public void updatePreciosComerciales(int i){
+        Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
+        Producto prod = catalogoProductos.get(i);
+        Double precio = prod.getPrecio();
+        prod.setPrecioComercial(precio -(precio*descCliente));
+    }
+
     /** Proceso que establece el valor del descuento manual para el producto seleccionado*/
     public void setValorDescuentoManual(final Producto producto){
         final Context oThis = this;
@@ -345,12 +366,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 	@Override
 	protected Request getRequestAction() {
-		// TODO Crear consulta a la data del Dashboard.
-		
 		Request req = new Request(Request.PARSE_REQUEST);
 		ParseQuery query = new ParseQuery("Producto");
-		query.include("marca");
-		
+        query.include("categoria");
 		req.setRequest(query);
 		
 		return req;

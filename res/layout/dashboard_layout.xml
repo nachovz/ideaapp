@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dashboard_relative_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/dashboard_info"
@@ -24,7 +24,7 @@
                         android:id="@+id/metasTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Metas"
+                        android:text="@string/metas"
                         android:textSize="30dp"
                         android:textColor="#ffffff"
                         android:textStyle="bold|italic"
@@ -40,9 +40,10 @@
                         android:textStyle="bold|italic"
                         android:layout_width="200dp"
                         android:layout_height="fill_parent"
-                        android:layout_gravity="center"
+                        android:layout_gravity="right"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/metasTextView"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="110dp"
                         />
             </RelativeLayout>
 
@@ -50,13 +51,13 @@
                     android:id="@+id/metas_scroll_view"
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
-                    android:layout_below="@+id/metas_spinner">
+                    >
 
                 <TableLayout
                         android:id="@+id/meta_list_elements"
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
+                        android:layout_height="wrap_content"
                         android:padding="25dp"
                         android:focusableInTouchMode="true"
                         android:focusable="false">
@@ -115,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="60dp"
-                android:text="Pedidos"
+                android:text="@string/pedidos_banner_text"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -132,11 +133,11 @@
 
         <Button
             android:id="@+id/cliente_nuevo_pedido_boton"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="65dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/cliente_relative_layout"
-            android:text="Nuevo Pedido"
+            android:text="@string/nuevo_pedido_button_text"
             android:textSize="20dp"
             android:onClick="createNewPedido" />
 
@@ -149,7 +150,7 @@
             <LinearLayout
                 android:id="@+id/client_list_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
             </LinearLayout>
         </ScrollView>

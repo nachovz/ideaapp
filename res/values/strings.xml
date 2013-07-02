@@ -16,6 +16,7 @@
 
     <string name="codigo">Codigo</string>
     <string name="meta">Meta</string>
+    <string name="metas">Metas</string>
     <string name="pedidos">Pedidos</string>
 
     <!--GestionPedido-->
@@ -25,16 +26,23 @@
     <string name="numeroOrdenCompra">Orden de compra #</string>
     <string name="direccionEnvio">Dirección de Envío</string>
     <string name="producto">Producto</string>
-    <string name="cantidad">Cantidad</string>
-    <string name="precioUnitario">Precio Unitario</string>
+    <string name="cantidad">Cant.</string>
+    <string name="precioUnitario">P. Unitario</string>
     <string name="precioTotal">Precio Total</string>
-    <string name="subtotal">Subtotal</string>
-    <string name="descComercial">Desc. Comercial</string>
-    <string name="flete">Flete</string>
-    <string name="misc">Miscelaneos</string>
-    <string name="impuesto">Impuesto</string>
+    <string name="subtotal">Subtotal</string><string name="impuesto">Impuesto</string>
     <string name="total">TOTAL</string>
     <string name="botonPedido">Finalizar Pedido</string>
     <string name="pedidoCompletado">Pedido Completado exitosamente</string>
+    <string name="descuentoVolumen">Desc.</string>
+    <string name="observaciones">Observaciones</string>
+    <string name="precioDescComercial">P. Comercial</string>
+    <string name="observaciones_hint">Agregue observaciones sobre el pedido aqui</string>
+    <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
+    <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
+    <string name="pedidos_banner_text">Pedidos</string>
+    <string name="existencia">Existencia: </string>
+    <string name="agregar_descuento">Agregar Descuento</string>
+    <string name="nombre_producto">Nombre del Producto:</string>
+    <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
 
 </resources>

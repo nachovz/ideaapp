@@ -75,7 +75,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 
 			textView = (TextView) view.findViewById(R.id.banner_carrito_total_text_view);
 			if(textView != null) {
-				textView.setText(producto.getStringPrecioTotal());
+				textView.setText(producto.getStringPrecioComercialTotal());
 			}
 			
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_mas_image_view);
@@ -114,6 +114,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					Producto producto;
 					
 					producto = (Producto) getItem(position);
+                    producto.setCantidad(1);
 					catalogoActivity = (CatalogoActivity) menuActivity;
 					catalogoActivity.adapterCatalogo.removeProductoFlagCarrito(producto);
 					catalogoActivity.adapterCatalogo.notifyDataSetChanged();
@@ -130,15 +131,25 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 				textView.setText(producto.getNombre());
 			}
 			
-			if(producto.getStringPrecio() != null) {
+			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_precio_text_view);
-				textView.setText(producto.getStringPrecio());
+				textView.setText(producto.getStringPrecioComercial());
 			}
 			
 			if(producto.getImagen() != null) {
 				imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
 				imageView.setImageBitmap(producto.getImagen());
 			}
+
+            if(producto.getDescuentoAplicado() !=0.0){
+                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
+                rlDesc.setVisibility(View.VISIBLE);
+                TextView porcDescTextView = (TextView) view.findViewById(R.id.descuento_textView);
+                porcDescTextView.setText(producto.getDescuentoAplicadoPorcString());
+            }else{
+                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
+                rlDesc.setVisibility(View.INVISIBLE);
+            }
 		}
 		return view;
 	}

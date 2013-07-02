@@ -38,7 +38,7 @@
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="7dp"
 	            android:layout_marginTop="10dp"
-	            android:text="Nombre del Producto."
+	            android:text="@string/nombre_producto"
 	            android:textColor="#ffffff"
 	            android:textSize="16sp"
 	            android:textStyle="bold|italic"/>
@@ -68,7 +68,6 @@
 	            android:layout_centerInParent="true"
 	            android:layout_marginBottom="32dp"
 	            android:layout_marginLeft="50dp"
-	            android:text="999.999 Bs."
 	            android:textColor="#ffffff"
 	            android:textSize="16sp"
 	            android:textStyle="bold|italic"/>
@@ -101,17 +100,17 @@
 	            android:layout_height="40dp"
 	            android:background="@drawable/menu_producto_selector"
 	            android:gravity="center_vertical|center_horizontal"
-	            android:text="Agregar Descuento"
+	            android:text="@string/agregar_descuento"
 	            android:textColor="#646464"
 	            android:textStyle="bold|italic" />
 
 	        <TextView
-	            android:id="@+id/banner_producto_menu_item_excedentes"
+	            android:id="@+id/banner_producto_menu_item_existencia"
 	            android:layout_width="fill_parent"
 	            android:layout_height="40dp"
 	            android:background="@drawable/menu_producto_selector"
 	            android:gravity="center_vertical|center_horizontal"
-	            android:text="Excedentes: "
+	            android:text="@string/existencia"
 	            android:textColor="#646464"
 	            android:textStyle="bold|italic" />
 	

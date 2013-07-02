@@ -5,11 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Cliente;
@@ -22,15 +18,17 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.grupoidea.ideaapp.activities.CatalogoActivity.*;
+
 public abstract class ParentMenuActivity extends ParentActivity {
 	private TextView menuTituloTextView; 
 	private ImageView logOff;
 	private ImageView menuIcon;
 	private ImageView carrito;
 	protected Spinner clienteSpinner;
-    protected int clienteSelected;
+    public static int clienteSelected;
     protected ArrayAdapter<String> adapter;
-    protected ArrayList<Cliente> clientes;
+    public static ArrayList<Cliente> clientes;
 	private RelativeLayout frontLayout;
 	
 	private ViewGroup menuRight;
@@ -89,13 +87,21 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 
-////        //Poblar Spinner de Clientes e inflar
+        //Poblar Spinner de Clientes e inflar
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         clienteSpinner.setEnabled(false);
         clienteSpinner.setVisibility(View.INVISIBLE);
-//        adapter = getClientesFromParse();
-//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//		clienteSpinner.setAdapter(adapter);
+        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clienteSelected=i;
+                Log.d("DEBUG", "Cliente seleccionado: "+i);
+                CatalogoActivity.updatePreciosComerciales();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
 
         frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 
@@ -218,8 +224,6 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	protected void setMenuTittle(String titulo) {
 		if(menuTituloTextView != null && titulo != null) {
 			menuTituloTextView.setText(titulo);
-//			clienteSpinner.setEnabled(false);
-//			clienteSpinner.setVisibility(View.INVISIBLE);
 		}
 	}
 	

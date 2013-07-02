@@ -30,8 +30,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     protected Context mContext;
     protected JSONArray productosJSON;
     protected double subtotal, desc, flete, misc, imp, total;
-    protected DecimalFormat df = new DecimalFormat("#.##");
-    protected String denom, direccion;
+    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
+    protected String denom, direccion, observaciones;
     protected ParseUser vendedor;
     protected Cliente cliente;
     /** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
@@ -81,85 +81,101 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             //Subtotal
                 subtotal = getSubtotal();
                 text = (TextView) findViewById(R.id.subtotal_edit);
-                text.setText(df.format(subtotal)+denom);
+                text.setText(df.format(subtotal)+" "+denom);
 
-            //Descuento Comercial
-                desc=cliente.getDescuento()/100.0;
-                Log.d("DEBUG", desc+"");
-                desc = subtotal *desc;
-                text = (TextView) findViewById(R.id.desc_comercial_edit);
-                text.setText(df.format(desc)+denom);
-            //Flete
-                //TODO convertir a funcion
-                flete = 0.0;
-                text = (TextView) findViewById(R.id.flete_edit);
-                text.setText(df.format(flete)+denom);
-            //Miscelaneos
-                //TODO convertir a funcion
-                misc = 0.0;
-                text = (TextView) findViewById(R.id.misc_edit);
-                text.setText(df.format(misc)+denom);
             //Impuesto
                 //TODO convertir a funcion
-                imp=0.0;
+                imp=subtotal*0.14;
                 text = (TextView) findViewById(R.id.impuesto_edit);
-                text.setText(df.format(imp)+denom);
+                text.setText(df.format(imp)+" "+denom);
 
             //Total
-                total=subtotal-desc; //TODO + impuestos flete y eso
+                total=subtotal+imp;
                 text = (TextView) findViewById(R.id.total_edit);
-                text.setText(df.format(total)+denom);
+                text.setText(df.format(total)+" "+denom);
 
             //llenar tablerow con productos
             TableLayout tl = (TableLayout)findViewById(R.id.listado_productos_pedido_table);
             TableRow tr;
-            TextView t1,t2,t3,t4;
+            TextView nombreTextView,cantidadTextView,precioTextView, precioComercialTextView,descuentoTextView, precioFinalTextView;
             LayoutInflater inflater = this.getLayoutInflater();
             Boolean darkBackground = true;
             TableRow.LayoutParams params;
+            String descProd;
 
             for(int i=0, size=productos.size(); i<size; i++){
                 Producto prod = productos.get(i);
                 tr = new TableRow(this);
                 tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                t1= new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.35"));
-                t1.setLayoutParams(params);
-                t1.setTextColor(Color.parseColor("#262626"));
-                t1.setPadding(18,18,18,18);
-                t1.setText(prod.getNombre());
-                tr.addView(t1);
-                if(darkBackground) t1.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                nombreTextView= new TextView(this);
+                //Nombre
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                nombreTextView.setLayoutParams(params);
+                nombreTextView.setTextColor(Color.parseColor("#262626"));
+                nombreTextView.setPadding(18, 18, 18, 18);
+                nombreTextView.setText(prod.getNombre());
+                tr.addView(nombreTextView);
+                if(darkBackground) nombreTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else nombreTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
 
-                t2 = new TextView(this);
+                //Cantidad
+                cantidadTextView = new TextView(this);
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                cantidadTextView.setLayoutParams(params);
+                cantidadTextView.setTextColor(Color.parseColor("#262626"));
+                cantidadTextView.setPadding(18, 18, 18, 18);
+                cantidadTextView.setText(String.valueOf(prod.getCantidad()));
+                tr.addView(cantidadTextView);
+                if(darkBackground) cantidadTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else cantidadTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+                //Precio Lista
+                precioTextView = new TextView(this);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
-                t2.setLayoutParams(params);
-                t2.setTextColor(Color.parseColor("#262626"));
-                t2.setPadding(18,18,18,18);
-                t2.setText(String.valueOf(prod.getCantidad()));
-                tr.addView(t2);
-                if(darkBackground) t2.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                precioTextView.setLayoutParams(params);
+                precioTextView.setTextColor(Color.parseColor("#262626"));
+                precioTextView.setPadding(18, 18, 18, 18);
+                precioTextView.setText(prod.getStringPrecio());
+                tr.addView(precioTextView);
+                if(darkBackground) precioTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else precioTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
 
-                t3 = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
-                t3.setLayoutParams(params);
-                t3.setTextColor(Color.parseColor("#262626"));
-                t3.setPadding(18, 18, 18, 18);
-                t3.setText(prod.getStringPrecio());
-                tr.addView(t3);
-                if(darkBackground) t3.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                //Precio con Desc Comercial
+                precioComercialTextView = new TextView(this);
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                precioComercialTextView.setLayoutParams(params);
+                precioComercialTextView.setTextColor(Color.parseColor("#262626"));
+                precioComercialTextView.setPadding(18, 18, 18, 18);
+                precioComercialTextView.setText(prod.getStringPrecioComercial());
+                tr.addView(precioComercialTextView);
+                if(darkBackground) precioComercialTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else precioComercialTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
 
-                t4 = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
-                t4.setLayoutParams(params);
-                t4.setTextColor(Color.parseColor("#262626"));
-                t4.setPadding(18, 18, 18, 18);
-                t4.setText(prod.getStringPrecioTotal());
-                tr.addView(t4);
-                if(darkBackground) t4.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                //Descuento por Volumen
+                descuentoTextView = new TextView(this);
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                descuentoTextView.setLayoutParams(params);
+                descuentoTextView.setTextColor(Color.parseColor("#262626"));
+                descuentoTextView.setPadding(18, 18, 18, 18);
+                descProd= df.format(prod.getPrecioComercial() * prod.getDescuentoAplicado());
+                descuentoTextView.setText(descProd+" ("+prod.getDescuentoAplicadoPorcString()+")");
+                tr.addView(descuentoTextView);
+                if(darkBackground) descuentoTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else descuentoTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+                //Precio Final
+                precioFinalTextView = new TextView(this);
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                precioFinalTextView.setLayoutParams(params);
+                precioFinalTextView.setTextColor(Color.parseColor("#262626"));
+                precioFinalTextView.setPadding(18, 18, 18, 18);
+                precioFinalTextView.setText(prod.getStringPrecioComercialTotal());
+                tr.addView(precioFinalTextView);
+                if(darkBackground) precioFinalTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else precioFinalTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
 
                 //Añadir a TableLayout de productos
-                tl.addView(tr, tl.getChildCount() - 1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                tl.addView(tr, tl.getChildCount(), new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
                 darkBackground=!darkBackground;
             }
 
@@ -182,6 +198,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         EditText direccionET = (EditText) findViewById(R.id.direccion_envio_edit);
         direccion = ""+String.valueOf(direccionET.getText());
 
+        EditText obs = (EditText) findViewById(R.id.obs_editText);
+        observaciones = ""+String.valueOf(obs.getText());
+
         //Cliente
         Log.d("DEBUG", "Pidiendo Cliente");
         final ParseQuery clienteParseQuery = new ParseQuery("Cliente");
@@ -201,7 +220,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 pedidoParse.put("direccion", direccion);
                 pedidoParse.put("estado", 0);
                 pedidoParse.put("num_pedido", numPedido);
-                pedidoParse.saveInBackground(new SaveCallback() {
+                pedidoParse.put("comentario", observaciones);
+//                pedidoParse.saveInBackground(new SaveCallback() {
+                pedidoParse.saveEventually(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         for (final Producto prod : productos) {
@@ -216,10 +237,12 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     Log.d("DEBUG", "Agregando a PedidoHasProducto");
                                     final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
                                     pedidoHasProductos.put("cantidad", prod.getCantidad());
-                                    pedidoHasProductos.put("descuento", prod.getDescuentoManual());
+                                    Log.d("DEBUG", "descuento aplicado: "+prod.getDescuentoAplicadoString());
+                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado()*100.0);
                                     pedidoHasProductos.put("pedido", pedidoParse);
                                     pedidoHasProductos.put("producto", productoParse);
-                                    pedidoHasProductos.saveInBackground(new SaveCallback() {
+//                                    pedidoHasProductos.saveInBackground(new SaveCallback() {
+                                    pedidoHasProductos.saveEventually(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e != null) e.printStackTrace();
@@ -240,7 +263,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     public Double getSubtotal(){
         Double sub=0.0;
         for(Producto prod:productos){
-            sub += prod.getPrecioTotal();
+            sub += prod.getPrecioComercialTotal();
         }
         return sub;
     }

@@ -48,6 +48,27 @@
         </RelativeLayout>
 
         <RelativeLayout
+                android:id="@+id/banner_carrito_descuento_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/pedidos_bkg_descuento">
+            <TextView
+                android:id="@+id/descuento_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="32dp"
+                android:layout_marginLeft="50dp"
+                android:text="99%"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold|italic"/>
+        </RelativeLayout>
+        <RelativeLayout
             android:id="@+id/banner_carrito_precio_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

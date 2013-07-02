@@ -27,16 +27,18 @@ public class Producto {
 	private static String denominacion;
 	/** Numero con el precio unitario del producto.*/
 	private double precio;
+    /** Precio del producto con descuento comercial del cliente*/
+    private double precioComercial;
 	/** Mapa de bits con la representaci�n visual del producto.*/
 	private Bitmap imagen;
 	/** String que representa el c�digo del producto para IDEA */
 	private String codigo;
-	/** Identificador de marca para obtener los descuentos desde parse */
-	private String idMarca;
+	/** Identificador de categoria para obtener los descuentos desde parse */
+	private String idCategoria;
 	/** Nombre de la marca del producto */
-	private String nombreMarca;
+	private String marca;
 	/** Clase dentro de la marca del producto */
-	private String claseMarca;
+	private String categoria;
 
     /** Objeto tipo ParseRelation para obtener los descuentos del producto */
 	private ParseRelation descuentosQuery;
@@ -49,14 +51,16 @@ public class Producto {
     private int existencia;
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
-	/** Double que representa el descuentoManual aplicado al producto (manualmente) */
+	/** Double que representa el descuentoManual aplicado al producto (manualmente)*/
 	private double descuentoManual;
-    protected static DecimalFormat df = new DecimalFormat("#.##");
+    /** Double que representa el descuento aplicado al producto segun cantidad y categoria*/
+    private double descuentoAplicado;
 
     /** Boolean que permite determinar si el menu del producto es visible al usuario*/
 	private Boolean isMenuOpen;
 	/** Boolean que permite determinar si el producto esta en el carrito*/
 	private Boolean isInCarrito;
+    public static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
 	/** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
 	 *  @param id Entero que contiene el identificador unico del producto
@@ -86,11 +90,13 @@ public class Producto {
 		this.id = id;
 		this.nombre = nombre;
 		this.precio = precio;
+        this.precioComercial = precio;
 		this.denominacion = denominacion;
 		this.imagen = imagen;
 		this.codigo = codigo;
 		this.cantidad = 1;
         this.descuentoManual = 0.0;
+        this.descuentoAplicado = 0.0;
 		this.isInCarrito = false;
 		this.tablaDescuentos = new SparseArray<Double>();
 	}
@@ -181,28 +187,28 @@ public class Producto {
 		this.isInCarrito = isInCarrito;
 	}
 
-	public String getIdMarca() {
-		return idMarca;
+	public String getIdCategoria() {
+		return idCategoria;
 	}
 
-	public void setIdMarca(String idMarca) {
-		this.idMarca = idMarca;
+	public void setIdCategoria(String idCategoria) {
+		this.idCategoria = idCategoria;
 	}
 
-	public String getNombreMarca() {
-		return nombreMarca;
+	public String getMarca() {
+		return marca;
 	}
 
-	public void setNombreMarca(String nombreMarca) {
-		this.nombreMarca = nombreMarca;
+	public void setMarca(String marca) {
+		this.marca = marca;
 	}
 
-	public String getClaseMarca() {
-		return claseMarca;
+	public String getCategoria() {
+		return categoria;
 	}
 
-	public void setClaseMarca(String claseMarca) {
-		this.claseMarca = claseMarca;
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
 		//setDescuentosFromParse();
 	}
 
@@ -217,13 +223,34 @@ public class Producto {
 	public String getStringPrecioTotal() {
 		return precioDenominacionToString(getPrecioTotal());
 	}
+
+    /** Permite calcular el precio comercial de los productos del mismo tipo.*/
+    public double getPrecioComercialTotal() {
+        double precioTotal, desc= 1.0 - getDescuentoAplicado();
+        precioTotal = cantidad * precioComercial * desc;
+        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precioComercial)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
+        return precioTotal;
+    }
+    /** Permite construir el string del precio comercial total concatenandole al precio la denominacion*/
+    public String getStringPrecioComercialTotal() {
+        return precioDenominacionToString(getPrecioComercialTotal());
+    }
+
+    /** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
+    public String getStringPrecioComercial() {
+        return precioDenominacionToString(getPrecioComercial());
+    }
+
 	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
 		return precioDenominacionToString(getPrecio());
 	}
 	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
 	public void addCantidad() {
-		this.cantidad++;
+		if(cantidad < existencia){
+            this.cantidad++;
+            setDescuentoAplicado(calcularDescuentoAplicado());
+        }
 	}
 	
 	/** Permite disminuir un item a la cantidad de productos del mismo tipo*/
@@ -231,19 +258,20 @@ public class Producto {
 		if(cantidad-- == 0) {
 			this.cantidad = 0;
 		}
+        setDescuentoAplicado(calcularDescuentoAplicado());
 	}
 
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
 	public static String precioDenominacionToString(double precio) {
-		StringBuffer stringBuffer;
-		String strValue = null;
-        strValue = df.format(precio);
-
-		stringBuffer = new StringBuffer(strValue).append(" ").append(denominacion);
-		if(stringBuffer != null) {
-			strValue = stringBuffer.toString();
-		}
-		return strValue;
+//		StringBuffer stringBuffer;
+//		String strValue = null;
+//        strValue = df.format(precio);
+//		stringBuffer = new StringBuffer(strValue).append(" ").append(denominacion);
+//		if(stringBuffer != null) {
+//			strValue = stringBuffer.toString();
+//		}
+//		return strValue;
+        return ""+df.format(precio)+" "+denominacion;
 	}
 	/** Convierte el objeto producto en JSONObject 
 	 * @throws JSONException */
@@ -253,11 +281,13 @@ public class Producto {
 		productoJSON.put("nombre", getNombre());
 		productoJSON.put("id", getId());
 		productoJSON.put("codigo", getCodigo());
-		productoJSON.put("precio", getPrecio());
+        productoJSON.put("precio", getPrecio());
+        productoJSON.put("precioComercial", getPrecioComercial());
 		productoJSON.put("cantidad", getCantidad());
-		productoJSON.put("total", getPrecioTotal());
-		productoJSON.put("descuentoManual", getDescuentoManual());
-		
+		productoJSON.put("totalComercial", getPrecioComercialTotal());
+        productoJSON.put("descuentoManual", getDescuentoManual());
+        productoJSON.put("descuentoAplicado", getDescuentoAplicado());
+
 		return productoJSON;
 	}
 
@@ -269,7 +299,9 @@ public class Producto {
             Producto producto = new Producto(id, nombre, precio, "Bs.");
             producto.setCodigo(json.getString("codigo"));
             producto.setCantidad(json.getInt("cantidad"));
+            producto.setPrecioComercial(json.getDouble("precioComercial"));
             producto.setDescuentoManual(json.getDouble("descuentoManual"));
+            producto.setDescuentoAplicado(json.getDouble("descuentoAplicado"));
 
             return producto;
         }catch(JSONException e){
@@ -281,12 +313,12 @@ public class Producto {
 		tablaDescuentos.append(c, d);
 	}
 	
-	public double getDescuentoAplicado(){
-        if(descuentoManual ==0){
+	public double calcularDescuentoAplicado(){
+        if(descuentoManual == 0.0){
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
-                if( key <= cantidad){
+                if( key != 0 && key<= cantidad){
                     return tablaDescuentos.valueAt(i)/100.0;
                 }
             }
@@ -295,13 +327,17 @@ public class Producto {
         }
         return 0.0;
 	}
+
+    public String getDescuentoAplicadoString(){
+        return df.format(getDescuentoAplicado() * 100.0);
+    }
 	
 	public int getCountDescuentos(){
         return tablaDescuentos.size();
 	}
 	
 	public String getStringDescuentoAt(int index){
-		String texto = ">"+tablaDescuentos.keyAt(index)+" : "+tablaDescuentos.valueAt(index)+"%";
+		String texto = ">"+(tablaDescuentos.keyAt(index)-1)+" : "+tablaDescuentos.valueAt(index)+"%";
 		return texto;
 	}
 
@@ -318,35 +354,6 @@ public class Producto {
     }
 
 	public void setDescuentosFromParse() {
-        tablaDescuentos.clear();
-//        final ParseQuery query = new ParseQuery("Marca");
-//        query.findInBackground(new FindCallback() {
-//            public void done(List<ParseObject> marcas, ParseException e) {
-//                if(e == null && marcas != null){
-//                    Log.d("DEBUG", "Marcas obtenidas: "+String.valueOf(marcas.size()));
-//                    for (ParseObject marcaObj : marcas) {
-//                        ParseQuery descuentosQuery = marcaObj.getRelation("descuentos").getQuery();
-//                        descuentosQuery.findInBackground(new FindCallback() {
-//                            public void done(List<ParseObject> descuentos, ParseException e) {
-//                                if(e == null && descuentos != null){
-//                                    Log.d("DEBUG", "Descuentos recuperados para este producto: "+descuentos.size());
-//                                    int pos=0;
-//                                    for(ParseObject descuentoManual: descuentos){
-//                                        tablaDescuentos.append(descuentoManual.getInt("cantidad"),descuentoManual.getDouble("porcentaje"));
-//                                        pos = tablaDescuentos.size()-1;
-//                                        Log.d("DEBUG","cant:"+tablaDescuentos.keyAt(pos)+" %:"+tablaDescuentos.valueAt(pos));
-//                                    }
-//                                }else{
-//                                    Log.d("DEBUG", "No se recuperaron descuentos para este producto");
-//                                }
-//                            }
-//                            });
-//                    }
-//                }else{
-//                    Log.d("DEBUG", "result: null");
-//                }
-//            }
-//        });
     }
 
 	public ParseRelation getDescuentosQuery() {
@@ -363,5 +370,30 @@ public class Producto {
 
     public void setProductoParse(ParseObject productoParse) {
         this.productoParse = productoParse;
+    }
+
+    /** Double que representa el descuento aplicado al producto por cantidad**/
+    public double getDescuentoAplicado() {
+        if(descuentoManual == 0){
+            return descuentoAplicado;
+        }else{
+            return descuentoManual;
+        }
+    }
+
+    public String getDescuentoAplicadoPorcString(){
+        return ""+df.format(getDescuentoAplicado() * 100.0)+"%";
+    }
+
+    public void setDescuentoAplicado(double descuentoAplicado) {
+        this.descuentoAplicado = descuentoAplicado;
+    }
+
+    public double getPrecioComercial() {
+        return precioComercial;
+    }
+
+    public void setPrecioComercial(double precioComercial) {
+        this.precioComercial = precioComercial;
     }
 }

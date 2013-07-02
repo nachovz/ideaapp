@@ -1,13 +1,10 @@
 package com.grupoidea.ideaapp.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
@@ -17,7 +14,6 @@ import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
-import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -73,6 +69,7 @@ public class DashboardActivity extends ParentMenuActivity {
         ParseQuery queryPedidos = new ParseQuery("Pedido");
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
+        queryPedidos.orderByDescending("createdAt");
         queryPedidos.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
@@ -98,7 +95,7 @@ public class DashboardActivity extends ParentMenuActivity {
         //Carga de metas
         ParseQuery query = new ParseQuery("Metas");
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
-        query.include("producto.marca");
+        query.include("producto");
         query.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
@@ -114,8 +111,8 @@ public class DashboardActivity extends ParentMenuActivity {
                         String codigo = parseObject.getParseObject("producto").getString("codigo");
 
                         producto = new Producto(producto1, null, codigo, 0.0);
-                        String marca = parseObject.getParseObject("producto").getParseObject("marca").getString("nombre");
-                        producto.setNombreMarca(marca);
+                        String marca = parseObject.getParseObject("producto").getString("marca");
+                        producto.setMarca(marca);
                         marcas.add(marca);
 
                         meta.setProducto(producto);
@@ -148,7 +145,7 @@ public class DashboardActivity extends ParentMenuActivity {
                             }
 
                             for (Meta meta:metas){
-                                if (meta.getProducto().getNombreMarca().equalsIgnoreCase(lista.get(position))){
+                                if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
                                     //Crear TableRow nuevo
                                     TableRow.LayoutParams params;
                                     tr = new TableRow(mContext);

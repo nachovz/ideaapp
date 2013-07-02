@@ -1,9 +1,11 @@
 package com.grupoidea.ideaapp.models;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Carrito {
 	private ArrayList<Producto> productos;
+    public DecimalFormat df = new DecimalFormat("###,###,##0.##");
 	
 	/** Constructor por defecto, permite instanciar el listado de productos.*/
 	public Carrito() {
@@ -24,7 +26,7 @@ public class Carrito {
 		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			totalValue += productoActual.getPrecioTotal();
+			totalValue += productoActual.getPrecioComercialTotal();
 		}
 		return totalValue;
 	}
@@ -35,8 +37,8 @@ public class Carrito {
 		double totalValue;
 		
 		totalValue = calcularTotalValue(); 
-		total = new StringBuffer(String.valueOf(totalValue)).append(" Bs.").toString();
-		return total;
+		return ""+df.format(totalValue)+" Bs.";
+//		return total;
 	}
 	
 	/** Permite determinar el indice de un producto si se encuentra actualmente en el listado de productos

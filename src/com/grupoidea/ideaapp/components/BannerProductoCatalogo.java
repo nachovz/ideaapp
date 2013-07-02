@@ -99,7 +99,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		ImageView imageView;
 		RelativeLayout relativeLayout;
 		LayoutInflater inflater;
-		
+
 		producto = (Producto) getItem(position);
 
         //View previo no existe
@@ -116,9 +116,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				textView.setText(producto.getNombre());
 			}
 			
-			if(producto.getStringPrecio() != null) {
+			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_precio_text_view);
-				textView.setText(producto.getStringPrecio());
+				textView.setText(producto.getStringPrecioComercial());
 			}
 			
 			if(producto.getIsInCarrito()) {
@@ -236,12 +236,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 }
             });
 
-            //Actualizar Excedentes
+            //Actualizar Existencia
             TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
             if (exced == null) {
                 throw new AssertionError();
             }
-            exced.setText(menuActivity.getText(R.string.excedentes)+String.valueOf(producto.getExistencia()));
+            exced.setText(menuActivity.getText(R.string.existencia)+" "+String.valueOf(producto.getExistencia()));
 
             // Listar descuentos en el menu de producto
             ArrayList<String> menu_prod = producto.getDescuentosString();
