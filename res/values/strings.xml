@@ -44,5 +44,6 @@
     <string name="agregar_descuento">Agregar Descuento</string>
     <string name="nombre_producto">Nombre del Producto:</string>
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
+    <string name="facturado">Facturado</string>
 
 </resources>

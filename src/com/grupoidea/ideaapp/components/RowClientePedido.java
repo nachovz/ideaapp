@@ -3,17 +3,13 @@ package com.grupoidea.ideaapp.components;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
@@ -110,7 +106,21 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTypeface(null, Typeface.BOLD_ITALIC);
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        textView.setBackgroundResource(R.drawable.client_img_pastilla);
+
+        switch (estado) {
+            case Pedido.ESTADO_VERIFICANDO:
+                textView.setBackgroundResource(R.drawable.pastillaverificando);
+                break;
+            case Pedido.ESTADO_APROBADO:
+                textView.setBackgroundResource(R.drawable.pastillaaprobado);
+                break;
+            case Pedido.ESTADO_RECHAZADO:
+                textView.setBackgroundResource(R.drawable.pastillarechazado);
+                break;
+            default:
+                textView.setBackgroundResource(R.drawable.pastillaerror);
+                break;
+        }
 	    
 		return textView;
 	}

@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" >
 
-        <LinearLayout
+        <RelativeLayout
                 android:orientation="vertical"
                 android:id="@+id/metas_layout"
                 android:layout_width="fill_parent"
@@ -19,7 +19,9 @@
             <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="58dp"
-                    android:background="#ADADAD">
+                    android:background="#ADADAD"
+                    android:id="@+id/header_metas"
+                    android:layout_alignParentTop="true">
                 <TextView
                         android:id="@+id/metasTextView"
                         android:layout_width="wrap_content"
@@ -49,16 +51,18 @@
 
             <ScrollView
                     android:id="@+id/metas_scroll_view"
-                    android:layout_width="match_parent"
+                    android:layout_width="600dp"
                     android:layout_height="350dp"
-                    >
+                    android:layout_below="@+id/header_metas"
+                    android:layout_alignRight="@+id/header_metas"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginRight="25dp">
 
                 <TableLayout
                         android:id="@+id/meta_list_elements"
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:padding="25dp"
                         android:focusableInTouchMode="true"
                         android:focusable="false">
                     <TableRow>
@@ -86,22 +90,62 @@
                                 android:padding="18dip"
                                 android:layout_weight="0.2"
                                 style="@style/encabezado"/>
+                        <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/facturado"
+                                android:layout_span="1"
+                                android:padding="18dip"
+                                android:layout_weight="0.2"
+                                style="@style/encabezado"/>
                     </TableRow>
                 </TableLayout>
             </ScrollView>
 
-        </LinearLayout>
+            <RelativeLayout
+                    android:id="@+id/metas_gauge"
+                    android:layout_height="wrap_content"
+                    android:layout_width="350dp"
+                    android:layout_toLeftOf="@+id/metas_scroll_view"
+                    android:layout_below="@+id/header_metas"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/metas_gauge_background">
+                <TextView
+                    android:id="@+id/metas_actual_textView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Actual: 100.000"
+                    android:textSize="18sp"
+                    android:layout_alignParentTop="false"
+                        />
+                <TextView
+                    android:id="@+id/metas_total_textView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Meta: 150.000"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/metas_actual_textView"/>
+                <TextView
+                    android:id="@+id/metas_restante_textView"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Restan:50.000"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/metas_total_textView"/>
+                <ProgressBar
+                        android:id="@+id/metas_progressbar"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="100"
+                        android:progress="50"
+                        android:layout_below="@+id/metas_restante_textView"/>
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/dashboard_resumen_text_view"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="Actual: 100.000 - Meta: 150.000 - Restan:50.000"
-            android:textSize="18sp"
-            android:layout_alignParentEnd="false"
-            android:layout_below="@+id/metas_layout"/>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/cliente_relative_layout"

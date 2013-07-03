@@ -2,6 +2,7 @@ package com.grupoidea.ideaapp.activities;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -93,6 +94,8 @@ public class DashboardActivity extends ParentMenuActivity {
 		}
 
         //Carga de metas
+        int acumMetas, totalMetas, restaMetas;
+
         ParseQuery query = new ParseQuery("Metas");
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
@@ -102,11 +105,13 @@ public class DashboardActivity extends ParentMenuActivity {
                 if(e == null){
                     Meta meta;
                     Producto producto;
+                    int acumM=0, total=0, resta=0;
 
                     for (ParseObject parseObject: parseObjects){
                         meta = new Meta();
-                        meta.setValorFinal(parseObject.getDouble("meta"));
-                        meta.setValorActual(parseObject.getDouble("pedido"));
+                        meta.setValorFinal(parseObject.getInt("meta"));
+                        meta.setValorActual(parseObject.getInt("facturado"));
+                        meta.setValorEspera(parseObject.getInt("pedido"));
                         String producto1 = parseObject.getParseObject("producto").getObjectId();
                         String codigo = parseObject.getParseObject("producto").getString("codigo");
 
@@ -117,8 +122,37 @@ public class DashboardActivity extends ParentMenuActivity {
 
                         meta.setProducto(producto);
                         metas.add(meta);
-                    }
 
+                        //Acumular metas y cosas
+                        acumM += meta.getValorActual();
+                        total += meta.getValorFinal();
+                    }
+                    resta=total-acumM;
+
+                    TextView metasTextView=(TextView)findViewById(R.id.metas_actual_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Actual: " + acumM);
+
+                    metasTextView=(TextView)findViewById(R.id.metas_total_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Meta: " + total);
+
+                    metasTextView=(TextView)findViewById(R.id.metas_restante_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Resta: " + resta);
+
+//                    ProgressBar metasProgress = (ProgressBar)findViewById(R.id.metas_gauge);
+//                    metasProgress.setMax(total);
+//                    metasProgress.setProgress(acumM);
                     //Spinner de marcas con metas
                     final ArrayList<String> lista = new ArrayList<String>(marcas);
 
@@ -133,7 +167,7 @@ public class DashboardActivity extends ParentMenuActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //                            LayoutInflater inflador;
-                            TextView tcod, tmeta, tpedido;
+                            TextView tcod, tmeta, tpedido, tfacturado;
 //                            LinearLayout scrollView = (LinearLayout)((Activity) mContext).findViewById(R.id.metas_scroll_view);
 //                            scrollView.removeAllViews();
 //                            inflador = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -181,9 +215,19 @@ public class DashboardActivity extends ParentMenuActivity {
                                     tpedido.setLayoutParams(params);
                                     tpedido.setTextColor(Color.parseColor("#262626"));
                                     tpedido.setPadding(18, 18, 18, 18);
-                                    tpedido.setText(String.valueOf(meta.getValorActual()));
+                                    tpedido.setText(String.valueOf(meta.getValorEspera()));
                                     tpedido.setGravity(Gravity.CENTER);
                                     tr.addView(tpedido);
+
+                                    //Crear y agregar TextView de Facturado a TableRow
+                                    tfacturado = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                                    tfacturado.setLayoutParams(params);
+                                    tfacturado.setTextColor(Color.parseColor("#262626"));
+                                    tfacturado.setPadding(18, 18, 18, 18);
+                                    tfacturado.setText(String.valueOf(meta.getValorActual()));
+                                    tfacturado.setGravity(Gravity.CENTER);
+                                    tr.addView(tfacturado);
 
                                     //Añadir a TableLayout de metas
                                     tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
@@ -162,9 +162,10 @@
         </TableLayout>
 
         <!--Listado de productos del pedido-->
+        <!--android:layout_height="450dp"-->
         <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="450dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/encabezado_pedido_table"
                 android:id="@+id/listado_productos_table_container"
                 android:layout_marginTop="35dp"
@@ -173,7 +174,6 @@
                     android:id="@+id/encabezado_listado_productos_pedido_table"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     >
                 <TableRow
                         android:id="@+id/row_productos">
@@ -232,14 +232,12 @@
                 android:id="@+id/scrollview_listado_productos_pedido_table"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                    android:layout_below="@id/encabezado_listado_productos_pedido_table">
+                android:layout_below="@id/encabezado_listado_productos_pedido_table">
 
                 <TableLayout
                     android:id="@+id/listado_productos_pedido_table"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                >
-
+                    android:layout_height="wrap_content">
                 </TableLayout>
             </ScrollView>
         </RelativeLayout>
@@ -259,11 +257,8 @@
                 android:text="@string/observaciones"
                 style="@style/encabezado"
                 android:textAlignment="center"
-                android:layout_span="1"
                 android:paddingBottom="20dp"
-                android:layout_gravity="left"
-
-                    />
+                android:layout_gravity="left"/>
             <EditText
                 android:id="@+id/obs_editText"
                 android:layout_height="wrap_content"
@@ -369,4 +364,4 @@
                 android:onClick="commitPedido" />
 
     </RelativeLayout>
-</RelativeLayout>
+</ScrollView>

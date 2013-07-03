@@ -201,7 +201,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         EditText obs = (EditText) findViewById(R.id.obs_editText);
         observaciones = ""+String.valueOf(obs.getText());
 
-        //Cliente
+        //Obtener Cliente de Parse
         Log.d("DEBUG", "Pidiendo Cliente");
         final ParseQuery clienteParseQuery = new ParseQuery("Cliente");
         clienteParseQuery.whereEqualTo("nombre", cliente.getNombre());
@@ -212,7 +212,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 numPedido = String.valueOf(56000 + rand.nextInt(10000));
                 Log.d("DEBUG", "numPedido: " + numPedido);
 
-                //Pedido
+                //Crear Pedido
                 Log.d("DEBUG", "Pidiendo Pedido");
                 final ParseObject pedidoParse = new ParseObject("Pedido");
                 pedidoParse.put("asesor", ParseUser.getCurrentUser());
@@ -221,12 +221,11 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 pedidoParse.put("estado", 0);
                 pedidoParse.put("num_pedido", numPedido);
                 pedidoParse.put("comentario", observaciones);
-//                pedidoParse.saveInBackground(new SaveCallback() {
                 pedidoParse.saveEventually(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         for (final Producto prod : productos) {
-                            //Producto
+                            //Obtener Productos de Parse
                             Log.d("DEBUG", "Pidiendo Producto");
                             ParseQuery productoParseQuery = new ParseQuery("Producto");
                             productoParseQuery.whereEqualTo("codigo", prod.getNombre()); //TODO FIX Getters y Setters
@@ -235,19 +234,19 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                 public void done(final ParseObject productoParse, ParseException e) {
                                     if (e != null) Log.d("DEBUG", e.getMessage());
                                     Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                                    //Agregar a PedidoHasProducto
                                     final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
                                     pedidoHasProductos.put("cantidad", prod.getCantidad());
-                                    Log.d("DEBUG", "descuento aplicado: "+prod.getDescuentoAplicadoString());
-                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado()*100.0);
+                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
+                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
                                     pedidoHasProductos.put("pedido", pedidoParse);
                                     pedidoHasProductos.put("producto", productoParse);
-//                                    pedidoHasProductos.saveInBackground(new SaveCallback() {
                                     pedidoHasProductos.saveEventually(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e != null) e.printStackTrace();
                                             Log.d("DEBUG", "Pedido: " + pedidoParse.getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-                                            Toast.makeText(mContext,R.string.pedidoCompletado,3000).show();
+                                            Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
                                             dispatchActivity(DashboardActivity.class, null, true);
                                         }
                                     });
@@ -258,6 +257,51 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 });
             }
         });
+
+        //Actualizar existencia en UserHasProducto
+        ParseQuery queryExistencia = new ParseQuery("UserHasProducto");
+        queryExistencia.include("producto");
+        queryExistencia.whereEqualTo("usuario", ParseUser.getCurrentUser());
+        queryExistencia.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> parseObjects, ParseException e) {
+                if(e==null){
+                    int existenciaParse;
+                    Producto producto;
+                    Log.d("DEBUG", "objetos recuperados UserHasProducto: "+parseObjects.size());
+                    for(ParseObject parseObject:parseObjects){
+                        existenciaParse = parseObject.getInt("cantidad");
+                        Log.d("DEBUG", "existenciaparse: "+existenciaParse);
+                        producto=getProductoByObjectId(parseObject.getParseObject("producto").getObjectId());
+                        if(producto != null){
+                            parseObject.put("cantidad", existenciaParse-producto.getCantidad());
+                            Log.d("DEBUG", "cantidad actualizada: "+(existenciaParse-producto.getCantidad()));
+                            parseObject.saveEventually(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e!=null)
+                                        Log.d("DEBUG", e.getMessage());
+                                }
+                            });
+                        }
+                    }
+                }else{
+                    Log.d("DEBUG", e.getCause()+e.getMessage());
+                }
+            }
+        });
+
+        //Actualizar campo pedido en Metas
+    }
+
+    public Producto getProductoByObjectId(String id){
+        for(Producto producto:productos){
+            Log.d("DEBUG", "id parse: "+id+" ipProd: "+producto.getId());
+            if(producto.getId().equals(id))
+                Log.d("DEBUG", "Found "+producto.getId());
+                return producto;
+        }
+        return null;
     }
 
     public Double getSubtotal(){

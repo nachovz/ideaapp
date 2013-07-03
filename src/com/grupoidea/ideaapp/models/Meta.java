@@ -5,6 +5,7 @@ public class Meta {
 	private double valorFinal;
 	private double valorActual;
 	private double valorRestante;
+    private double valorEspera;
     private Producto producto;
 
 	public double getValorFinal() {
@@ -30,5 +31,13 @@ public class Meta {
     }
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+
+    public double getValorEspera() {
+        return valorEspera;
+    }
+
+    public void setValorEspera(double valorEspera) {
+        this.valorEspera = valorEspera;
     }
 }
