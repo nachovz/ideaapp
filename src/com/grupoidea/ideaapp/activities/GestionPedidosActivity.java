@@ -258,35 +258,35 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             }
         });
 
-        //Actualizar existencia en UserHasProducto
-        ParseQuery queryExistencia = new ParseQuery("UserHasProducto");
-        queryExistencia.include("producto");
-        queryExistencia.whereEqualTo("usuario", ParseUser.getCurrentUser());
-        queryExistencia.findInBackground(new FindCallback() {
+        //Actualizar existencia en Metas
+        ParseQuery queryMetas = new ParseQuery("Metas");
+        queryMetas.include("producto");
+        queryMetas.whereEqualTo("usuario", ParseUser.getCurrentUser());
+        queryMetas.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
-                if(e==null){
+                if (e == null) {
                     int existenciaParse;
                     Producto producto;
-                    Log.d("DEBUG", "objetos recuperados UserHasProducto: "+parseObjects.size());
-                    for(ParseObject parseObject:parseObjects){
-                        existenciaParse = parseObject.getInt("cantidad");
-                        Log.d("DEBUG", "existenciaparse: "+existenciaParse);
-                        producto=getProductoByObjectId(parseObject.getParseObject("producto").getObjectId());
-                        if(producto != null){
-                            parseObject.put("cantidad", existenciaParse-producto.getCantidad());
-                            Log.d("DEBUG", "cantidad actualizada: "+(existenciaParse-producto.getCantidad()));
+                    Log.d("DEBUG", "objetos recuperados Metas: " + parseObjects.size());
+                    for (ParseObject parseObject : parseObjects) {
+                        existenciaParse = parseObject.getInt("pedido");
+                        Log.d("DEBUG", "existenciaParse: " + existenciaParse);
+                        producto = getProductoByObjectId(parseObject.getParseObject("producto").getObjectId());
+                        if (producto != null) {
+                            parseObject.put("pedido", existenciaParse + producto.getCantidad());
+                            Log.d("DEBUG", "cantidad actualizada: " + (existenciaParse + producto.getCantidad()));
                             parseObject.saveEventually(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    if(e!=null)
+                                    if (e != null)
                                         Log.d("DEBUG", e.getMessage());
                                 }
                             });
                         }
                     }
-                }else{
-                    Log.d("DEBUG", e.getCause()+e.getMessage());
+                } else {
+                    Log.d("DEBUG", e.getCause() + e.getMessage());
                 }
             }
         });

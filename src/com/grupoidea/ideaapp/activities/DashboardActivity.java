@@ -105,7 +105,7 @@ public class DashboardActivity extends ParentMenuActivity {
                 if(e == null){
                     Meta meta;
                     Producto producto;
-                    int acumM=0, total=0, resta=0;
+                    int facturadoMetas=0, totalMetas=0, pedidoMetas=0, acumMetas=0;
 
                     for (ParseObject parseObject: parseObjects){
                         meta = new Meta();
@@ -124,35 +124,36 @@ public class DashboardActivity extends ParentMenuActivity {
                         metas.add(meta);
 
                         //Acumular metas y cosas
-                        acumM += meta.getValorActual();
-                        total += meta.getValorFinal();
+                        facturadoMetas += meta.getValorActual();
+                        pedidoMetas +=meta.getValorEspera();
+                        totalMetas += meta.getValorFinal();
                     }
-                    resta=total-acumM;
+                    acumMetas=facturadoMetas+pedidoMetas;
 
                     TextView metasTextView=(TextView)findViewById(R.id.metas_actual_textView);
                     metasTextView.setTextSize(18);
                     metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
                     metasTextView.setTextColor(Color.WHITE);
                     metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                    metasTextView.setText("Actual: " + acumM);
+                    metasTextView.setText("Actual: " + acumMetas);
 
                     metasTextView=(TextView)findViewById(R.id.metas_total_textView);
                     metasTextView.setTextSize(18);
                     metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
                     metasTextView.setTextColor(Color.WHITE);
                     metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                    metasTextView.setText("Meta: " + total);
+                    metasTextView.setText("Meta: " + totalMetas);
 
                     metasTextView=(TextView)findViewById(R.id.metas_restante_textView);
                     metasTextView.setTextSize(18);
                     metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
                     metasTextView.setTextColor(Color.WHITE);
                     metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                    metasTextView.setText("Resta: " + resta);
+                    metasTextView.setText("Resta: " + (totalMetas-acumMetas));
 
 //                    ProgressBar metasProgress = (ProgressBar)findViewById(R.id.metas_gauge);
-//                    metasProgress.setMax(total);
-//                    metasProgress.setProgress(acumM);
+//                    metasProgress.setMax(totalMetas);
+//                    metasProgress.setProgress(facturadoMetas);
                     //Spinner de marcas con metas
                     final ArrayList<String> lista = new ArrayList<String>(marcas);
 
