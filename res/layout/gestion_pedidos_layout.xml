@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
@@ -162,37 +162,37 @@
         </TableLayout>
 
         <!--Listado de productos del pedido-->
-        <ScrollView
-            android:id="@+id/scrollview_listado_productos_pedido_table"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/encabezado_pedido_table">
-
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="450dp"
+                android:layout_below="@id/encabezado_pedido_table"
+                android:id="@+id/listado_productos_table_container"
+                android:layout_marginTop="35dp"
+                android:layout_marginBottom="35dp">
             <TableLayout
-                android:id="@+id/listado_productos_pedido_table"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="35dp"
-                android:paddingBottom="35dp"
-            >
+                    android:id="@+id/encabezado_listado_productos_pedido_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    >
                 <TableRow
                         android:id="@+id/row_productos">
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/producto"
-                        android:layout_span="1"
-                        android:padding="18dip"
-                        android:layout_weight="0.4"
-                        style="@style/encabezado"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/producto"
+                            android:layout_span="1"
+                            android:padding="18dip"
+                            android:layout_weight="0.4"
+                            style="@style/encabezado"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cantidad"
-                        android:layout_span="1"
-                        android:padding="18dip"
-                        android:layout_weight="0.05"
-                        style="@style/encabezado"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cantidad"
+                            android:layout_span="1"
+                            android:padding="18dip"
+                            android:layout_weight="0.05"
+                            style="@style/encabezado"/>
                     <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -202,32 +202,47 @@
                             android:layout_weight="0.15"
                             style="@style/encabezado"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/precioDescComercial"
-                        android:layout_span="1"
-                        android:padding="18dip"
-                        android:layout_weight="0.15"
-                        style="@style/encabezado"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/precioDescComercial"
+                            android:layout_span="1"
+                            android:padding="18dip"
+                            android:layout_weight="0.15"
+                            style="@style/encabezado"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/descuentoVolumen"
-                        android:layout_span="1"
-                        android:padding="18dip"
-                        android:layout_weight="0.1"
-                        style="@style/encabezado"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/descuentoVolumen"
+                            android:layout_span="1"
+                            android:padding="18dip"
+                            android:layout_weight="0.1"
+                            style="@style/encabezado"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/precioTotal"
-                        android:layout_span="1"
-                        android:padding="18dip"
-                        android:layout_weight="0.15"
-                        style="@style/encabezado"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/precioTotal"
+                            android:layout_span="1"
+                            android:padding="18dip"
+                            android:layout_weight="0.15"
+                            style="@style/encabezado"/>
                 </TableRow>
             </TableLayout>
-        </ScrollView>
+
+            <ScrollView
+                android:id="@+id/scrollview_listado_productos_pedido_table"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                    android:layout_below="@id/encabezado_listado_productos_pedido_table">
+
+                <TableLayout
+                    android:id="@+id/listado_productos_pedido_table"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                >
+
+                </TableLayout>
+            </ScrollView>
+        </RelativeLayout>
 
         <!--Observaciones-->
         <RelativeLayout
@@ -236,7 +251,7 @@
                 android:layout_width="wrap_content"
                 android:paddingRight="18dip"
                 android:layout_toLeftOf="@+id/totales_pedido_table"
-                android:layout_below="@+id/scrollview_listado_productos_pedido_table">
+                android:layout_below="@+id/listado_productos_table_container">
             <TextView
                 android:id="@+id/obs_titulo"
                 android:layout_width="match_parent"
@@ -269,7 +284,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="35dp"
-            android:layout_below="@id/scrollview_listado_productos_pedido_table">
+            android:layout_below="@+id/listado_productos_table_container">
             <TableRow>
                 <TextView
                         android:layout_width="match_parent"
@@ -352,5 +367,6 @@
                 android:textSize="20dp"
                 android:text="@string/botonPedido"
                 android:onClick="commitPedido" />
+
     </RelativeLayout>
-</ScrollView>
+</RelativeLayout>
