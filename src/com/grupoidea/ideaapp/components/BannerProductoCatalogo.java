@@ -11,13 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
@@ -111,14 +106,16 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         }
 		
 		if(producto != null) {
+            //Nombre producto
 			if(producto.getNombre() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_titulo_text_view);
 				textView.setText(producto.getNombre());
 			}
-			
+
+            //Precio producto
 			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_precio_text_view);
-				textView.setText(producto.getStringPrecioComercial());
+				textView.setText(producto.getPrecioComercialSinIvaConIvaString());
 			}
 			
 			if(producto.getIsInCarrito()) {
@@ -166,7 +163,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
 					//Agrega el producto clickeado al carrito de compras.
 					producto = productos.get(position);
-					addProductoFlagCarrito(producto);
+//					addProductoFlagCarrito(producto);
+                    producto.setIsInCarrito(true);
 					adapter.notifyDataSetChanged();
 					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
 					adapterCarrito.getCarrito().addProducto(producto);
@@ -217,7 +215,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
             menu.setTag(producto);
 
-            //TODO fix: Listener para cuando se pierda el foco
             menu.setOnFocusChangeListener(new View.OnFocusChangeListener(){
                 LayoutParams layoutParams;
                 @Override

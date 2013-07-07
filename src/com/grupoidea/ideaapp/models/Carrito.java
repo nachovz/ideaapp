@@ -38,7 +38,6 @@ public class Carrito {
 		
 		totalValue = calcularTotalValue(); 
 		return ""+df.format(totalValue)+" Bs.";
-//		return total;
 	}
 	
 	/** Permite determinar el indice de un producto si se encuentra actualmente en el listado de productos
@@ -99,4 +98,15 @@ public class Carrito {
 	public int count(){
 		return productos.size();
 	}
+
+    public void recalcularDescuentos(){
+        Producto prodPivot;
+        String categoriaPivot;
+
+        for(int i=0, size=productos.size(); i<size; i++){
+            if(productos.get(i).getIsInCarrito()){
+
+            }
+        }
+    }
 }

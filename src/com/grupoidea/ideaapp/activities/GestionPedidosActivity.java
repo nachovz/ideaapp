@@ -9,13 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
-
 import com.parse.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +34,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     protected Cliente cliente;
     /** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
     protected ArrayList<Producto> productos;
-    protected String numPedido;
+    protected String numPedido, idPedido;
 
     public GestionPedidosActivity() {
 		super(false, false);
@@ -47,12 +45,18 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gestion_pedidos_layout);
         mContext=this;
+
+        //mostrar nombre de usuario
+        setMenuTittle(ParseUser.getCurrentUser().getUsername());
+
         clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         denom = new String();
         productos = new ArrayList<Producto>();
         vendedor = ParseUser.getCurrentUser();
         try {
             Intent intent = getIntent();
+            idPedido = intent.getStringExtra("idPedido");
+            numPedido = intent.getStringExtra("numPedido");
             String jsonStr = intent.getStringExtra("Productos");
             cliente = new Cliente(intent.getStringExtra("Cliente"));
             cliente.setId(intent.getStringExtra("ClienteId"));
@@ -74,9 +78,13 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 text = (TextView) findViewById(R.id.nombre_cliente_edit);
                 text.setText(cliente.getNombre());
             //# Orden Compra
-                //TODO convertir a funcion
+                if(numPedido==null){
+                    Random rand = new Random();
+                    numPedido = String.valueOf(56000 + rand.nextInt(10000));
+                    Log.d("DEBUG", "numPedido: " + numPedido);
+                }
                 text = (TextView) findViewById(R.id.numero_orden_compra_edit);
-                text.setText("#0019587");
+                text.setText("#"+numPedido);
 
             //Subtotal
                 subtotal = getSubtotal();
@@ -84,8 +92,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 text.setText(df.format(subtotal)+" "+denom);
 
             //Impuesto
-                //TODO convertir a funcion
-                imp=subtotal*0.14;
+                imp=subtotal*productos.get(0).getIva();
                 text = (TextView) findViewById(R.id.impuesto_edit);
                 text.setText(df.format(imp)+" "+denom);
 
@@ -208,27 +215,44 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         clienteParseQuery.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject clienteParse, ParseException e) {
-                Random rand = new Random();
-                numPedido = String.valueOf(56000 + rand.nextInt(10000));
-                Log.d("DEBUG", "numPedido: " + numPedido);
-
                 //Crear Pedido
-                Log.d("DEBUG", "Pidiendo Pedido");
-                final ParseObject pedidoParse = new ParseObject("Pedido");
-                pedidoParse.put("asesor", ParseUser.getCurrentUser());
-                pedidoParse.put("cliente", clienteParse);
-                pedidoParse.put("direccion", direccion);
-                pedidoParse.put("estado", 0);
-                pedidoParse.put("num_pedido", numPedido);
-                pedidoParse.put("comentario", observaciones);
-                pedidoParse.saveEventually(new SaveCallback() {
+                final ParseObject[] pedidoParse = new ParseObject[1];
+                if(idPedido==null){
+                    //Si es un pedido nuevo
+                    pedidoParse[0] = new ParseObject("Pedido");Log.d("DEBUG", "Pidiendo Pedido");
+                }else{
+                    //Si es un pedido rechazado que se está modificando
+
+                    //Eliminar productos asociados con el pedido
+
+
+                    //Obtener el ParseObject con el objectId
+                    final ParseObject[] tempParseObj = new ParseObject[1];
+                    ParseQuery query = new ParseQuery("Pedido");
+                    query.getInBackground(idPedido, new GetCallback() {
+                        @Override
+                        public void done(ParseObject parseObject, ParseException e) {
+                            Log.d("DEBUG", "Recuperando Pedido");
+                            tempParseObj[0] =parseObject;
+                        }
+                    });
+                    pedidoParse[0] = tempParseObj[0];
+                }
+
+                pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
+                pedidoParse[0].put("cliente", clienteParse);
+                pedidoParse[0].put("direccion", direccion);
+                pedidoParse[0].put("estado", 0);
+                pedidoParse[0].put("num_pedido", numPedido);
+                pedidoParse[0].put("comentario", observaciones);
+                pedidoParse[0].saveEventually(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
                         for (final Producto prod : productos) {
                             //Obtener Productos de Parse
                             Log.d("DEBUG", "Pidiendo Producto");
                             ParseQuery productoParseQuery = new ParseQuery("Producto");
-                            productoParseQuery.whereEqualTo("codigo", prod.getNombre()); //TODO FIX Getters y Setters
+                            productoParseQuery.whereEqualTo("codigo", prod.getNombre());
                             productoParseQuery.getFirstInBackground(new GetCallback() {
                                 @Override
                                 public void done(final ParseObject productoParse, ParseException e) {
@@ -239,13 +263,13 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     pedidoHasProductos.put("cantidad", prod.getCantidad());
                                     Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
                                     pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
-                                    pedidoHasProductos.put("pedido", pedidoParse);
+                                    pedidoHasProductos.put("pedido", pedidoParse[0]);
                                     pedidoHasProductos.put("producto", productoParse);
                                     pedidoHasProductos.saveEventually(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {
                                             if (e != null) e.printStackTrace();
-                                            Log.d("DEBUG", "Pedido: " + pedidoParse.getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                            Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                             Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
                                             dispatchActivity(DashboardActivity.class, null, true);
                                         }

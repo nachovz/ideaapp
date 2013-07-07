@@ -1,12 +1,9 @@
 package com.grupoidea.ideaapp.models;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.util.SparseArray;
-
 import com.parse.ParseObject;
-import com.parse.ParseRelation;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,8 +37,8 @@ public class Producto {
 	/** Clase dentro de la marca del producto */
 	private String categoria;
 
-    /** Objeto tipo ParseRelation para obtener los descuentos del producto */
-	private ParseRelation descuentosQuery;
+    private ArrayList<String> categoriasRelated;
+
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
 	private SparseArray<Double> tablaDescuentos;
 	
@@ -55,6 +52,7 @@ public class Producto {
 	private double descuentoManual;
     /** Double que representa el descuento aplicado al producto segun cantidad y categoria*/
     private double descuentoAplicado;
+    private double iva;
 
     /** Boolean que permite determinar si el menu del producto es visible al usuario*/
 	private Boolean isMenuOpen;
@@ -97,6 +95,7 @@ public class Producto {
 		this.cantidad = 1;
         this.descuentoManual = 0.0;
         this.descuentoAplicado = 0.0;
+        this.iva = 0.0;
 		this.isInCarrito = false;
 		this.tablaDescuentos = new SparseArray<Double>();
 	}
@@ -212,23 +211,11 @@ public class Producto {
 		//setDescuentosFromParse();
 	}
 
-	/** Permite calcular el precio de los productos del mismo tipo.*/
-	public double getPrecioTotal() {
-		double precioTotal, desc= 1.0 - getDescuentoAplicado();
-        precioTotal = cantidad * precio * desc;
-        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precio)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
-		return precioTotal;
-	}
-	/** Permite construir el string del precio total concatenandole al precio la denominacion*/
-	public String getStringPrecioTotal() {
-		return precioDenominacionToString(getPrecioTotal());
-	}
-
     /** Permite calcular el precio comercial de los productos del mismo tipo.*/
     public double getPrecioComercialTotal() {
         double precioTotal, desc= 1.0 - getDescuentoAplicado();
         precioTotal = cantidad * precioComercial * desc;
-        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precioComercial)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
+//        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precioComercial)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
         return precioTotal;
     }
     /** Permite construir el string del precio comercial total concatenandole al precio la denominacion*/
@@ -263,14 +250,6 @@ public class Producto {
 
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
 	public static String precioDenominacionToString(double precio) {
-//		StringBuffer stringBuffer;
-//		String strValue = null;
-//        strValue = df.format(precio);
-//		stringBuffer = new StringBuffer(strValue).append(" ").append(denominacion);
-//		if(stringBuffer != null) {
-//			strValue = stringBuffer.toString();
-//		}
-//		return strValue;
         return ""+df.format(precio)+" "+denominacion;
 	}
 	/** Convierte el objeto producto en JSONObject 
@@ -353,17 +332,6 @@ public class Producto {
         this.tablaDescuentos=tablaDescuentos;
     }
 
-	public void setDescuentosFromParse() {
-    }
-
-	public ParseRelation getDescuentosQuery() {
-		return descuentosQuery;
-	}
-
-	public void setDescuentosQuery(ParseRelation descuentosQuery) {
-		this.descuentosQuery = descuentosQuery;
-	}
-
     public ParseObject getProductoParse() {
         return productoParse;
     }
@@ -395,5 +363,47 @@ public class Producto {
 
     public void setPrecioComercial(double precioComercial) {
         this.precioComercial = precioComercial;
+    }
+
+    public double getIva() {
+        return iva;
+    }
+
+    public void setIva(double iva) {
+        this.iva = iva/100.0;
+    }
+
+    public String getPrecioComercialConIva(){
+        return precioDenominacionToString(getPrecioComercial() + (getPrecioComercial()*getIva()));
+    }
+
+    public String getPrecioComercialSinIvaConIvaString(){
+        return getStringPrecioComercial()+" / "+getPrecioComercialConIva();
+    }
+
+    public ArrayList<String> getCategoriasRelated() {
+        return categoriasRelated;
+    }
+
+    public void setCategoriasRelated(ArrayList<String> categoriasRelated) {
+        this.categoriasRelated = categoriasRelated;
+    }
+
+    public void setCategoriasRelatedJSONArray(JSONArray jsonArray) {
+        try{
+            ArrayList<String> list = new ArrayList<String>();
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i=0;i<len;i++){
+                    list.add(jsonArray.get(i).toString());
+//                    Log.d("DEBUG", "json: "+jsonArray.get(i).toString());
+                }
+                this.categoriasRelated = list;
+            }else{
+                this.categoriasRelated = null;
+            }
+        }catch(JSONException e){
+            this.categoriasRelated = null;
+        }
     }
 }

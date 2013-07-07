@@ -75,11 +75,15 @@
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="105dp"
+                    android:layout_marginRight="150dp"
                     android:layout_marginTop="10dp"
                     android:focusable="false"
                     />
 
+            <ImageView android:id="@+id/menu_refresh_image_view" android:layout_width="wrap_content"
+                       android:layout_height="wrap_content" android:layout_alignParentRight="true"
+                       android:layout_marginRight="90dp" android:layout_marginTop="15dp"
+                       android:src="@drawable/img_refresh"/>
             <ImageView
                 android:id="@+id/menu_logoff_image_view"
                 android:layout_width="wrap_content"

@@ -1,30 +1,26 @@
 package com.grupoidea.ideaapp.activities;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.*;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Cliente;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.parse.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.grupoidea.ideaapp.activities.CatalogoActivity.*;
-
 public abstract class ParentMenuActivity extends ParentActivity {
 	private TextView menuTituloTextView; 
 	private ImageView logOff;
+    protected ImageView refresh;
 	private ImageView menuIcon;
 	private ImageView carrito;
+    protected ProgressDialog progressDialog;
 	protected Spinner clienteSpinner;
     public static int clienteSelected;
     protected ArrayAdapter<String> adapter;
@@ -83,6 +79,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuLeftShowed = false;
 		
 		menuTituloTextView = (TextView) findViewById(R.id.menu_titulo_text_view);
+        refresh = (ImageView) findViewById(R.id.menu_refresh_image_view);
 		logOff = (ImageView) findViewById(R.id.menu_logoff_image_view);
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
@@ -136,6 +133,15 @@ public abstract class ParentMenuActivity extends ParentActivity {
 				}
 			});
 		}
+
+        //Crear listener para el boton de refresh
+        refresh.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
 
         //Crear listener para el boton de log off
 		logOff.setOnClickListener(new OnClickListener() {

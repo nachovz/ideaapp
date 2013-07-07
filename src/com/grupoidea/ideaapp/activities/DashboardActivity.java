@@ -1,5 +1,6 @@
 package com.grupoidea.ideaapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -8,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.*;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowClientePedido;
 import com.grupoidea.ideaapp.io.Request;
@@ -16,11 +16,7 @@ import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
 import com.grupoidea.ideaapp.models.Producto;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.parse.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,8 +59,19 @@ public class DashboardActivity extends ParentMenuActivity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_layout);
-		
-		//Carga de Pedidos
+
+        //mostrar nombre de usuario
+        setMenuTittle(ParseUser.getCurrentUser().getUsername());
+
+        //Dialogo de carga
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Cargando...");
+        progressDialog.setMessage("Cargando Dashboard, por favor espere...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
 
         ParseQuery queryPedidos = new ParseQuery("Pedido");
@@ -79,6 +86,8 @@ public class DashboardActivity extends ParentMenuActivity {
                     for (ParseObject parseObject : parseObjects) {
                         ParseObject cliente = parseObject.getParseObject("cliente");
                         row = new RowClientePedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getCreatedAt());
+                        row.idPedido= parseObject.getObjectId();
+                        row.numPedido=parseObject.getString("num_pedido");
                         pedidosList.addView(row);
                     }
                     Log.d("DEBUG", "Carga de pedidos completa");
@@ -87,11 +96,6 @@ public class DashboardActivity extends ParentMenuActivity {
                 }
             }
         });
-		
-		user = ParseUser.getCurrentUser();
-		if(user != null) {
-			setMenuTittle(user.getUsername());
-		}
 
         //Carga de metas
         int acumMetas, totalMetas, restaMetas;
@@ -151,9 +155,10 @@ public class DashboardActivity extends ParentMenuActivity {
                     metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
                     metasTextView.setText("Resta: " + (totalMetas-acumMetas));
 
-//                    ProgressBar metasProgress = (ProgressBar)findViewById(R.id.metas_gauge);
-//                    metasProgress.setMax(totalMetas);
-//                    metasProgress.setProgress(facturadoMetas);
+                    ProgressBar metasProgress = (ProgressBar) findViewById(R.id.metas_gauge_progressbar);
+                    metasProgress.setMax(totalMetas);
+                    metasProgress.setProgress(acumMetas);
+
                     //Spinner de marcas con metas
                     final ArrayList<String> lista = new ArrayList<String>(marcas);
 
@@ -167,17 +172,15 @@ public class DashboardActivity extends ParentMenuActivity {
                     marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                            LayoutInflater inflador;
                             TextView tcod, tmeta, tpedido, tfacturado;
-//                            LinearLayout scrollView = (LinearLayout)((Activity) mContext).findViewById(R.id.metas_scroll_view);
-//                            scrollView.removeAllViews();
-//                            inflador = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                             Boolean darkBackground = true;
                             tl = (TableLayout) findViewById(R.id.meta_list_elements);
                             //limpiar TableLayout de metas
                             if(tl.getChildCount()>1){
                                 tl.removeViews(1,tl.getChildCount()-1);
                             }
+
+                            progressDialog.show();
 
                             for (Meta meta:metas){
                                 if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
@@ -236,6 +239,8 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                 }
                             }
+                            //quitar dialogo de carga
+                            progressDialog.dismiss();
 
                         }
                         @Override
@@ -272,9 +277,7 @@ public class DashboardActivity extends ParentMenuActivity {
 	
 	public void createNewPedido(View view){
 		Bundle bundle;
-		//TODO: Enviar idCliente mediante el bundle para que el CatalogoActivity se encargue de consultar los productos destacados del cliente
 		bundle = new Bundle();
-		//bundle.putString("clienteNombre", clienteNombre.getText().toString());
 		this.dispatchActivity(CatalogoActivity.class, bundle, false);
 	}
 
