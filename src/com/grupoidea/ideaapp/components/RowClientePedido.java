@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.ParentActivity;
@@ -37,7 +36,9 @@ public class RowClientePedido extends RelativeLayout {
 
 	private ParentActivity parent;
 	private Context context;
-	
+	public String idPedido;
+    public String numPedido;
+
 	private int estado;
 
 	/**
@@ -75,20 +76,18 @@ public class RowClientePedido extends RelativeLayout {
 		
 		estado = estadoParam;
 		this.addEstado(estado);
-		
+
 		if (estado == Pedido.ESTADO_RECHAZADO) {
 			this.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
 					Bundle bundle;
-					// TODO: Enviar idCliente mediante el bundle para que el
-					// CatalogoActivity se encargue de consultar los productos
-					// destacados del cliente
 					bundle = new Bundle();
-					bundle.putString("clienteNombre", clienteNombre.getText()
-							.toString());
+					bundle.putString("clienteNombre", ""+clienteNombre.getText());
+                    bundle.putString("idPedido", idPedido);
+                    bundle.putString("numPedido", numPedido);
 					parent.dispatchActivity(CatalogoActivity.class, bundle,
-							false);
+                            false);
 				}
 			});
 		}

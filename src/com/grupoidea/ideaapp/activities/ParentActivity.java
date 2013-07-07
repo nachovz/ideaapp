@@ -1,7 +1,5 @@
 package com.grupoidea.ideaapp.activities;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
@@ -18,6 +15,8 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.List;
 
 /**
  * Esta clase se encarga de determinar si las Activities hijas deben consultar
@@ -120,11 +119,7 @@ public abstract class ParentActivity extends Activity {
 			if (request.getRequestType() == Request.PARSE_REQUEST) {
 				ParseQuery query = (ParseQuery) request.getRequest();
 				loadFromParse(query);
-			} else if (request.getRequestType() == Request.HTTP_REQUEST) {
-				// TODO: Implementar clase HttpRequest que permita hacer
-				// consultas http.
-
-			}
+			} else if (request.getRequestType() == Request.HTTP_REQUEST) {}
 		} else {
 			Log.d("LOAD_DATA", "Este activity no posee query");
 		}

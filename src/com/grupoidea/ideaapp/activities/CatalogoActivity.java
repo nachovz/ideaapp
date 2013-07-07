@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -13,14 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
@@ -30,7 +24,6 @@ import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.*;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,9 +44,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 	public static BannerProductoCarrito adapterCarrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
 	public static BannerProductoCatalogo adapterCatalogo;
-    public String modificarPedidoId;
+    public String modificarPedidoId, modificarPedidoNum;
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
+    public String lastprodName;
 	
 	public CatalogoActivity() {
 		super(true, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
@@ -63,13 +57,22 @@ public class CatalogoActivity extends ParentMenuActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		
-		clienteNombre = getIntent().getExtras().getString("clienteNombre");
-        Log.d("DEBUG", "clientenombre: "+clienteNombre);
-		if(clienteNombre != null) {
-			setMenuTittle(clienteNombre);
-		}
-        modificarPedidoId= getIntent().getExtras().getString("numPedido");
+
+        //mostrar nombre de usuario
+        setMenuTittle(ParseUser.getCurrentUser().getUsername());
+
+        //Dialogo de carga
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Cargando...");
+        progressDialog.setMessage("Cargando Catalogo, por favor espere...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        modificarPedidoId= getIntent().getExtras().getString("idPedido");
+        modificarPedidoNum= getIntent().getExtras().getString("numPedido");
+        clienteNombre= getIntent().getExtras().getString("clienteNombre");
+
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
         //Poblar Spinner de Clientes e inflar
@@ -95,36 +98,33 @@ public class CatalogoActivity extends ParentMenuActivity {
 	}
 	
 	private Producto retrieveProducto(final ParseObject producto){
-		
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
 		double precio = producto.getDouble("costo");
 		final String objectId = producto.getObjectId();
-		
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
-
+        //asignar IVA
+        prod.setIva(producto.getParseObject("iva").getDouble("porcentaje"));
         //Obtener existencia
-        ParseQuery queryExistencia = new ParseQuery("UserHasProducto");
-        queryExistencia.whereEqualTo("usuario", ParseUser.getCurrentUser());
-        queryExistencia.whereEqualTo("producto",producto);
+        ParseQuery queryExistencia = new ParseQuery("Metas");
+        queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
+        queryExistencia.whereEqualTo("producto", producto);
         queryExistencia.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
-                if (e == null) prod.setExistencia(parseObject.getInt("cantidad"));
-                else{
-                    e.printStackTrace();
-                    Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla UserHasProducto");
-                }
+                if (e == null) prod.setExistencia(parseObject.getInt("meta"));
+                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla UserHasProducto");
             }
         });
-
+        //Obtener categoria
         ParseObject categoria = producto.getParseObject("categoria");
 		prod.setMarca(producto.getString("marca"));
 		prod.setCategoria(categoria.getString("nombre"));
         prod.setIdCategoria(categoria.getObjectId());
+        //Obtener categorias relacionadas
+        prod.setCategoriasRelatedJSONArray(categoria.getJSONArray("relacionadas"));
+        //Obtener descuentos
         final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
-
-        //Obtener categorias
         ParseQuery descuentosQuery = categoria.getRelation("descuentos").getQuery();
         descuentosQuery.findInBackground(new FindCallback() {
             @Override
@@ -132,6 +132,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if (e == null && descuentos != null) {
                     for (ParseObject descuento : descuentos) {
                         tablaDescuentos.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+                        if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
+                            //Quitar el dialogo con el ultimo descuento del ultimo producto
+                            Log.d("DEBUG", "Finalizada carga de productos");
+                            progressDialog.dismiss();
+                        }
                     }
                 }
             }
@@ -150,40 +155,101 @@ public class CatalogoActivity extends ParentMenuActivity {
 		RelativeLayout relativeLayout;
 		ListView listCarrito = null;
 
+        lastprodName=null;
         //cargar productos desde Parse
 		for (ParseObject parseObject : productosParse) {
 			producto = retrieveProducto(parseObject);
 			productos.add(producto);
+            if(parseObject.equals(productosParse.get(productosParse.size()-1))){
+                lastprodName=producto.getNombre();
+            }
 		}
 
 		carrito = new Carrito();
+        adapterCarrito = new BannerProductoCarrito(this, carrito);
+        menuRight = (RelativeLayout) getMenuRight();
+        if(menuRight != null) {
+            listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
+            relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
+            if(relativeLayout != null) {
+                //Agregar onClick Listener para cuando se haga tap sobre el total del carrito
+                relativeLayout.setOnClickListener(new OnClickListener(){
+                    @Override
+                    public void onClick(View arg0) {
+                        //lanzar GestionPedidosActivity
+                        String productos = productsToJSONString();
+                        if(productos != ""){
+                            Bundle bundle = new Bundle();
+                            bundle.putString("Productos", productos);
+                            Cliente clienteM;
+                            if(modificarPedidoId != null){
+                                //Obtener indice de cliente
+                                Log.d("DEBUG", ""+clientes.size());
+                                for(int j=0, size= clientes.size(); j<size; j++){
+                                    Log.d("DEBUG", "j: "+j);
+                                    if (clientes.get(j).getNombre().equalsIgnoreCase(clienteNombre)){
+                                        clienteSpinner.setSelection(j);
+                                        clienteSelected = j;
+                                        clienteSpinner.setEnabled(false);
+                                        Log.d("DEBUG", "cliente mod pedido: "+clienteNombre+" "+j);
+                                    }
+                                }
+                                clienteM = clientes.get(clienteSelected);
+                            }else{
+                                clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
+                            }
+
+                            bundle.putString("Cliente", clienteM.getNombre());
+                            bundle.putString("ClienteId", clienteM.getId());
+                            bundle.putDouble("Descuento", clienteM.getDescuento());
+                            bundle.putString("parseId", clienteM.getParseId());
+                            bundle.putString("idPedido", modificarPedidoId);
+                            bundle.putString("numPedido", modificarPedidoNum);
+                            dispatchActivity(GestionPedidosActivity.class, bundle, false);
+                        }else{
+                            Toast.makeText(getApplicationContext(), getString(R.string.warning_agregar_elementos_carrito), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+            }
+            if(listCarrito != null) {
+                listCarrito.setAdapter(adapterCarrito);
+                listCarrito.setSelection(listCarrito.getAdapter().getCount()-1);
+            }
+        }
+
         //Si vengo a modificar un pedido
-        //TODO llevar el codigo de pedido generado con el random como matrimonio obligado por todas las activities hasta el gestionar pedido
         if(modificarPedidoId == null){
             Log.d("DEBUG", "Pedido Nuevo");
         }else{
             Log.d("DEBUG", "Modificar Pedido "+modificarPedidoId);
-            final ArrayList<Producto> productos1=productos;
+            clienteSpinner.setVisibility(View.INVISIBLE);
+            final ArrayList<Producto> prodsModPedido=productos;
             //Pedido Id
-            final ParseQuery pedido = new ParseQuery("Pedido");
-            pedido.whereEqualTo("objectId", modificarPedidoId);
-            pedido.getFirstInBackground(new GetCallback() {
+            final ParseQuery queryPedido = new ParseQuery("Pedido");
+            queryPedido.whereEqualTo("objectId", modificarPedidoId);
+            queryPedido.getFirstInBackground(new GetCallback() {
                 @Override
                 public void done(ParseObject parseObject, ParseException e) {
                     //Productos en pedido
                     final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+                    productosEnPedido.whereEqualTo("pedido", parseObject);
                     productosEnPedido.include("producto");
                     productosEnPedido.findInBackground(new FindCallback() {
                         @Override
-                        public void done(List<ParseObject> productosEnPedidoObj, ParseException e) {
+                        public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
                             //Me muevo en los productos relacionados al pedido
-                            for(ParseObject producto: productosEnPedidoObj){
+                            for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
                                 //Agrego los relacionados al pedido en el carrito
-                                for(int i=0, size=productos1.size(); i<size; i++){
-                                    if(productos1.get(i).getNombre().equals(producto.get("codigo"))){
-                                       productos1.get(i).setCantidad(producto.getInt("cantidad"));
-                                        carrito.addProducto(productos1.get(i));
-                                        Log.d("DEBUG", "Agregando productos de pedido a modificar");
+                                ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
+                                for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
+                                    if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getNombre())) {
+                                        prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad"));
+                                        prodsModPedido.get(i).setIsInCarrito(true);
+                                        adapterCarrito.notifyDataSetChanged();
+                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
+                                        adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
+                                        adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                     }
                                 }
                             }
@@ -193,44 +259,11 @@ public class CatalogoActivity extends ParentMenuActivity {
             });
         }
 
-		adapterCarrito = new BannerProductoCarrito(this, carrito);
-		menuRight = (RelativeLayout) getMenuRight();
-		if(menuRight != null) {
-			listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
-			relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
-			if(relativeLayout != null) {
-				relativeLayout.setOnClickListener(new OnClickListener(){
-					@Override
-					public void onClick(View arg0) {
+        adapterCarrito.notifyDataSetChanged();
+        adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+        listCarrito.smoothScrollToPosition(0);
+        adapterCarrito.showCarrito();
 
-                        //lanzar GestionPedidosActivity
-						String productos = productsToJSONString();
-						if(productos != ""){
-							Bundle bundle = new Bundle();
-							
-							bundle.putString("Productos", productos);
-
-                            Cliente clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
-
-                            bundle.putString("Cliente", clienteM.getNombre());
-                            bundle.putString("ClienteId", clienteM.getId());
-                            bundle.putDouble("Descuento", clienteM.getDescuento());
-                            bundle.putString("parseId", clienteM.getParseId());
-
-							
-							dispatchActivity(GestionPedidosActivity.class, bundle, false);
-						}else{
-							Toast.makeText(getApplicationContext(), getString(R.string.warning_agregar_elementos_carrito), Toast.LENGTH_LONG).show();
-						}
-					}
-				});
-			}
-			if(listCarrito != null) {
-				listCarrito.setAdapter(adapterCarrito);
-				listCarrito.setSelection(listCarrito.getAdapter().getCount()-1);
-			}
-		}
-		
 		catalogoProductos = productos;
 		
 		if(listCarrito != null) {
@@ -280,7 +313,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 				grid.setAdapter(adapterCatalogo);
 			}
 		}
-		
 	}
 
 	protected String productsToJSONString() {
@@ -369,6 +401,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		Request req = new Request(Request.PARSE_REQUEST);
 		ParseQuery query = new ParseQuery("Producto");
         query.include("categoria");
+        query.include("iva");
 		req.setRequest(query);
 		
 		return req;

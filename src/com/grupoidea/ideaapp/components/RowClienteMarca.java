@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.ParentActivity;
@@ -56,9 +55,7 @@ public class RowClienteMarca extends RelativeLayout{
 		this.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				Bundle bundle;
-				//TODO: Enviar idCliente mediante el bundle para que el CatalogoActivity se encargue de consultar los productos destacados del cliente
-				bundle = new Bundle();
+				Bundle bundle;bundle = new Bundle();
 				bundle.putString("clienteNombre", clienteNombre.getText().toString());
 				parent.dispatchActivity(CatalogoActivity.class, bundle, false);
 			}

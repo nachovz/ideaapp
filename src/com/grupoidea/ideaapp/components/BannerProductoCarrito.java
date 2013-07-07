@@ -1,7 +1,6 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,7 +9,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.ParentMenuActivity;
@@ -59,6 +57,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		EditText editText;
 		
 		producto = (Producto) getItem(position);
+        //TODO recalcular descuentos
 		
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,16 +67,19 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		}
 			
 		if(producto != null) {
+            //cantidad de productos de esta clase
 			editText = (EditText) view.findViewById(R.id.banner_carrito_cantidad);
 			if(editText != null) {
 				editText.setText(String.valueOf(producto.getCantidad()));
 			}
 
+            //monto total de productos de esta clase
 			textView = (TextView) view.findViewById(R.id.banner_carrito_total_text_view);
 			if(textView != null) {
 				textView.setText(producto.getStringPrecioComercialTotal());
 			}
-			
+
+            //Aumentar cantidad
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_mas_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -85,27 +87,31 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					TextView textView;
 					RelativeLayout layout;
 					ParentMenuActivity menuActivity;
-					
 					producto = (Producto) getItem(position);
 					producto.addCantidad();
+                    //TODO recalcular descuentos
+
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito
 					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
-			
+
+            //Disminuir cantidad
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_menos_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					producto = (Producto) getItem(position);
 					producto.substractCantidad();
+                    //TODO recalcular descuentos
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito
 					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
-			
+
+            //Eliminar producto del carrito
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_eliminar_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -125,22 +131,26 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
-			
+
+            //Nombre producto
 			if(producto.getNombre() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_titulo_text_view);
 				textView.setText(producto.getNombre());
 			}
-			
+
+            //Precio producto
 			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_precio_text_view);
-				textView.setText(producto.getStringPrecioComercial());
+				textView.setText(producto.getPrecioComercialSinIvaConIvaString());
 			}
-			
+
+            //imagen del producto
 			if(producto.getImagen() != null) {
 				imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
 				imageView.setImageBitmap(producto.getImagen());
 			}
 
+            //descuento aplicado
             if(producto.getDescuentoAplicado() !=0.0){
                 RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
                 rlDesc.setVisibility(View.VISIBLE);
