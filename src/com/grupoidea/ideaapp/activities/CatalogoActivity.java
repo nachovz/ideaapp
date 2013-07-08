@@ -221,7 +221,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         //Si vengo a modificar un pedido
         if(modificarPedidoId == null && getIntent().getExtras().getInt("status")!= Pedido.ESTADO_RECHAZADO){
-            Log.d("DEBUG", "Pedido Nuevo");
+            Log.d("DEBUG", "Pedido Nuevo "+getIntent().getExtras().getInt("status"));
         }else if(getIntent().getExtras().getInt("status")== Pedido.ESTADO_RECHAZADO){
             Log.d("DEBUG", "Modificar Pedido "+modificarPedidoId);
             clienteSpinner.setVisibility(View.INVISIBLE);
@@ -258,6 +258,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                     });
                 }
             });
+            adapterCarrito.notifyDataSetChanged();
+            adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+            listCarrito.smoothScrollToPosition(0);
+            adapterCarrito.showCarrito();
+
         }else{
             final ArrayList<Producto> prodsModPedido=productos;
             //Pedido Id
@@ -292,12 +297,17 @@ public class CatalogoActivity extends ParentMenuActivity {
                     });
                 }
             });
+
+            adapterCarrito.notifyDataSetChanged();
+            adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+            listCarrito.smoothScrollToPosition(0);
+            adapterCarrito.showCarrito();
         }
 
-        adapterCarrito.notifyDataSetChanged();
+/*        adapterCarrito.notifyDataSetChanged();
         adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
         listCarrito.smoothScrollToPosition(0);
-        adapterCarrito.showCarrito();
+        adapterCarrito.showCarrito();*/
 
 		catalogoProductos = productos;
 		

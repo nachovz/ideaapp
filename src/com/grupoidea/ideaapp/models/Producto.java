@@ -48,6 +48,8 @@ public class Producto {
     private int existencia;
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
+
+    private int cantidadDescuentosGroup;
 	/** Double que representa el descuentoManual aplicado al producto (manualmente)*/
 	private double descuentoManual;
     /** Double que representa el descuento aplicado al producto segun cantidad y categoria*/
@@ -297,7 +299,7 @@ public class Producto {
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
-                if( key != 0 && key<= cantidad){
+                if( key != 0 && key<= cantidadDescuentosGroup){
                     return tablaDescuentos.valueAt(i)/100.0;
                 }
             }
@@ -405,5 +407,22 @@ public class Producto {
         }catch(JSONException e){
             this.categoriasRelated = null;
         }
+    }
+
+    public int getCantidadDescuentosGroup() {
+        return cantidadDescuentosGroup;
+    }
+
+    public void setCantidadDescuentosGroup(int cantidadDescuentosGroup) {
+        this.cantidadDescuentosGroup = cantidadDescuentosGroup;
+    }
+
+    public boolean isInCategoryGroup(ArrayList<String> grupoCategorias){
+        for(int i=0, size=grupoCategorias.size(); i<size; i++){
+            if(grupoCategorias.get(i).equalsIgnoreCase(this.getCategoria())){
+                return true;
+            }
+        }
+        return false;
     }
 }
