@@ -22,6 +22,7 @@ import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Cliente;
+import com.grupoidea.ideaapp.models.GrupoCategoria;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.*;
@@ -126,7 +127,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		prod.setCategoria(categoria.getString("nombre"));
         prod.setIdCategoria(categoria.getObjectId());
         //Obtener categorias relacionadas
-        prod.setCategoriasRelatedJSONArray(categoria.getJSONArray("relacionadas"));
+//        prod.setCategoriasRelatedJSONArray(categoria.getJSONArray("relacionadas"));
         //Obtener descuentos
         final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
         ParseQuery descuentosQuery = categoria.getRelation("descuentos").getQuery();
@@ -146,6 +147,29 @@ public class CatalogoActivity extends ParentMenuActivity {
             }
         });
         prod.setTablaDescuentos(tablaDescuentos);
+
+        if(null != producto.getParseObject("grupo_categorias") && null != producto.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
+        //almacenar grupo categoria
+        GrupoCategoria grupo = new GrupoCategoria();
+        grupo.setRelacionadasJSONArray(producto.getParseObject("grupo_categorias").getJSONArray("relacionadas"));
+
+        //obtener descuentos por grupo de categoria
+        final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
+        descuentosQuery = producto.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
+        descuentosQuery.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> descuentos, ParseException e) {
+                if (e == null && descuentos != null) {
+                    for (ParseObject descuento : descuentos) {
+                        tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+                    }
+                }
+            }
+        });
+        grupo.setTablaDescuentos(tablaDescuentosGrupo);
+        prod.setGrupoCategoria(grupo);
+        }
+
         return prod;
 	}
 	 
@@ -450,6 +474,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		ParseQuery query = new ParseQuery("Producto");
         query.include("categoria");
         query.include("iva");
+        query.include("grupo_categorias");
 		req.setRequest(query);
 		
 		return req;

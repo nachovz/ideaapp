@@ -37,7 +37,7 @@ public class Producto {
 	/** Clase dentro de la marca del producto */
 	private String categoria;
 
-    private ArrayList<String> categoriasRelated;
+    private GrupoCategoria grupoCategoria;
 
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
 	private SparseArray<Double> tablaDescuentos;
@@ -301,7 +301,7 @@ public class Producto {
             int key;
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
-                if( key != 0 && key<= cantidadDescuentosGroup){
+                if( key != 0 && key<= cantidad){
                     return tablaDescuentos.valueAt(i)/100.0;
                 }
             }
@@ -385,15 +385,15 @@ public class Producto {
         return getStringPrecioComercial()+" / "+getPrecioComercialConIva();
     }
 
-    public ArrayList<String> getCategoriasRelated() {
+    /*public ArrayList<String> getCategoriasRelated() {
         return categoriasRelated;
     }
 
     public void setCategoriasRelated(ArrayList<String> categoriasRelated) {
         this.categoriasRelated = categoriasRelated;
-    }
+    }*/
 
-    public void setCategoriasRelatedJSONArray(JSONArray jsonArray) {
+    /*public void setCategoriasRelatedJSONArray(JSONArray jsonArray) {
         try{
             ArrayList<String> list = new ArrayList<String>();
             if (jsonArray != null) {
@@ -409,7 +409,7 @@ public class Producto {
         }catch(JSONException e){
             this.categoriasRelated = null;
         }
-    }
+    }*/
 
     public int getCantidadDescuentosGroup() {
         return cantidadDescuentosGroup;
@@ -434,5 +434,31 @@ public class Producto {
 
     public void setExcedente(int excedente) {
         this.excedente = excedente;
+    }
+
+    public ArrayList<String> getRelacionadas(){
+        if(null != getGrupoCategoria())
+            return getGrupoCategoria().getRelacionadas();
+        else
+            return  null;
+    }
+
+    public void setRelacionadas(JSONArray related){
+        getGrupoCategoria().setRelacionadasJSONArray(related);
+    }
+
+    public void setRelacionadas(ArrayList<String> related){
+        getGrupoCategoria().setRelacionadas(related);
+    }
+
+    public GrupoCategoria getGrupoCategoria() {
+        if(null!= grupoCategoria)
+            return grupoCategoria;
+        else
+            return null;
+    }
+
+    public void setGrupoCategoria(GrupoCategoria grupoCategoria) {
+        this.grupoCategoria = grupoCategoria;
     }
 }

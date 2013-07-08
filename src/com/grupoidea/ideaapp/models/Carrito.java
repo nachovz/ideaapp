@@ -101,7 +101,47 @@ public class Carrito {
 		return productos.size();
 	}
 
-    public void recalcularDescuentos(Producto prodPivot){
+    public void recalcularDescuentosGrupoCategoria(Producto prodPivot){
+        ArrayList<String> catsGrupo;
+        ArrayList<Producto> prodGroup = new ArrayList<Producto>();
+        int cantGrupo=0, size=productos.size();
+        String categoriaProd = prodPivot.getCategoria();
+        Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
+        Log.d("DEBUG","categoria: "+ categoriaProd);
+        if(prodPivot.getRelacionadas() != null){
+            catsGrupo= prodPivot.getRelacionadas();
+
+            //cantidad incial es la cantidad de productos pivot
+            cantGrupo=prodPivot.getCantidad();
+            Log.d("DEBUG","categorias: "+catsGrupo.get(0));
+
+            //desplazarse por los productos buscando productos en categorias relacionadas que estén en el carrito
+            for(int i=0; i<size; i++){
+                if(productos.get(i).getIsInCarrito() && !(productos.get(i).getId().equals(prodPivot.getId())) && productos.get(i).isInCategoryGroup(catsGrupo)){
+                    //agrego los productos que coincidan con sus cantidades
+                    cantGrupo+=productos.get(i).getCantidad();
+                    prodGroup.add(productos.get(i));
+                    Log.d("DEBUG", "Producto relacionado: " + productos.get(i).getNombre()+" cantidad: "+productos.get(i).getCantidad());
+                }
+            }
+            //agrego mi producto pivot al final
+            prodGroup.add(prodPivot);
+            Log.d("DEBUG", "Cantidad total: " + cantGrupo);
+            //calcular descuento aplicado y guardar el mayor
+            double descAplGroup= prodPivot.getGrupoCategoria().calcularDescuentoAplicado(cantGrupo);
+            Log.d("DEBUG", "desc aplicado= "+descAplGroup);
+            //aplicar mayor descuento a todos los productos
+            for(Producto prod:prodGroup){
+                if(prod.getDescuentoAplicado()<=descAplGroup){
+                    prod.setDescuentoAplicado(descAplGroup);
+                }else{
+                    prod.setDescuentoAplicado(prod.calcularDescuentoAplicado());
+                }
+            }
+        }
+    }
+
+/*    public void recalcularDescuentos(Producto prodPivot){
         ArrayList<String> catsGrupo;
         ArrayList<Producto> prodGroup = new ArrayList<Producto>();
         int cantGrupo=0, size=productos.size();
@@ -141,5 +181,5 @@ public class Carrito {
         for(Producto prod:prodGroup){
             prod.setDescuentoAplicado(descAplGroup);
         }
-    }
+    }*/
 }

@@ -58,7 +58,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		
 		producto = (Producto) getItem(position);
         //TODO recalcular descuentos
-        carrito.recalcularDescuentos(producto);
+        carrito.recalcularDescuentosGrupoCategoria(producto);
 		
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -91,7 +91,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					producto = (Producto) getItem(position);
 					producto.addCantidad();
                     //TODO recalcular descuentos
-                    carrito.recalcularDescuentos(producto);
+                    carrito.recalcularDescuentosGrupoCategoria(producto);
 
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito
@@ -107,7 +107,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					producto = (Producto) getItem(position);
 					producto.substractCantidad();
                     //TODO recalcular descuentos
-                    carrito.recalcularDescuentos(producto);
+                    carrito.recalcularDescuentosGrupoCategoria(producto);
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito
 					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
