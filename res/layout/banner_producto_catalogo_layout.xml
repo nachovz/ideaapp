@@ -113,6 +113,16 @@
 	            android:text="@string/existencia"
 	            android:textColor="#646464"
 	            android:textStyle="bold|italic" />
+
+            <TextView
+                    android:id="@+id/banner_producto_menu_item_excedente"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/menu_producto_selector"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/excedentes"
+                    android:textColor="#646464"
+                    android:textStyle="bold|italic" />
 	
 	    </LinearLayout>
 	</RelativeLayout>

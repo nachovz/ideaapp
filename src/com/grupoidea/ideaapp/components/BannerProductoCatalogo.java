@@ -234,11 +234,14 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             });
 
             //Actualizar Existencia
-            TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
+            TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-2);
             if (exced == null) {
                 throw new AssertionError();
             }
             exced.setText(menuActivity.getText(R.string.existencia)+" "+String.valueOf(producto.getExistencia()));
+
+            exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
+            exced.setText(menuActivity.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
 
             // Listar descuentos en el menu de producto
             ArrayList<String> menu_prod = producto.getDescuentosString();

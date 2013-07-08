@@ -49,6 +49,8 @@ public class Producto {
 	/** Entero que almacena la cantidad de productos deseados*/
 	private int cantidad;
 
+    private int excedente;
+
     private int cantidadDescuentosGroup;
 	/** Double que representa el descuentoManual aplicado al producto (manualmente)*/
 	private double descuentoManual;
@@ -424,5 +426,13 @@ public class Producto {
             }
         }
         return false;
+    }
+
+    public int getExcedente() {
+        return excedente;
+    }
+
+    public void setExcedente(int excedente) {
+        this.excedente = excedente;
     }
 }

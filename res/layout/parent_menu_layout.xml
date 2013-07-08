@@ -83,7 +83,8 @@
             <ImageView android:id="@+id/menu_refresh_image_view" android:layout_width="wrap_content"
                        android:layout_height="wrap_content" android:layout_alignParentRight="true"
                        android:layout_marginRight="90dp" android:layout_marginTop="15dp"
-                       android:src="@drawable/img_refresh"/>
+                       android:src="@drawable/dash_img_logoff"
+                       android:focusableInTouchMode="false"/>
             <ImageView
                 android:id="@+id/menu_logoff_image_view"
                 android:layout_width="wrap_content"

@@ -101,11 +101,13 @@ public class CatalogoActivity extends ParentMenuActivity {
 	private Producto retrieveProducto(final ParseObject producto){
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
+//        Log.d("DEBUG", "nombre prod: "+codigo);
 		double precio = producto.getDouble("costo");
 		final String objectId = producto.getObjectId();
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
         //asignar IVA
         prod.setIva(producto.getParseObject("iva").getDouble("porcentaje"));
+        prod.setExcedente(producto.getInt("excedente"));
         //Obtener existencia
         ParseQuery queryExistencia = new ParseQuery("Metas");
         queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
@@ -120,6 +122,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Obtener categoria
         ParseObject categoria = producto.getParseObject("categoria");
 		prod.setMarca(producto.getString("marca"));
+//        Log.d("DEBUG", "categoria: "+categoria.getString("nombre"));
 		prod.setCategoria(categoria.getString("nombre"));
         prod.setIdCategoria(categoria.getObjectId());
         //Obtener categorias relacionadas

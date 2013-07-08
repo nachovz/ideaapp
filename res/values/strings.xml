@@ -40,7 +40,7 @@
     <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
     <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
     <string name="pedidos_banner_text">Pedidos</string>
-    <string name="existencia">Existencia: </string>
+    <string name="existencia">Meta: </string>
     <string name="agregar_descuento">Agregar Descuento</string>
     <string name="nombre_producto">Nombre del Producto:</string>
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>

@@ -102,14 +102,21 @@ public class Carrito {
 	}
 
     public void recalcularDescuentos(Producto prodPivot){
-//        Producto prodPivot;
-        ArrayList<String> catsGrupo = new ArrayList<String>();
+        ArrayList<String> catsGrupo;
         ArrayList<Producto> prodGroup = new ArrayList<Producto>();
         int cantGrupo=0, size=productos.size();
+        String categoriaProd = prodPivot.getCategoria();
         Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
-        catsGrupo= prodPivot.getCategoriasRelated();
-        catsGrupo.add(prodPivot.getCategoria());
+        Log.d("DEBUG","categoria: "+ categoriaProd);
+        if(prodPivot.getCategoriasRelated() != null){
+            catsGrupo= prodPivot.getCategoriasRelated();
+            catsGrupo.add(categoriaProd);
+        }else{
+            catsGrupo= new ArrayList<String>();
+            catsGrupo.add(categoriaProd);
+        }
         cantGrupo=prodPivot.getCantidad();
+        Log.d("DEBUG","categorias: "+catsGrupo.get(0));
 
         //desplazarse por los productos buscando productos en categorias relacionadas que estén en el carrito
         for(int i=0; i<size; i++){

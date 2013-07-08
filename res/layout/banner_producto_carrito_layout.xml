@@ -55,7 +55,7 @@
                 android:layout_marginBottom="65dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/pedidos_bkg_descuento">
+                android:background="@drawable/pedidos_bkg_monto">
             <TextView
                 android:id="@+id/descuento_textView"
                 android:layout_width="wrap_content"
