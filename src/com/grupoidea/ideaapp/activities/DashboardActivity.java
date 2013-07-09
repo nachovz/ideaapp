@@ -15,6 +15,7 @@ import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
+import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.*;
 
@@ -88,6 +89,9 @@ public class DashboardActivity extends ParentMenuActivity {
                         row = new RowClientePedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getCreatedAt());
                         row.idPedido= parseObject.getObjectId();
                         row.numPedido=parseObject.getString("num_pedido");
+                        if(parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO)
+                            Log.d("DEBUG","asignando comentario rechazo, "+parseObject.getInt("estado"));
+                            row.observacionesRechazoPedido = parseObject.getString("comentario_rechazo");
                         pedidosList.addView(row);
                     }
                     Log.d("DEBUG", "Carga de pedidos completa");

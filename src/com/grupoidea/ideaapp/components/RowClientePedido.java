@@ -1,9 +1,12 @@
 package com.grupoidea.ideaapp.components;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +38,10 @@ public class RowClientePedido extends RelativeLayout {
 	private TextView fechaPedido;
 
 	private ParentActivity parent;
-	private Context context;
+	public Context context;
 	public String idPedido;
     public String numPedido;
+    public String observacionesRechazoPedido;
 
 	private int estado;
 
@@ -91,7 +95,29 @@ public class RowClientePedido extends RelativeLayout {
                             false);
 				}
 			});
-		}else{
+
+            final Context contextDialog = context;
+
+            this.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d("DEBUG", "obs rechazo: "+observacionesRechazoPedido);
+//                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).show();
+                    new AlertDialog.Builder(contextDialog)
+                            .setTitle("Comentario Rechazo de Pedido: ")
+                            .setMessage(observacionesRechazoPedido)
+                            .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .show();
+                    return true;
+                }
+            });
+
+
+        }else{
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
