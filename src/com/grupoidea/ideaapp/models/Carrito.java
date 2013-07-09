@@ -140,46 +140,4 @@ public class Carrito {
             }
         }
     }
-
-/*    public void recalcularDescuentos(Producto prodPivot){
-        ArrayList<String> catsGrupo;
-        ArrayList<Producto> prodGroup = new ArrayList<Producto>();
-        int cantGrupo=0, size=productos.size();
-        String categoriaProd = prodPivot.getCategoria();
-        Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
-        Log.d("DEBUG","categoria: "+ categoriaProd);
-        if(prodPivot.getCategoriasRelated() != null){
-            catsGrupo= prodPivot.getCategoriasRelated();
-            catsGrupo.add(categoriaProd);
-        }else{
-            catsGrupo= new ArrayList<String>();
-            catsGrupo.add(categoriaProd);
-        }
-        cantGrupo=prodPivot.getCantidad();
-        Log.d("DEBUG","categorias: "+catsGrupo.get(0));
-
-        //desplazarse por los productos buscando productos en categorias relacionadas que estén en el carrito
-        for(int i=0; i<size; i++){
-            if(productos.get(i).getIsInCarrito() && !(productos.get(i).getId().equals(prodPivot.getId())) && productos.get(i).isInCategoryGroup(catsGrupo)){
-                cantGrupo+=productos.get(i).getCantidad();
-                prodGroup.add(productos.get(i));
-                Log.d("DEBUG", "Producto relacionado: " + productos.get(i).getNombre()+" cantidad: "+productos.get(i).getCantidad());
-            }
-        }
-        prodGroup.add(prodPivot);
-        Log.d("DEBUG", "Cantidad total: " + cantGrupo);
-        //calcular descuento aplicado y guardar el mayor
-        double descAplGroup=0.0;
-        for(Producto prod:prodGroup){
-            prod.setCantidadDescuentosGroup(cantGrupo);
-            prod.setDescuentoAplicado(prod.calcularDescuentoAplicado());
-            if(prod.getDescuentoAplicado()>descAplGroup){
-                descAplGroup=prod.getDescuentoAplicado();
-            }
-        }
-        //aplicar mayor descuento a todos los productos
-        for(Producto prod:prodGroup){
-            prod.setDescuentoAplicado(descAplGroup);
-        }
-    }*/
 }
