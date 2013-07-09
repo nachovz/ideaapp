@@ -102,16 +102,16 @@ public class RowClientePedido extends RelativeLayout {
                 @Override
                 public boolean onLongClick(View v) {
                     Log.d("DEBUG", "obs rechazo: "+observacionesRechazoPedido);
-//                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).show();
-                    new AlertDialog.Builder(contextDialog)
-                            .setTitle("Comentario Rechazo de Pedido: ")
-                            .setMessage(observacionesRechazoPedido)
-                            .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // continue with delete
-                                }
-                            })
-                            .show();
+                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle("Observaciones por rechazo de pedido:").show();
+//                    new AlertDialog.Builder(contextDialog)
+//                            .setTitle("Comentario Rechazo de Pedido: ")
+//                            .setMessage(observacionesRechazoPedido)
+//                            .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    // continue with delete
+//                                }
+//                            })
+//                            .show();
                     return true;
                 }
             });
