@@ -245,7 +245,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
             // Listar descuentos en el menu de producto
             ArrayList<String> menu_prod = producto.getDescuentosString();
-            if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+2)){
+            if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+3)){
                 for(int i=0, size=menu_prod.size(); i<size; i++) {
                     TextView descProd = createProductoMenuTextView(menuActivity, menu_prod.get(i));
                     menu.addView(descProd, menu.getChildCount()-2);

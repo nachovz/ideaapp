@@ -70,7 +70,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 text = (TextView) findViewById(R.id.fecha_edit);
                 Time now = new Time(); now.setToNow();
                 text.setText(now.monthDay + "/" + now.month + "/" + now.year);
-
             //ID Cliente
                 text = (TextView) findViewById(R.id.id_cliente_edit);
                 text.setText(cliente.getId());
@@ -202,6 +201,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
     public void commitPedido(View view) {
         Log.d("DEBUG", "Button clicked");
+        Button finalizarPedidoButton = (Button) findViewById(R.id.finalizarPedidoButton);
+        finalizarPedidoButton.setEnabled(false);
+        Toast.makeText(mContext, R.string.subiendoPedido, 3000).show();
         EditText direccionET = (EditText) findViewById(R.id.direccion_envio_edit);
         direccion = ""+String.valueOf(direccionET.getText());
 
@@ -285,7 +287,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         //Actualizar existencia en Metas
         ParseQuery queryMetas = new ParseQuery("Metas");
         queryMetas.include("producto");
-        queryMetas.whereEqualTo("usuario", ParseUser.getCurrentUser());
+        queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryMetas.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {

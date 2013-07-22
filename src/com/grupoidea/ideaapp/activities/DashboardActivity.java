@@ -78,7 +78,8 @@ public class DashboardActivity extends ParentMenuActivity {
         ParseQuery queryPedidos = new ParseQuery("Pedido");
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
-        queryPedidos.orderByDescending("createdAt");
+//        queryPedidos.orderByDescending("createdAt");
+        queryPedidos.orderByAscending("estado");
         queryPedidos.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
@@ -90,7 +91,7 @@ public class DashboardActivity extends ParentMenuActivity {
                         row.idPedido= parseObject.getObjectId();
                         row.numPedido=parseObject.getString("num_pedido");
                         if(parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO)
-                            Log.d("DEBUG","asignando comentario rechazo, "+parseObject.getInt("estado"));
+//                            Log.d("DEBUG","asignando comentario rechazo, "+parseObject.getInt("estado"));
                             row.observacionesRechazoPedido = parseObject.getString("comentario_rechazo");
                         pedidosList.addView(row);
                     }
@@ -255,7 +256,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     Log.d("DEBUG","Metas cargadas");
                 }else{
-                    Log.d("PARSE",e.toString());
+                    Log.d("DEBUG",e.toString());
                 }
             }
         });

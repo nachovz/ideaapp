@@ -270,7 +270,7 @@ public class Producto {
 		productoJSON.put("totalComercial", getPrecioComercialTotal());
         productoJSON.put("descuentoManual", getDescuentoManual());
         productoJSON.put("descuentoAplicado", getDescuentoAplicado());
-
+        productoJSON.put("IVA", getIva());
 		return productoJSON;
 	}
 
@@ -285,6 +285,7 @@ public class Producto {
             producto.setPrecioComercial(json.getDouble("precioComercial"));
             producto.setDescuentoManual(json.getDouble("descuentoManual"));
             producto.setDescuentoAplicado(json.getDouble("descuentoAplicado"));
+            producto.setIva(json.getDouble("IVA")*100.0);
 
             return producto;
         }catch(JSONException e){
