@@ -7,8 +7,9 @@ public class Pedido {
 	/** Estado del pedido */
 	public static final int ESTADO_VERIFICANDO = 0;
 	public static final int ESTADO_APROBADO = 1;
-	public static final int ESTADO_RECHAZADO = 2;
-	
+    public static final int ESTADO_RECHAZADO = 2;
+    public static final int ESTADO_ANULADO = 3;
+
 	/** Objeto de tipo Cliente asociado al pedido */
 	private Cliente cliente;
 	/** Direccion de envio del pedido */

@@ -2,7 +2,6 @@ package com.grupoidea.ideaapp.components;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -10,6 +9,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -81,11 +83,19 @@ public class RowClientePedido extends RelativeLayout {
 		estado = estadoParam;
 		this.addEstado(estado);
 
+        final Context contextDialog = context;
+
 		if (estado == Pedido.ESTADO_RECHAZADO) {
 			this.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
-					Bundle bundle;
+
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+//                    builder.setMessage(R.string.dialog_message)
+//                            .setTitle(R.string.dialog_title);
+//                    AlertDialog dialog = builder.create();
+
+                    Bundle bundle;
 					bundle = new Bundle();
 					bundle.putString("clienteNombre", ""+clienteNombre.getText());
                     bundle.putString("idPedido", idPedido);
@@ -96,28 +106,33 @@ public class RowClientePedido extends RelativeLayout {
 				}
 			});
 
-            final Context contextDialog = context;
-
             this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     Log.d("DEBUG", "obs rechazo: "+observacionesRechazoPedido);
                     new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle("Observaciones por rechazo de pedido:").show();
-//                    new AlertDialog.Builder(contextDialog)
-//                            .setTitle("Comentario Rechazo de Pedido: ")
-//                            .setMessage(observacionesRechazoPedido)
-//                            .setPositiveButton("Regresar", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                    // continue with delete
-//                                }
-//                            })
-//                            .show();
                     return true;
                 }
             });
 
 
+        }else if(estado == Pedido.ESTADO_VERIFICANDO){
+            //editar pedido
+            this.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View arg0) {
+                    Bundle bundle;
+                    bundle = new Bundle();
+                    bundle.putString("clienteNombre", ""+clienteNombre.getText());
+                    bundle.putString("idPedido", idPedido);
+                    bundle.putString("numPedido", numPedido);
+                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
+                    parent.dispatchActivity(CatalogoActivity.class, bundle,
+                            false);
+                }
+            });
         }else{
+            //estado aprobado estado anulado
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
@@ -144,18 +159,28 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
+        final Animation animation = new AlphaAnimation(1, (float) 0.25); // Change alpha from fully visible to invisible
+        animation.setDuration(1000); // duration - half a second
+        animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
+        animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely
+        animation.setRepeatMode(Animation.REVERSE); // Reverse animation at the end so the button will fade back in
+
         switch (estado) {
             case Pedido.ESTADO_VERIFICANDO:
-                textView.setBackgroundResource(R.drawable.pastillaverificando);
+                textView.setBackgroundResource(R.drawable.pastilla_verificando);
                 break;
             case Pedido.ESTADO_APROBADO:
-                textView.setBackgroundResource(R.drawable.pastillaaprobado);
+                textView.setBackgroundResource(R.drawable.pastilla_aprobado);
                 break;
             case Pedido.ESTADO_RECHAZADO:
-                textView.setBackgroundResource(R.drawable.pastillarechazado);
+                textView.setBackgroundResource(R.drawable.pastilla_rechazado);
+                textView.startAnimation(animation);
+                break;
+            case Pedido.ESTADO_ANULADO:
+                textView.setBackgroundResource(R.drawable.pastilla_anulado);
                 break;
             default:
-                textView.setBackgroundResource(R.drawable.pastillaerror);
+                textView.setBackgroundResource(R.drawable.pastilla_error);
                 break;
         }
 	    
@@ -175,9 +200,12 @@ public class RowClientePedido extends RelativeLayout {
 		case Pedido.ESTADO_APROBADO:
 			estadoString = "APROBADO";
 			break;
-		case Pedido.ESTADO_RECHAZADO:
-			estadoString = "RECHAZADO";
-			break;
+        case Pedido.ESTADO_RECHAZADO:
+            estadoString = "RECHAZADO";
+            break;
+        case Pedido.ESTADO_ANULADO:
+            estadoString = "ANULADO";
+            break;
 		default:
 			estadoString = "ERROR";
 			break;

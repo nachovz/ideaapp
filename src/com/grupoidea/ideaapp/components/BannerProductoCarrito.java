@@ -1,6 +1,8 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,7 +59,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		EditText editText;
 		
 		producto = (Producto) getItem(position);
-        //TODO recalcular descuentos
         carrito.recalcularDescuentosGrupoCategoria(producto);
 		
 		if (convertView == null) {  
@@ -90,7 +91,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 					ParentMenuActivity menuActivity;
 					producto = (Producto) getItem(position);
 					producto.addCantidad();
-                    //TODO recalcular descuentos
                     carrito.recalcularDescuentosGrupoCategoria(producto);
 
 					carritoAdapter.notifyDataSetChanged();
@@ -106,13 +106,43 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 				public void onClick(View view) {
 					producto = (Producto) getItem(position);
 					producto.substractCantidad();
-                    //TODO recalcular descuentos
                     carrito.recalcularDescuentosGrupoCategoria(producto);
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito
 					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 				}
 			});
+
+            //Cantidad cambiada con teclado
+            final EditText cantProd = (EditText) view.findViewById(R.id.banner_carrito_cantidad);
+
+            TextWatcher tw = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if(!cantProd.getText().toString().isEmpty()){
+                        int cant = Integer.valueOf(cantProd.getText().toString());
+                        producto.setCantidad(cant);
+                        carrito.recalcularDescuentosGrupoCategoria(producto);
+                        carritoAdapter.notifyDataSetChanged();
+                        //Calcula el total del carrito
+                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                    }else{
+                        producto.setCantidad(1);
+                        carrito.recalcularDescuentosGrupoCategoria(producto);
+                        carritoAdapter.notifyDataSetChanged();
+                        //Calcula el total del carrito
+                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                    }
+                }
+            };
+
+            cantProd.addTextChangedListener(tw);
 
             //Eliminar producto del carrito
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_eliminar_image_view);
@@ -144,7 +174,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
             //Precio producto
 			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_precio_text_view);
-				textView.setText(producto.getPrecioComercialSinIvaConIvaString());
+				textView.setText(producto.getPrecioCarritoSinIvaConIvaString());
 			}
 
             //imagen del producto
@@ -161,6 +191,15 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                 porcDescTextView.setText(producto.getDescuentoAplicadoPorcString());
             }else{
                 RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
+                rlDesc.setVisibility(View.INVISIBLE);
+            }
+
+            //Descuento manual
+            if(producto.getDescuentoManual() != 0){
+                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
+                rlDesc.setVisibility(View.VISIBLE);
+            }else{
+                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
                 rlDesc.setVisibility(View.INVISIBLE);
             }
 		}

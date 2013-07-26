@@ -68,6 +68,25 @@
                 android:textSize="16sp"
                 android:textStyle="bold|italic"/>
         </RelativeLayout>
+
+        <RelativeLayout android:id="@+id/descuento_manual_indicator"
+                        android:layout_width="40dp"
+                        android:layout_height="33dp"
+                        android:background="@drawable/indicator_descuento_manual"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/banner_carrito_descuento_layout"
+                        android:layout_alignBottom="@+id/banner_carrito_descuento_layout">
+            <TextView android:id="@+id/textView"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_centerInParent="true"
+                      android:layout_marginBottom="32dp"
+                      android:layout_marginLeft="50dp"
+                      android:text="@string/M"
+                      android:textColor="#ffffff"
+                      android:textSize="16sp"
+                      android:textStyle="bold|italic"/>
+        </RelativeLayout>
         <RelativeLayout
             android:id="@+id/banner_carrito_precio_layout"
             android:layout_width="wrap_content"

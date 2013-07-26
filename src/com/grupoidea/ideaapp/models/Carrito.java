@@ -1,7 +1,5 @@
 package com.grupoidea.ideaapp.models;
 
-import android.util.Log;
-
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -106,14 +104,14 @@ public class Carrito {
         ArrayList<Producto> prodGroup = new ArrayList<Producto>();
         int cantGrupo=0, size=productos.size();
         String categoriaProd = prodPivot.getCategoria();
-        Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
-        Log.d("DEBUG","categoria: "+ categoriaProd);
+//        Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
+//        Log.d("DEBUG","categoria: "+ categoriaProd);
         if(prodPivot.getRelacionadas() != null){
             catsGrupo= prodPivot.getRelacionadas();
 
             //cantidad incial es la cantidad de productos pivot
             cantGrupo=prodPivot.getCantidad();
-            Log.d("DEBUG","categorias: "+catsGrupo.get(0));
+//            Log.d("DEBUG","categorias: "+catsGrupo.get(0));
 
             //desplazarse por los productos buscando productos en categorias relacionadas que estén en el carrito
             for(int i=0; i<size; i++){
@@ -121,15 +119,15 @@ public class Carrito {
                     //agrego los productos que coincidan con sus cantidades
                     cantGrupo+=productos.get(i).getCantidad();
                     prodGroup.add(productos.get(i));
-                    Log.d("DEBUG", "Producto relacionado: " + productos.get(i).getNombre()+" cantidad: "+productos.get(i).getCantidad());
+//                    Log.d("DEBUG", "Producto relacionado: " + productos.get(i).getNombre()+" cantidad: "+productos.get(i).getCantidad());
                 }
             }
             //agrego mi producto pivot al final
             prodGroup.add(prodPivot);
-            Log.d("DEBUG", "Cantidad total: " + cantGrupo);
+//            Log.d("DEBUG", "Cantidad total: " + cantGrupo);
             //calcular descuento aplicado y guardar el mayor
             double descAplGroup= prodPivot.getGrupoCategoria().calcularDescuentoAplicado(cantGrupo);
-            Log.d("DEBUG", "desc aplicado= "+descAplGroup);
+//            Log.d("DEBUG", "desc aplicado= "+descAplGroup);
             //aplicar mayor descuento a todos los productos
             for(Producto prod:prodGroup){
                 if(prod.getDescuentoAplicado()<=descAplGroup){

@@ -46,5 +46,6 @@
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
     <string name="facturado">Facturado</string>
     <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
+    <string name="M">M</string>
 
 </resources>

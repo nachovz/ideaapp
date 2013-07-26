@@ -20,11 +20,7 @@ import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
-import com.grupoidea.ideaapp.models.Carrito;
-import com.grupoidea.ideaapp.models.Cliente;
-import com.grupoidea.ideaapp.models.GrupoCategoria;
-import com.grupoidea.ideaapp.models.Pedido;
-import com.grupoidea.ideaapp.models.Producto;
+import com.grupoidea.ideaapp.models.*;
 import com.parse.*;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -330,11 +326,6 @@ public class CatalogoActivity extends ParentMenuActivity {
             listCarrito.smoothScrollToPosition(0);
             adapterCarrito.showCarrito();
         }
-
-/*        adapterCarrito.notifyDataSetChanged();
-        adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-        listCarrito.smoothScrollToPosition(0);
-        adapterCarrito.showCarrito();*/
 
 		catalogoProductos = productos;
 		

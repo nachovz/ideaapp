@@ -171,7 +171,7 @@ public class Producto {
 	}
 
 	public void setDescuentoManual(double descuentoManual) {
-		this.descuentoManual = descuentoManual;
+		this.descuentoManual = descuentoManual/100.0;
 	}
 	
 	public String getCodigo() {
@@ -232,13 +232,17 @@ public class Producto {
         return precioDenominacionToString(getPrecioComercial());
     }
 
+    public String getStringPrecioDescuento() {
+        return precioDenominacionToString(getPrecioComercial()-(getPrecioComercial()*getDescuentoAplicado()));
+    }
+
 	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
 		return precioDenominacionToString(getPrecio());
 	}
 	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
 	public void addCantidad() {
-		if(cantidad < existencia){
+		if(cantidad < existencia+excedente){
             this.cantidad++;
             setDescuentoAplicado(calcularDescuentoAplicado());
         }
@@ -347,7 +351,7 @@ public class Producto {
 
     /** Double que representa el descuento aplicado al producto por cantidad**/
     public double getDescuentoAplicado() {
-        if(descuentoManual == 0){
+        if(descuentoManual == 0.0){
             return descuentoAplicado;
         }else{
             return descuentoManual;
@@ -386,31 +390,15 @@ public class Producto {
         return getStringPrecioComercial()+" / "+getPrecioComercialConIva();
     }
 
-    /*public ArrayList<String> getCategoriasRelated() {
-        return categoriasRelated;
+    public String getPrecioDescuentoConIva(){
+        double precio = getPrecioComercial();
+        precio = precio - (precio*getDescuentoAplicado());
+        return precioDenominacionToString(precio + (precio*getIva()));
     }
 
-    public void setCategoriasRelated(ArrayList<String> categoriasRelated) {
-        this.categoriasRelated = categoriasRelated;
-    }*/
-
-    /*public void setCategoriasRelatedJSONArray(JSONArray jsonArray) {
-        try{
-            ArrayList<String> list = new ArrayList<String>();
-            if (jsonArray != null) {
-                int len = jsonArray.length();
-                for (int i=0;i<len;i++){
-                    list.add(jsonArray.get(i).toString());
-//                    Log.d("DEBUG", "json: "+jsonArray.get(i).toString());
-                }
-                this.categoriasRelated = list;
-            }else{
-                this.categoriasRelated = null;
-            }
-        }catch(JSONException e){
-            this.categoriasRelated = null;
-        }
-    }*/
+    public String getPrecioCarritoSinIvaConIvaString(){
+        return getStringPrecioDescuento()+" / "+getPrecioDescuentoConIva();
+    }
 
     public int getCantidadDescuentosGroup() {
         return cantidadDescuentosGroup;
