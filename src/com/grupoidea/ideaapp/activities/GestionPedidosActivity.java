@@ -224,10 +224,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     pedidoParse[0] = new ParseObject("Pedido");Log.d("DEBUG", "Pidiendo Pedido");
                 }else{
                     //Si es un pedido rechazado que se está modificando
-
-                    //Eliminar productos asociados con el pedido
-
-
+                    if(idPedido.isEmpty() || idPedido == null){
                     //Obtener el ParseObject con el objectId
                     final ParseObject[] tempParseObj = new ParseObject[1];
                     ParseQuery query = new ParseQuery("Pedido");
@@ -235,10 +232,50 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         @Override
                         public void done(ParseObject parseObject, ParseException e) {
                             Log.d("DEBUG", "Recuperando Pedido");
-                            tempParseObj[0] =parseObject;
+                            tempParseObj[0] = parseObject;
                         }
                     });
                     pedidoParse[0] = tempParseObj[0];
+
+                    //Eliminar productos asociados con el pedido
+                    query = new ParseQuery("PedidoHasProductos");
+                    query.include("producto");
+                    query.whereEqualTo("pedido", idPedido);
+                    query.findInBackground(new FindCallback() {
+                        @Override
+                        public void done(List<ParseObject> productosPedido, ParseException e) {
+                            ParseQuery query;
+                            //obtener productos del pedido
+                            for(int i=0, size=productosPedido.size(); i<size; i++){
+                                final ParseObject productoPedido = productosPedido.get(i);
+                                //buscar producto en metas
+                                query = new ParseQuery("Metas");
+                                query.include("producto");
+                                query.include("asesor");
+                                query.whereEqualTo("asesor", ParseUser.getCurrentUser());
+                                query.whereEqualTo("producto", productoPedido);
+                                query.getFirstInBackground(new GetCallback() {
+                                    @Override
+                                    public void done(ParseObject meta, ParseException e) {
+                                        //restaurarle la cantidad a campo pedido en metas
+                                        meta.put("pedido", meta.getInt("pedido")-productoPedido.getInt("cantidad"));
+                                        meta.saveInBackground();
+                                    }
+                                });
+
+                                //restaurar excedentes de existir
+                                if(productoPedido.getInt("excedente") > 0){
+                                    ParseObject productoEx = productoPedido.getParseObject("producto");
+                                    productoEx.put("excedente", productoEx.getInt("excedente") + productoPedido.getInt("excedente"));
+                                    productoEx.saveInBackground();
+                                }
+
+                                //borrar el producto del pedido
+                                productoPedido.deleteInBackground();
+                            }
+                        }
+                    });
+                    }
                 }
 
                 pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
@@ -252,7 +289,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     public void done(ParseException e) {
                         for (final Producto prod : productos) {
                             //Obtener Productos de Parse
-                            Log.d("DEBUG", "Pidiendo Producto");
+                            Log.d("DEBUG", "Obteniendo Producto de Parse");
                             ParseQuery productoParseQuery = new ParseQuery("Producto");
                             productoParseQuery.whereEqualTo("codigo", prod.getNombre());
                             productoParseQuery.getFirstInBackground(new GetCallback() {
@@ -262,11 +299,18 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     Log.d("DEBUG", "Agregando a PedidoHasProducto");
                                     //Agregar a PedidoHasProducto
                                     final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
+                                    //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
                                     pedidoHasProductos.put("cantidad", prod.getCantidad());
-                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
+                                    pedidoHasProductos.put("excedente", 0);
+//                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
                                     pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
                                     pedidoHasProductos.put("pedido", pedidoParse[0]);
                                     pedidoHasProductos.put("producto", productoParse);
+                                    if(prod.getDescuentoManual() != 0.0){
+                                        pedidoHasProductos.put("manual", true);
+                                    }else{
+                                        pedidoHasProductos.put("manual", false);
+                                    }
                                     pedidoHasProductos.saveEventually(new SaveCallback() {
                                         @Override
                                         public void done(ParseException e) {

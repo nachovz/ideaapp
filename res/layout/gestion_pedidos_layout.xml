@@ -357,12 +357,12 @@
                 android:id="@+id/finalizarPedidoButton"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:layout_below="@id/totales_pedido_table"
                 android:layout_centerHorizontal="true"
-                android:gravity="center"
                 android:textSize="20dp"
                 android:text="@string/botonPedido"
-                android:onClick="commitPedido"/>
+                android:onClick="commitPedido" android:layout_alignParentBottom="true"
+                android:layout_below="@+id/totales_pedido_table" android:layout_alignParentEnd="false"
+                android:gravity="center"/>
 
     </RelativeLayout>
 </ScrollView>

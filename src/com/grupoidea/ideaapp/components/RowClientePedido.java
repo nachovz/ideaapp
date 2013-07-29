@@ -86,9 +86,9 @@ public class RowClientePedido extends RelativeLayout {
         final Context contextDialog = context;
 
 		if (estado == Pedido.ESTADO_RECHAZADO) {
-			this.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View arg0) {
+			this.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View arg0) {
 
 //                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
 //                    builder.setMessage(R.string.dialog_message)
@@ -96,31 +96,31 @@ public class RowClientePedido extends RelativeLayout {
 //                    AlertDialog dialog = builder.create();
 
                     Bundle bundle;
-					bundle = new Bundle();
-					bundle.putString("clienteNombre", ""+clienteNombre.getText());
+                    bundle = new Bundle();
+                    bundle.putString("clienteNombre", "" + clienteNombre.getText());
                     bundle.putString("idPedido", idPedido);
                     bundle.putString("numPedido", numPedido);
                     bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
-					parent.dispatchActivity(CatalogoActivity.class, bundle,
+                    parent.dispatchActivity(CatalogoActivity.class, bundle,
                             false);
-				}
-			});
-
-            this.setOnLongClickListener(new OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Log.d("DEBUG", "obs rechazo: "+observacionesRechazoPedido);
-                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle("Observaciones por rechazo de pedido:").show();
                     return true;
+                }
+            });
+
+            this.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("DEBUG", "obs rechazo: " + observacionesRechazoPedido);
+                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle("Observaciones por rechazo de pedido:").show();
                 }
             });
 
 
         }else if(estado == Pedido.ESTADO_VERIFICANDO){
             //editar pedido
-            this.setOnClickListener(new OnClickListener() {
+            this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
-                public void onClick(View arg0) {
+                public boolean onLongClick(View arg0) {
                     Bundle bundle;
                     bundle = new Bundle();
                     bundle.putString("clienteNombre", ""+clienteNombre.getText());
@@ -129,18 +129,20 @@ public class RowClientePedido extends RelativeLayout {
                     bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
                     parent.dispatchActivity(CatalogoActivity.class, bundle,
                             false);
+                    return true;
                 }
             });
         }else{
             //estado aprobado estado anulado
-            this.setOnClickListener(new OnClickListener() {
+            this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
-                public void onClick(View arg0) {
+                public boolean onLongClick(View arg0) {
                     Bundle bundle;
                     bundle = new Bundle();
                     bundle.putString("idPedido", idPedido);
                     parent.dispatchActivity(CatalogoActivity.class, bundle,
                             false);
+                    return true;
                 }
             });
         }
