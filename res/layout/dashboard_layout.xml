@@ -98,6 +98,14 @@
                                 android:padding="18dip"
                                 android:layout_weight="0.2"
                                 style="@style/encabezado"/>
+                        <TextView style="@style/encabezado"
+                                  android:layout_width="fill_parent"
+                                  android:layout_height="wrap_content"
+                                  android:text="@string/Bs"
+                                  android:layout_span="1"
+                                  android:padding="18dip"
+                                  android:layout_weight="0.2"
+                                  android:id="@+id/textView"/>
                     </TableRow>
                 </TableLayout>
             </ScrollView>
@@ -173,6 +181,15 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
                 android:src="@drawable/dash_img_icono_inferior" />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/counterPedidos"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="55dp"
+                    android:textStyle="bold" android:textColor="#FFFFFF" android:textSize="30sp"
+                    android:layout_marginLeft="40dp" android:background="@drawable/pastilla_counter_pedido"
+                    android:padding="4dp" android:visibility="invisible"/>
         </RelativeLayout>
 
         <Button
@@ -185,11 +202,16 @@
             android:textSize="20dp"
             android:onClick="createNewPedido" />
 
+        <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/pedidos_spinner" android:layout_below="@+id/cliente_nuevo_pedido_boton"
+                />
         <ScrollView
             android:id="@+id/cliente_scroll_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/cliente_nuevo_pedido_boton" >
+            android:layout_below="@+id/pedidos_spinner" >
 
             <LinearLayout
                 android:id="@+id/client_list_linear_layout"

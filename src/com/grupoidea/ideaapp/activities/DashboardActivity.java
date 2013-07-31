@@ -30,6 +30,9 @@ public class DashboardActivity extends ParentMenuActivity {
 	//private LinearLayout clienteList;
 	/** ViewGroup que contiene las filas con informacion de los pedidos */
 	private LinearLayout pedidosList;
+    private List<ParseObject> pedidos;
+    private Spinner pedidosSpinner;
+    private ArrayAdapter<String> pedidosSpinnerAdapter;
 
     /** Lista de metas del usuario logueado */
     private ArrayList<Meta> metas;
@@ -72,29 +75,67 @@ public class DashboardActivity extends ParentMenuActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
 
+        //Contador de pedidos
+        final TextView pedidosCounter;
+        pedidosCounter = (TextView) findViewById(R.id.counterPedidos);
+        //Llenar Spinner
+        final ArrayList<String> estados = new ArrayList<String>();
+        estados.add("VERIFICANDO");
+        estados.add("APROBADO");
+        estados.add("RECHAZADO");
+        estados.add("ANULADO");
+        estados.add("TODOS");
+
+        pedidosSpinnerAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, estados);
+        pedidosSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pedidosSpinner = (Spinner)findViewById(R.id.pedidos_spinner);
+        pedidosSpinner.setAdapter(pedidosSpinnerAdapter);
+
         //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
-
         ParseQuery queryPedidos = new ParseQuery("Pedido");
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
-//        queryPedidos.orderByDescending("createdAt");
         queryPedidos.orderByAscending("estado");
+        queryPedidos.addDescendingOrder("createdAt");
         queryPedidos.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    RowClientePedido row;
-                    for (ParseObject parseObject : parseObjects) {
-                        ParseObject cliente = parseObject.getParseObject("cliente");
-                        row = new RowClientePedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getCreatedAt());
-                        row.idPedido= parseObject.getObjectId();
-                        row.numPedido=parseObject.getString("num_pedido");
-                        if(parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO)
-//                            Log.d("DEBUG","asignando comentario rechazo, "+parseObject.getInt("estado"));
-                            row.observacionesRechazoPedido = parseObject.getString("comentario_rechazo");
-                        pedidosList.addView(row);
-                    }
+                    pedidos = parseObjects;
+                    //setear contador de pedidos
+                    pedidosCounter.setText(String.valueOf(pedidos.size()));
+                    pedidosCounter.setVisibility(View.VISIBLE);
+
+                    pedidosSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            Log.d("DEBUG","Estado seleccionado "+estados.get(position));
+                            RowClientePedido row;
+                            pedidosList.removeAllViews();
+                            for (ParseObject parseObject : pedidos) {
+                                if(parseObject.getInt("estado") == position || position == 4){
+                                    ParseObject cliente = parseObject.getParseObject("cliente");
+                                    row = new RowClientePedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getString("num_pedido"), parseObject.getCreatedAt(), parseObject.getUpdatedAt());
+                                    row.idPedido = parseObject.getObjectId();
+                                    row.numPedido = parseObject.getString("num_pedido");
+                                    if(position == Pedido.ESTADO_RECHAZADO || parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO){
+                                        row.observacionesRechazoPedido = parseObject.getString("comentario_rechazo");
+                                    }else if(position == Pedido.ESTADO_APROBADO){
+                                        //TODO view de pedido aprobado
+                                    }
+                                    pedidosList.addView(row);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+
+                    //poner Rechazado como seleccionado
+                    pedidosSpinner.setSelection(2);
+
                     Log.d("DEBUG", "Carga de pedidos completa");
                 } else {
                     Log.d("PARSE", e.toString());
@@ -121,6 +162,7 @@ public class DashboardActivity extends ParentMenuActivity {
                         meta.setValorFinal(parseObject.getInt("meta"));
                         meta.setValorActual(parseObject.getInt("facturado"));
                         meta.setValorEspera(parseObject.getInt("pedido"));
+                        meta.setValorBs(parseObject.getDouble("meta_bs"));
                         String producto1 = parseObject.getParseObject("producto").getObjectId();
                         String codigo = parseObject.getParseObject("producto").getString("codigo");
 
@@ -177,7 +219,7 @@ public class DashboardActivity extends ParentMenuActivity {
                     marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            TextView tcod, tmeta, tpedido, tfacturado;
+                            TextView tcod, tmeta, tpedido, tfacturado, tbs;
                             Boolean darkBackground = true;
                             tl = (TableLayout) findViewById(R.id.meta_list_elements);
                             //limpiar TableLayout de metas
@@ -201,7 +243,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Codigo a TableRow
                                     tcod = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
                                     tcod.setLayoutParams(params);
                                     tcod.setTextColor(Color.parseColor("#262626"));
                                     tcod.setPadding(18, 18, 18, 18);
@@ -220,7 +262,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Pedidos a TableRow
                                     tpedido = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
                                     tpedido.setLayoutParams(params);
                                     tpedido.setTextColor(Color.parseColor("#262626"));
                                     tpedido.setPadding(18, 18, 18, 18);
@@ -230,13 +272,23 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Facturado a TableRow
                                     tfacturado = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
                                     tfacturado.setLayoutParams(params);
                                     tfacturado.setTextColor(Color.parseColor("#262626"));
                                     tfacturado.setPadding(18, 18, 18, 18);
                                     tfacturado.setText(String.valueOf(meta.getValorActual()));
                                     tfacturado.setGravity(Gravity.CENTER);
                                     tr.addView(tfacturado);
+
+                                    //Crear y agregar TextView de Bolivares a TableRow
+                                    tbs = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    tbs.setLayoutParams(params);
+                                    tbs.setTextColor(Color.parseColor("#262626"));
+                                    tbs.setPadding(18, 18, 18, 18);
+                                    tbs.setText(String.valueOf(meta.getValorBs()));
+                                    tbs.setGravity(Gravity.CENTER);
+                                    tr.addView(tbs);
 
                                     //Añadir a TableLayout de metas
                                     tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));

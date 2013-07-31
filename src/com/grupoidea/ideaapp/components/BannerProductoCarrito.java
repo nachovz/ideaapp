@@ -127,7 +127,12 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                 public void afterTextChanged(Editable editable) {
                     if(!cantProd.getText().toString().isEmpty()){
                         int cant = Integer.valueOf(cantProd.getText().toString());
-                        producto.setCantidad(cant);
+                        int max = producto.getExcedente()+producto.getExistencia();
+                        if(cant > max){
+                            producto.setCantidad(max);
+                        }else{
+                            producto.setCantidad(cant);
+                        }
                         carrito.recalcularDescuentosGrupoCategoria(producto);
                         carritoAdapter.notifyDataSetChanged();
                         //Calcula el total del carrito

@@ -5,12 +5,25 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/cliente_num_pedido_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#808080"
+        android:textSize="28sp"
+        android:textStyle="bold|italic"
+        android:layout_alignParentBottom="false"
+        android:layout_marginRight="40dp"/>
+    <TextView
         android:id="@+id/cliente_nombre_pedido_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="160dp"
         android:layout_marginTop="20dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#646464"

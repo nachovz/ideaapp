@@ -35,6 +35,7 @@
         </activity>
         <activity
             android:name="com.grupoidea.ideaapp.activities.GestionPedidosActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:label="@string/app_name">
         </activity>
         <activity

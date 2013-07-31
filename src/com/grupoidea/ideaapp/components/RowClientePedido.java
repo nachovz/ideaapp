@@ -2,10 +2,10 @@ package com.grupoidea.ideaapp.components;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +31,7 @@ import java.util.Date;
  * 
  */
 public class RowClientePedido extends RelativeLayout {
-	private RelativeLayout rowClienteLayout;
+    private RelativeLayout rowClienteLayout;
 	private RelativeLayout fillLayout;
 	private RelativeLayout backgroundLayout;
 	private FrameLayout estatusLayout;
@@ -57,7 +57,7 @@ public class RowClientePedido extends RelativeLayout {
 	 * @param nombreCliente
 	 *            Cadena de texto con el nombre (Razon Social) del cliente
 	 */
-	public RowClientePedido(Context context, String nombreCliente, int estadoParam, Date creationDate) {
+	public RowClientePedido(Context context, String nombreCliente, int estadoParam, String codPedido, Date createdAt, Date updatedAt) {
 		super(context);
 		this.context = context;
 		
@@ -68,41 +68,57 @@ public class RowClientePedido extends RelativeLayout {
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.row_cliente_pedido_layout, this);
 		rowClienteLayout = (RelativeLayout) view;
-		
+
 		view = rowClienteLayout.findViewById(R.id.cliente_nombre_pedido_textview);
 		clienteNombre = (TextView) view;
 		clienteNombre.setText(nombreCliente);
 
+        view = rowClienteLayout.findViewById(R.id.cliente_num_pedido_textview);
+        clienteNombre = (TextView) view;
+        clienteNombre.setText("   #"+codPedido);
+
+        //Mostrar fechas de creacion y de actualizacion del pedido
         view = rowClienteLayout.findViewById(R.id.cliente_pedido_date_textview);
         fechaPedido = (TextView) view;
-        fechaPedido.setText(DateFormat.getDateInstance().format(creationDate));
-		
+        if(createdAt.equals(updatedAt)){
+            fechaPedido.setText("Creado: "+DateFormat.getDateInstance().format(createdAt));
+        }else{
+            fechaPedido.setText("Creado: "+DateFormat.getDateInstance().format(createdAt)+" (Editado: "+DateFormat.getDateInstance().format(updatedAt)+")");
+        }
 		view = rowClienteLayout.findViewById(R.id.cliente_pedido_status_layout);
 		estatusLayout = (FrameLayout) view;
 		
 		estado = estadoParam;
 		this.addEstado(estado);
 
+        //Establecer acciones para taps y long taps segun estado de pedido
         final Context contextDialog = context;
-
 		if (estado == Pedido.ESTADO_RECHAZADO) {
 			this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View arg0) {
+                    //Levantar dialogo de confirmacion
+                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                    builder.setMessage(contextDialog.getString(R.string.rechazado_dialog_message))
+                            .setTitle(contextDialog.getString(R.string.rechazado_dialog_title))
+                            .setPositiveButton(contextDialog.getString(R.string.dialog_continuar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Bundle bundle;
+                                    bundle = new Bundle();
+                                    bundle.putString("clienteNombre", "" + clienteNombre.getText());
+                                    bundle.putString("idPedido", idPedido);
+                                    bundle.putString("numPedido", numPedido);
+                                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
+                                    parent.dispatchActivity(CatalogoActivity.class, bundle,false);
+                                }
+                            })
+                            .setNegativeButton(contextDialog.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
 
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
-//                    builder.setMessage(R.string.dialog_message)
-//                            .setTitle(R.string.dialog_title);
-//                    AlertDialog dialog = builder.create();
-
-                    Bundle bundle;
-                    bundle = new Bundle();
-                    bundle.putString("clienteNombre", "" + clienteNombre.getText());
-                    bundle.putString("idPedido", idPedido);
-                    bundle.putString("numPedido", numPedido);
-                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
-                    parent.dispatchActivity(CatalogoActivity.class, bundle,
-                            false);
                     return true;
                 }
             });
@@ -110,8 +126,8 @@ public class RowClientePedido extends RelativeLayout {
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("DEBUG", "obs rechazo: " + observacionesRechazoPedido);
-                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle("Observaciones por rechazo de pedido:").show();
+//                    Log.d("DEBUG", "obs rechazo: " + observacionesRechazoPedido);
+                    new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle(contextDialog.getString(R.string.obs_rechazo_pedido_alert_title)).show();
                 }
             });
 
@@ -121,14 +137,28 @@ public class RowClientePedido extends RelativeLayout {
             this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View arg0) {
-                    Bundle bundle;
-                    bundle = new Bundle();
-                    bundle.putString("clienteNombre", ""+clienteNombre.getText());
-                    bundle.putString("idPedido", idPedido);
-                    bundle.putString("numPedido", numPedido);
-                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
-                    parent.dispatchActivity(CatalogoActivity.class, bundle,
-                            false);
+                    //Levantar dialogo de confirmacion
+                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                    builder.setMessage(contextDialog.getString(R.string.verificando_dialog_message))
+                            .setTitle(contextDialog.getString(R.string.verificando_dialog_title))
+                            .setPositiveButton(contextDialog.getString(R.string.dialog_continuar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Bundle bundle;
+                                    bundle = new Bundle();
+                                    bundle.putString("clienteNombre", ""+clienteNombre.getText());
+                                    bundle.putString("idPedido", idPedido);
+                                    bundle.putString("numPedido", numPedido);
+                                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
+                                    parent.dispatchActivity(CatalogoActivity.class, bundle,false);
+                                }
+                            })
+                            .setNegativeButton(contextDialog.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
                     return true;
                 }
             });
@@ -137,11 +167,25 @@ public class RowClientePedido extends RelativeLayout {
             this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View arg0) {
-                    Bundle bundle;
-                    bundle = new Bundle();
-                    bundle.putString("idPedido", idPedido);
-                    parent.dispatchActivity(CatalogoActivity.class, bundle,
-                            false);
+                    //Levantar dialogo de confirmacion
+                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                    builder.setMessage(contextDialog.getString(R.string.copiar_dialog_message))
+                            .setTitle(contextDialog.getString(R.string.copiar_dialog_title))
+                            .setPositiveButton(contextDialog.getString(R.string.dialog_continuar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Bundle bundle;
+                                    bundle = new Bundle();
+                                    bundle.putString("idPedido", idPedido);
+                                    parent.dispatchActivity(CatalogoActivity.class, bundle,false);
+                                }
+                            })
+                            .setNegativeButton(contextDialog.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
                     return true;
                 }
             });

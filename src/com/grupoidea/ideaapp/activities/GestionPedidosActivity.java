@@ -115,7 +115,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 nombreTextView= new TextView(this);
                 //Nombre
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
                 nombreTextView.setLayoutParams(params);
                 nombreTextView.setTextColor(Color.parseColor("#262626"));
                 nombreTextView.setPadding(18, 18, 18, 18);
@@ -137,7 +137,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio Lista
                 precioTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
                 precioTextView.setLayoutParams(params);
                 precioTextView.setTextColor(Color.parseColor("#262626"));
                 precioTextView.setPadding(18, 18, 18, 18);
@@ -148,7 +148,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio con Desc Comercial
                 precioComercialTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
                 precioComercialTextView.setLayoutParams(params);
                 precioComercialTextView.setTextColor(Color.parseColor("#262626"));
                 precioComercialTextView.setPadding(18, 18, 18, 18);
@@ -159,7 +159,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Descuento por Volumen
                 descuentoTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
                 descuentoTextView.setLayoutParams(params);
                 descuentoTextView.setTextColor(Color.parseColor("#262626"));
                 descuentoTextView.setPadding(18, 18, 18, 18);
@@ -171,7 +171,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio Final
                 precioFinalTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
                 precioFinalTextView.setLayoutParams(params);
                 precioFinalTextView.setTextColor(Color.parseColor("#262626"));
                 precioFinalTextView.setPadding(18, 18, 18, 18);
@@ -213,118 +213,129 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         //Obtener Cliente de Parse
         Log.d("DEBUG", "Pidiendo Cliente");
         final ParseQuery clienteParseQuery = new ParseQuery("Cliente");
+        Log.d("DEBUG", "Cliente: "+ cliente.getNombre());
         clienteParseQuery.whereEqualTo("nombre", cliente.getNombre());
         clienteParseQuery.getFirstInBackground(new GetCallback() {
             @Override
-            public void done(ParseObject clienteParse, ParseException e) {
-                //Crear Pedido
-                final ParseObject[] pedidoParse = new ParseObject[1];
-                if(idPedido==null){
-                    //Si es un pedido nuevo
-                    pedidoParse[0] = new ParseObject("Pedido");Log.d("DEBUG", "Pidiendo Pedido");
-                }else{
-                    //Si es un pedido rechazado que se está modificando
-                    if(idPedido.isEmpty() || idPedido == null){
-                    //Obtener el ParseObject con el objectId
-                    final ParseObject[] tempParseObj = new ParseObject[1];
-                    ParseQuery query = new ParseQuery("Pedido");
-                    query.getInBackground(idPedido, new GetCallback() {
-                        @Override
-                        public void done(ParseObject parseObject, ParseException e) {
-                            Log.d("DEBUG", "Recuperando Pedido");
-                            tempParseObj[0] = parseObject;
-                        }
-                    });
-                    pedidoParse[0] = tempParseObj[0];
-
-                    //Eliminar productos asociados con el pedido
-                    query = new ParseQuery("PedidoHasProductos");
-                    query.include("producto");
-                    query.whereEqualTo("pedido", idPedido);
-                    query.findInBackground(new FindCallback() {
-                        @Override
-                        public void done(List<ParseObject> productosPedido, ParseException e) {
-                            ParseQuery query;
-                            //obtener productos del pedido
-                            for(int i=0, size=productosPedido.size(); i<size; i++){
-                                final ParseObject productoPedido = productosPedido.get(i);
-                                //buscar producto en metas
-                                query = new ParseQuery("Metas");
-                                query.include("producto");
-                                query.include("asesor");
-                                query.whereEqualTo("asesor", ParseUser.getCurrentUser());
-                                query.whereEqualTo("producto", productoPedido);
-                                query.getFirstInBackground(new GetCallback() {
-                                    @Override
-                                    public void done(ParseObject meta, ParseException e) {
-                                        //restaurarle la cantidad a campo pedido en metas
-                                        meta.put("pedido", meta.getInt("pedido")-productoPedido.getInt("cantidad"));
-                                        meta.saveInBackground();
-                                    }
-                                });
-
-                                //restaurar excedentes de existir
-                                if(productoPedido.getInt("excedente") > 0){
-                                    ParseObject productoEx = productoPedido.getParseObject("producto");
-                                    productoEx.put("excedente", productoEx.getInt("excedente") + productoPedido.getInt("excedente"));
-                                    productoEx.saveInBackground();
-                                }
-
-                                //borrar el producto del pedido
-                                productoPedido.deleteInBackground();
-                            }
-                        }
-                    });
-                    }
-                }
-
-                pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
-                pedidoParse[0].put("cliente", clienteParse);
-                pedidoParse[0].put("direccion", direccion);
-                pedidoParse[0].put("estado", 0);
-                pedidoParse[0].put("num_pedido", numPedido);
-                pedidoParse[0].put("comentario", observaciones);
-                pedidoParse[0].saveEventually(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        for (final Producto prod : productos) {
-                            //Obtener Productos de Parse
-                            Log.d("DEBUG", "Obteniendo Producto de Parse");
-                            ParseQuery productoParseQuery = new ParseQuery("Producto");
-                            productoParseQuery.whereEqualTo("codigo", prod.getNombre());
-                            productoParseQuery.getFirstInBackground(new GetCallback() {
-                                @Override
-                                public void done(final ParseObject productoParse, ParseException e) {
-                                    if (e != null) Log.d("DEBUG", e.getMessage());
-                                    Log.d("DEBUG", "Agregando a PedidoHasProducto");
-                                    //Agregar a PedidoHasProducto
-                                    final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
-                                    //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
-                                    pedidoHasProductos.put("cantidad", prod.getCantidad());
-                                    pedidoHasProductos.put("excedente", 0);
-//                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
-                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
-                                    pedidoHasProductos.put("pedido", pedidoParse[0]);
-                                    pedidoHasProductos.put("producto", productoParse);
-                                    if(prod.getDescuentoManual() != 0.0){
-                                        pedidoHasProductos.put("manual", true);
-                                    }else{
-                                        pedidoHasProductos.put("manual", false);
-                                    }
-                                    pedidoHasProductos.saveEventually(new SaveCallback() {
+            public void done(final ParseObject clienteParse, ParseException e) {
+                if(e==null){
+                    Log.d("DEBUG", "entrando en Done de Cliente");
+                    //Crear Pedido
+                    final ParseObject[] pedidoParse = new ParseObject[1];
+                    if(idPedido==null){
+                        //Si es un pedido nuevo
+                        pedidoParse[0] = new ParseObject("Pedido");
+                        Log.d("DEBUG", "Pidiendo Pedido");
+                    }else{
+                        //Si es un pedido rechazado que se está modificando
+                        Log.d("DEBUG", "Editando pedido "+idPedido);
+                        //Obtener el ParseObject con el objectId
+                        ParseQuery query = new ParseQuery("Pedido");
+                        query.getInBackground(idPedido, new GetCallback() {
+                            @Override
+                            public void done(ParseObject parseObject, ParseException e) {
+                                Log.d("DEBUG", "Recuperando Pedido " + parseObject.getObjectId());
+                                if (e == null) {
+                                    pedidoParse[0] = parseObject;
+                                    //Eliminar productos asociados con el pedido
+                                    ParseQuery query = new ParseQuery("PedidoHasProductos");
+                                    query.include("producto");
+                                    query.whereEqualTo("pedido", idPedido);
+                                    query.findInBackground(new FindCallback() {
                                         @Override
-                                        public void done(ParseException e) {
-                                            if (e != null) e.printStackTrace();
-                                            Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-                                            Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
-                                            dispatchActivity(DashboardActivity.class, null, true);
+                                        public void done(List<ParseObject> productosPedido, ParseException e) {
+                                            if (e == null) {
+                                                ParseQuery query;
+                                                //obtener productos del pedido
+                                                for (int i = 0, size = productosPedido.size(); i < size; i++) {
+                                                    final ParseObject productoPedido = productosPedido.get(i);
+                                                    //buscar producto en metas
+                                                    query = new ParseQuery("Metas");
+                                                    query.include("producto");
+                                                    query.include("asesor");
+                                                    query.whereEqualTo("asesor", ParseUser.getCurrentUser());
+                                                    query.whereEqualTo("producto", productoPedido);
+                                                    query.getFirstInBackground(new GetCallback() {
+                                                        @Override
+                                                        public void done(ParseObject meta, ParseException e) {
+                                                            //restaurarle la cantidad a campo pedido en metas
+                                                            meta.put("pedido", meta.getInt("pedido") - productoPedido.getInt("cantidad"));
+                                                            meta.saveInBackground();
+                                                        }
+                                                    });
+
+                                                    //restaurar excedentes de existir
+                                                    if (productoPedido.getInt("excedente") > 0) {
+                                                        ParseObject productoEx = productoPedido.getParseObject("producto");
+                                                        productoEx.put("excedente", productoEx.getInt("excedente") + productoPedido.getInt("excedente"));
+                                                        productoEx.saveInBackground();
+                                                    }
+
+                                                    //borrar el producto del pedido
+                                                    productoPedido.deleteInBackground();
+                                                }
+                                            } else {
+                                                Log.d("DEBUG", e.getCause() + e.getMessage());
+                                            }
                                         }
                                     });
+
+                                    pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
+                                    pedidoParse[0].put("cliente", clienteParse);
+                                    pedidoParse[0].put("direccion", direccion);
+                                    pedidoParse[0].put("estado", 0);
+                                    pedidoParse[0].put("num_pedido", numPedido);
+                                    pedidoParse[0].put("comentario", observaciones);
+                                    pedidoParse[0].saveEventually(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            for (final Producto prod : productos) {
+                                                //Obtener Productos de Parse
+                                                Log.d("DEBUG", "Obteniendo Producto de Parse");
+                                                ParseQuery productoParseQuery = new ParseQuery("Producto");
+                                                productoParseQuery.whereEqualTo("codigo", prod.getNombre());
+                                                productoParseQuery.getFirstInBackground(new GetCallback() {
+                                                    @Override
+                                                    public void done(final ParseObject productoParse, ParseException e) {
+                                                        if (e != null) Log.d("DEBUG", e.getMessage());
+                                                        Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                                                        //Agregar a PedidoHasProducto
+                                                        final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
+                                                        //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
+                                                        pedidoHasProductos.put("cantidad", prod.getCantidad());
+                                                        pedidoHasProductos.put("excedente", 0);
+                                                        //                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
+                                                        pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
+                                                        pedidoHasProductos.put("pedido", pedidoParse[0]);
+                                                        pedidoHasProductos.put("producto", productoParse);
+                                                        if (prod.getDescuentoManual() != 0.0) {
+                                                            pedidoHasProductos.put("manual", true);
+                                                        } else {
+                                                            pedidoHasProductos.put("manual", false);
+                                                        }
+                                                        pedidoHasProductos.saveEventually(new SaveCallback() {
+                                                            @Override
+                                                            public void done(ParseException e) {
+                                                                if (e != null) e.printStackTrace();
+                                                                Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                                                Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
+                                                                dispatchActivity(DashboardActivity.class, null, true);
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Log.d("DEBUG", e.getCause() + e.getMessage());
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
-                });
+                }else{
+                    Log.d("DEBUG", e.getCause() + e.getMessage());
+                }
             }
         });
 

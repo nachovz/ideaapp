@@ -47,5 +47,17 @@
     <string name="facturado">Facturado</string>
     <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
     <string name="M">M</string>
+    <string name="hintObsPedido">Agregue observaciones sobre el pedido aqui</string>
+    <string name="Bs">Bs.</string>
+
+    <string name="dialog_continuar_button">Continuar</string>
+    <string name="dialog_cancelar_button">Cancelar</string>
+    <string name="rechazado_dialog_title">Editar Pedido Rechazado</string>
+    <string name="rechazado_dialog_message">Editar este pedido cambiará su estado a \"Verificando\". Continuar?</string>
+    <string name="verificando_dialog_title">Editar Pedido Esperando Verificacion</string>
+    <string name="verificando_dialog_message">Esta seguro que desea editar pedido en espera de Verificación?</string>
+    <string name="copiar_dialog_title">Crear Nuevo Pedido</string>
+    <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado?</string>
+    <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string><string name="categorias">Categorias</string><string name="marcas">Marcas</string>
 
 </resources>

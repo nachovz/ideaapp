@@ -112,7 +112,14 @@ public class CatalogoActivity extends ParentMenuActivity {
         queryExistencia.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
-                if (e == null) prod.setExistencia(parseObject.getInt("meta"));
+                if (e == null){
+                    int exist = parseObject.getInt("meta")-parseObject.getInt("pedido")-parseObject.getInt("facturado");
+                    if(exist >0){
+                        prod.setExistencia(exist);
+                    }else{
+                        prod.setExistencia(0);
+                    }
+                }
                 else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla UserHasProducto");
             }
         });
@@ -208,9 +215,9 @@ public class CatalogoActivity extends ParentMenuActivity {
                             Cliente clienteM;
                             if(modificarPedidoId != null){
                                 //Obtener indice de cliente
-                                Log.d("DEBUG", ""+clientes.size());
+//                                Log.d("DEBUG", ""+clientes.size());
                                 for(int j=0, size= clientes.size(); j<size; j++){
-                                    Log.d("DEBUG", "j: "+j);
+//                                    Log.d("DEBUG", "j: "+j);
                                     if (clientes.get(j).getNombre().equalsIgnoreCase(clienteNombre)){
                                         clienteSpinner.setSelection(j);
                                         clienteSelected = j;
@@ -387,7 +394,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         try {
             for (int i = 0, count = prodsCarrito.size(); i < count; i++) {
                 productoJSONObj = prodsCarrito.get(i).toJSON();
-                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
+//                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
                 productosJSONArray.put(productoJSONObj);
             }
             productos = productosJSONArray.toString();

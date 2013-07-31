@@ -93,8 +93,6 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-hdpi/dash_menu_icono_idea.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/dash_menu_icono_idea.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/detalle_producto.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/fileHashes.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/fileSnapshots.bin" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-hdpi/ic_launcher.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/ic_launcher.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-xhdpi/ic_launcher.png" />
@@ -117,7 +115,6 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/menu_bkg.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/menu_bkg_titulo.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/microondas.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/outputFileStates.bin" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/pantalla_pedidos.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/parrillera.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/pedidos_bkg_cantidad.png" />
@@ -134,28 +131,23 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/pedidos_manager_cantidad_menos.png" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/pinguinos.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/sonido.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/taskArtifacts.bin" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/thermos.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/tostadoras.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/tv.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable-mdpi/vinera.jpg" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/manifests/debug/AndroidManifest.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/source/buildConfig/debug/com/grupoidea/ideaapp/BuildConfig.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Parse_1_1_92.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/source/r/debug/com/grupoidea/ideaapp/R.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/banner_producto_carrito_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/banner_producto_catalogo_layout.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/cache.properties.lock" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/1.6/taskArtifacts/cache.properties" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/carrito_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/catalogo_layout.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/dashboard_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/incremental/aidl/debug/dependency.store" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/drawable/detalle_menu_selector.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/detalle_producto_layout.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/filtro_background_gradient.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/gestion_pedidos_layout.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/incremental/aidl/debug/inputs.data" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/incremental/mergeAssets/debug/inputs.data" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/incremental/mergeResources/debug/inputs.data" />
@@ -170,6 +162,8 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/incremental/mergeResources/debug/outputs.data" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/parent_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/parent_menu_layout.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/pastilla_counter_pedido.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/drawable/pastilla_title_items_filtro.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/row_cliente_marca_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/row_cliente_pedido_layout.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/layout/row_cliente_porcentaje_layout.xml" />
@@ -177,10 +171,20 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/values/values.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/values-v11/values.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/res/all/debug/values-v14/values.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Meta.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Meta.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" afterPath="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/carrito_layout.xml" afterPath="$PROJECT_DIR$/res/layout/carrito_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/dashboard_layout.xml" afterPath="$PROJECT_DIR$/res/layout/dashboard_layout.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/gestion_pedidos_layout.xml" afterPath="$PROJECT_DIR$/res/layout/gestion_pedidos_layout.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/menu_layout.xml" afterPath="$PROJECT_DIR$/res/layout/menu_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/row_cliente_pedido_layout.xml" afterPath="$PROJECT_DIR$/res/layout/row_cliente_pedido_layout.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="IDEAApp.iws" />
@@ -207,6 +211,7 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -244,7 +249,6 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -257,19 +261,67 @@
       <file leaf-file-name="GestionPedidosActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="285" column="64" selection-start="14555" selection-end="14555" vertical-scroll-proportion="0.51104975" vertical-offset="4495" max-vertical-offset="6606">
+            <state line="161" column="111" selection-start="7839" selection-end="7839" vertical-scroll-proportion="-2.572477" vertical-offset="3904" max-vertical-offset="6588">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DashboardActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="124" column="70" selection-start="5508" selection-end="5508" vertical-scroll-proportion="0.0" vertical-offset="2070" max-vertical-offset="6246">
               <folding>
-                <element signature="e#9997#10005#0" expanded="true" />
-                <element signature="e#10587#17637#0" expanded="true" />
-                <element signature="e#12046#14142#0" expanded="true" />
-                <element signature="e#12946#13446#0" expanded="true" />
-                <element signature="e#13411#13412#0" expanded="true" />
-                <element signature="e#14119#14120#0" expanded="true" />
-                <element signature="e#17248#17256#0" expanded="true" />
-                <element signature="e#17626#17627#0" expanded="true" />
-                <element signature="e#17886#19359#0" expanded="true" />
-                <element signature="e#19348#19349#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#2668#2676#0" expanded="true" />
+                <element signature="e#3611#6129#0" expanded="true" />
+                <element signature="e#6118#6119#0" expanded="true" />
+                <element signature="e#6390#16018#0" expanded="true" />
+                <element signature="e#9662#9670#0" expanded="true" />
+                <element signature="e#16007#16008#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dashboard_layout.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/dashboard_layout.xml">
+          <provider editor-type-id="text-editor">
+            <state line="61" column="36" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0" vertical-offset="1080" max-vertical-offset="4140">
+              <folding />
+            </state>
+          </provider>
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="menu_layout.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/menu_layout.xml">
+          <provider editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="810">
+              <folding />
+            </state>
+          </provider>
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pastilla_title_items_filtro.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_title_items_filtro.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="54" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="filtro_background_gradient.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/drawable/filtro_background_gradient.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="37" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -277,26 +329,19 @@
       <file leaf-file-name="RowClientePedido.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="118" column="54" selection-start="4254" selection-end="4254" vertical-scroll-proportion="0.0" vertical-offset="1728" max-vertical-offset="3636">
-              <folding>
-                <element signature="e#2865#3791#0" expanded="true" />
-                <element signature="e#3776#3777#0" expanded="true" />
-                <element signature="e#3831#4195#0" expanded="true" />
-                <element signature="e#4180#4181#0" expanded="true" />
-                <element signature="e#4323#4964#0" expanded="true" />
-                <element signature="e#4949#4950#0" expanded="true" />
-                <element signature="e#5067#5491#0" expanded="true" />
-                <element signature="e#5476#5477#0" expanded="true" />
-              </folding>
+            <state line="76" column="61" selection-start="2506" selection-end="2506" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4104">
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Producto.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
+      <file leaf-file-name="Pedido.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Pedido.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="280" column="27" selection-start="9380" selection-end="9380" vertical-scroll-proportion="0.0" vertical-offset="4710" max-vertical-offset="8118">
-              <folding />
+            <state line="10" column="47" selection-start="331" selection-end="331" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1062">
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -325,22 +370,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClienteMarca.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/ParentActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Pedido.java" />
-        <option value="$PROJECT_DIR$/res/drawable/pastilla_anulado.xml" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Carrito.java" />
-        <option value="$PROJECT_DIR$/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/res/drawable/indicator_descuento_manual.xml" />
-        <option value="$PROJECT_DIR$/res/layout/banner_producto_carrito_layout.xml" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java" />
-        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java" />
+        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Meta.java" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java" />
+        <option value="$PROJECT_DIR$/res/layout/row_cliente_pedido_layout.xml" />
+        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java" />
         <option value="$PROJECT_DIR$/res/layout/gestion_pedidos_layout.xml" />
+        <option value="$PROJECT_DIR$/res/layout/carrito_layout.xml" />
         <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java" />
+        <option value="$PROJECT_DIR$/res/drawable/pastilla_counter_pedido.xml" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/res/layout/dashboard_layout.xml" />
+        <option value="$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java" />
+        <option value="$PROJECT_DIR$/res/drawable/filtro_background_gradient.xml" />
+        <option value="$PROJECT_DIR$/res/drawable/pastilla_title_items_filtro.xml" />
+        <option value="$PROJECT_DIR$/res/layout/menu_layout.xml" />
       </list>
     </option>
   </component>
@@ -402,7 +447,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -449,7 +493,91 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="components" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="activities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -471,21 +599,40 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ideaapp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="project.structure.last.edited" value="Modules" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="75" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="96" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="96" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
-    <property name="recentsLimit" value="5" />
-    <property name="MemberChooser.sorted" value="false" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="80" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="recentsLimit" value="5" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/Parse-1.1.9.jar!/" />
     <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="99" />
@@ -610,8 +757,8 @@
       <option name="ACTIVITY_CLASS" value="" />
       <option name="MODE" value="default_activity" />
       <option name="DEPLOY" value="true" />
-      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
-      <option name="PREFERRED_AVD" value="x86_Tablet_10in" />
+      <option name="TARGET_SELECTION_MODE" value="USB_DEVICE" />
+      <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
       <option name="WIPE_USER_DATA" value="false" />
@@ -792,7 +939,11 @@
       <created>1374867886099</created>
       <updated>1374867886099</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Progreso hasta el 29/07 Falta filtrar pedidos por estado, dialogos de confirmacion, vista de pedido aprobado en popup y menu de filtros">
+      <created>1375120064228</created>
+      <updated>1375120064228</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -825,8 +976,8 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.06879195" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3262195" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32348484" sideWeight="0.68350166" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6712538" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.6712538" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31345826" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3909396" sideWeight="0.8079417" order="3" side_tool="false" content_ui="tabs" />
@@ -841,8 +992,8 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21016692" sideWeight="0.32197616" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32928678" sideWeight="0.6750842" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21016692" sideWeight="0.6882453" order="0" side_tool="true" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31175467" sideWeight="0.7221374" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21016692" sideWeight="0.6882453" order="0" side_tool="true" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31175467" sideWeight="0.7221374" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -920,7 +1071,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Faltan Dialogos para Pedidos basados en existentes y Menu de Filtros" />
+    <option name="LAST_COMMIT_MESSAGE" value="Progreso hasta el 29/07 Falta filtrar pedidos por estado, dialogos de confirmacion, vista de pedido aprobado en popup y menu de filtros" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -943,149 +1094,165 @@
     <MESSAGE value="Listo &quot;Tooltip&quot; (LongPress) de pedido rechazado en Dashboard" />
     <MESSAGE value="Corregidos &quot;Bugs&quot; encontrados por el Cliente y errores mios en commit hecho desde la oficina que no se reflejó bien en GIT" />
     <MESSAGE value="Faltan Dialogos para Pedidos basados en existentes y Menu de Filtros" />
+    <MESSAGE value="Progreso hasta el 29/07 Falta filtrar pedidos por estado, dialogos de confirmacion, vista de pedido aprobado en popup y menu de filtros" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_verificando.xml">
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_aprobado.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_error.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_rechazado.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_anulado.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="8" selection-start="386" selection-end="386" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="22" selection-start="2561" selection-end="2561" vertical-scroll-proportion="0.87096775" vertical-offset="378" max-vertical-offset="1008">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Carrito.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="135" column="25" selection-start="5372" selection-end="5372" vertical-scroll-proportion="0.5376147" vertical-offset="2083" max-vertical-offset="2628">
+        <state line="133" column="53" selection-start="4835" selection-end="4835" vertical-scroll-proportion="0.768" vertical-offset="1728" max-vertical-offset="3600">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/drawable/indicator_descuento_manual.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="30" selection-start="371" selection-end="371" vertical-scroll-proportion="0.2580645" vertical-offset="0" max-vertical-offset="558">
+        <state line="4" column="54" selection-start="184" selection-end="191" vertical-scroll-proportion="0.12903225" vertical-offset="0" max-vertical-offset="558">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/CatalogoActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="445" column="53" selection-start="21575" selection-end="21575" vertical-scroll-proportion="0.6183486" vertical-offset="6665" max-vertical-offset="7650">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCatalogo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="13" selection-start="822" selection-end="822" vertical-scroll-proportion="-7.8605504" vertical-offset="4374" max-vertical-offset="5382">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/banner_producto_carrito_layout.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="49" column="8" selection-start="1918" selection-end="1918" vertical-scroll-proportion="0.0" vertical-offset="706" max-vertical-offset="3330">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/BannerProductoCarrito.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="138" column="16" selection-start="5204" selection-end="5204" vertical-scroll-proportion="2.419355" vertical-offset="810" max-vertical-offset="3564">
-          <folding>
-            <element signature="e#5545#6183#0" expanded="true" />
-            <element signature="e#6177#6178#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/gestion_pedidos_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="364" column="25" selection-start="17665" selection-end="17665" vertical-scroll-proportion="0.0" vertical-offset="6166" max-vertical-offset="6696">
+          <folding>
+            <element signature="e#2727#2742#0" expanded="true" />
+            <element signature="e#3678#3697#0" expanded="true" />
+            <element signature="e#4643#4666#0" expanded="true" />
+            <element signature="e#5625#5652#0" expanded="true" />
+            <element signature="e#6608#6632#0" expanded="true" />
+            <element signature="e#7273#7303#0" expanded="true" />
+            <element signature="e#8634#8652#0" expanded="true" />
+            <element signature="e#9101#9119#0" expanded="true" />
+            <element signature="e#9569#9593#0" expanded="true" />
+            <element signature="e#10043#10072#0" expanded="true" />
+            <element signature="e#10522#10548#0" expanded="true" />
+            <element signature="e#10997#11018#0" expanded="true" />
+            <element signature="e#12600#12623#0" expanded="true" />
+            <element signature="e#13373#13396#0" expanded="true" />
+            <element signature="e#14059#14077#0" expanded="true" />
+            <element signature="e#15280#15298#0" expanded="true" />
+            <element signature="e#16482#16497#0" expanded="true" />
+            <element signature="e#17353#17374#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="android-designer">
         <state />
       </provider>
-      <provider editor-type-id="text-editor">
-        <state line="10" column="43" selection-start="435" selection-end="435" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6714">
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_counter_pedido.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="29" selection-start="362" selection-end="362" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="95" selection-start="3496" selection-end="3496" vertical-scroll-proportion="0.0" vertical-offset="679" max-vertical-offset="1224">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/components/RowClientePedido.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="118" column="54" selection-start="4254" selection-end="4254" vertical-scroll-proportion="0.0" vertical-offset="1728" max-vertical-offset="3636">
-          <folding>
-            <element signature="e#2865#3791#0" expanded="true" />
-            <element signature="e#3776#3777#0" expanded="true" />
-            <element signature="e#3831#4195#0" expanded="true" />
-            <element signature="e#4180#4181#0" expanded="true" />
-            <element signature="e#4323#4964#0" expanded="true" />
-            <element signature="e#4949#4950#0" expanded="true" />
-            <element signature="e#5067#5491#0" expanded="true" />
-            <element signature="e#5476#5477#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Producto.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="280" column="27" selection-start="9380" selection-end="9380" vertical-scroll-proportion="0.0" vertical-offset="4710" max-vertical-offset="8118">
+        <state line="76" column="61" selection-start="2506" selection-end="2506" vertical-scroll-proportion="0.0" vertical-offset="3433" max-vertical-offset="4104">
           <folding />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/models/Pedido.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="10" column="47" selection-start="331" selection-end="331" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1062">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/parent_menu_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2106">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/detalle_menu_selector.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="558">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/catalogo_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="954">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/DashboardActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="70" selection-start="5508" selection-end="5508" vertical-scroll-proportion="0.0" vertical-offset="2070" max-vertical-offset="6246">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2668#2676#0" expanded="true" />
+            <element signature="e#3611#6129#0" expanded="true" />
+            <element signature="e#6118#6119#0" expanded="true" />
+            <element signature="e#6390#16018#0" expanded="true" />
+            <element signature="e#9662#9670#0" expanded="true" />
+            <element signature="e#16007#16008#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/dashboard_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="61" column="36" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0" vertical-offset="922" max-vertical-offset="4158">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/filtro_background_gradient.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="37" selection-start="255" selection-end="255" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/drawable/pastilla_title_items_filtro.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4" column="54" selection-start="191" selection-end="191" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/menu_layout.xml">
+      <provider editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="468">
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/grupoidea/ideaapp/activities/GestionPedidosActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="285" column="64" selection-start="14555" selection-end="14555" vertical-scroll-proportion="0.51104975" vertical-offset="4495" max-vertical-offset="6606">
-          <folding>
-            <element signature="e#9997#10005#0" expanded="true" />
-            <element signature="e#10587#17637#0" expanded="true" />
-            <element signature="e#12046#14142#0" expanded="true" />
-            <element signature="e#12946#13446#0" expanded="true" />
-            <element signature="e#13411#13412#0" expanded="true" />
-            <element signature="e#14119#14120#0" expanded="true" />
-            <element signature="e#17248#17256#0" expanded="true" />
-            <element signature="e#17626#17627#0" expanded="true" />
-            <element signature="e#17886#19359#0" expanded="true" />
-            <element signature="e#19348#19349#0" expanded="true" />
-          </folding>
+        <state line="161" column="111" selection-start="7839" selection-end="7839" vertical-scroll-proportion="-2.572477" vertical-offset="3904" max-vertical-offset="6588">
+          <folding />
         </state>
       </provider>
     </entry>
