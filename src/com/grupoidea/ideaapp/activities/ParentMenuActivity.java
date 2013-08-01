@@ -65,7 +65,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		this.hasMenuRight = hasMenuRight;
 		this.hasMenuLeft = hasMenuLeft;
 		menuRight = null;
-		menuLeft = null;
+		setMenuLeft(null);
 	}
 	
 	@Override
@@ -207,7 +207,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		
 		inflateView = getLayoutInflater().inflate(layoutResId, null);
 		if(inflateView != null) {
-			menuLeft = (ViewGroup) inflateView;
+			setMenuLeft((ViewGroup) inflateView);
 			parentInflater = (RelativeLayout) findViewById(R.id.parent_menu_left_layout);
 			if(parentInflater != null) {
 				parentInflater.addView(inflateView);
@@ -222,7 +222,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	
 	/** Permite obtener el ViewGroup que se utilizara como menu lateral derecho*/
 	public ViewGroup getLeftMenuLayout() {
-		return menuLeft;
+		return getMenuLeft();
 	}
 	
 	/** Permite mostrar una cadena de texto en el centro del menu.
@@ -321,5 +321,13 @@ public abstract class ParentMenuActivity extends ParentActivity {
             }
         });
         return adapter;
+    }
+
+    public ViewGroup getMenuLeft() {
+        return menuLeft;
+    }
+
+    public void setMenuLeft(ViewGroup menuLeft) {
+        this.menuLeft = menuLeft;
     }
 }

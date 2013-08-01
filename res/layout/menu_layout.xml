@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/menu_inflated_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="@drawable/filtro_background_gradient">
+        android:layout_height="fill_parent" android:background="@drawable/filtro_background_gradient">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -22,6 +22,12 @@
                     android:id="@+id/categorias_filtro_textView" android:textColor="#FFFFFF" android:textStyle="bold|italic"
                     android:textSize="22sp" android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
                     android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:text="@string/todas" android:id="@+id/textView"
+                      android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
+                      android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
+                      android:background="@drawable/pastilla_items_filtro"
+                      android:layout_marginTop="5dp" android:layout_marginBottom="5dp"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
@@ -32,7 +38,13 @@
                       android:text="@string/marcas" android:id="@+id/marcas_filtro_textView"
                       android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
                       android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
-                      android:background="@drawable/pastilla_title_items_filtro"/>
+                      android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:text="@string/todas" android:id="@+id/textView2" android:textColor="#FFFFFF"
+                      android:textStyle="bold|italic" android:textSize="22sp" android:textAlignment="gravity"
+                      android:gravity="center" android:padding="10dp"
+                      android:background="@drawable/pastilla_items_filtro" android:layout_marginBottom="5dp"
+                      android:layout_marginTop="5dp"/>
         </LinearLayout>
 
     </RelativeLayout>

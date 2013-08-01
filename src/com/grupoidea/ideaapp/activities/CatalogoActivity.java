@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -46,6 +47,11 @@ public class CatalogoActivity extends ParentMenuActivity {
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
     public String lastprodName;
+    public String categoriaActual="Todas", marcaActual="Todas";
+    public static ArrayList<String> marcas, categorias;
+    public static ArrayAdapter marcasAdapter, categoriasAdapter;
+    public LinearLayout categoriasFiltro, marcasFiltro;
+    protected static  Context mContext;
 	
 	public CatalogoActivity() {
 		super(true, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
@@ -55,6 +61,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+        mContext = getBaseContext();
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
@@ -73,6 +80,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
+
         //Poblar Spinner de Clientes e inflar
         adapter = getClientesFromParse();
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -93,12 +101,17 @@ public class CatalogoActivity extends ParentMenuActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+
+        categorias = new ArrayList<String>();
+        marcas = new ArrayList<String>();
+        categoriaActual = getString(R.string.todas);
+        marcaActual = getString(R.string.todas);
+//        Log.d("DEBUG", "marca actual: "+ marcaActual+" categoria actual: "+categoriaActual);
 	}
 	
 	private Producto retrieveProducto(final ParseObject producto){
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
-//        Log.d("DEBUG", "nombre prod: "+codigo);
 		double precio = producto.getDouble("costo");
 		final String objectId = producto.getObjectId();
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
@@ -126,8 +139,9 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Obtener categoria
         ParseObject categoria = producto.getParseObject("categoria");
 		prod.setMarca(producto.getString("marca"));
-//        Log.d("DEBUG", "categoria: "+categoria.getString("nombre"));
+        addMarca(producto.getString("marca"));
 		prod.setCategoria(categoria.getString("nombre"));
+        addCategoria(categoria.getString("nombre"));
         prod.setIdCategoria(categoria.getObjectId());
         //Obtener categorias relacionadas
 //        prod.setCategoriasRelatedJSONArray(categoria.getJSONArray("relacionadas"));
@@ -182,7 +196,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		List<ParseObject> productosParse = (List<ParseObject>) response.getResponse();
 		ArrayList<Producto> productos = new ArrayList<Producto>();
 		Producto producto;
-		RelativeLayout menuRight;
+		RelativeLayout menuRight, menuLeft;
 		RelativeLayout relativeLayout;
 		ListView listCarrito = null;
 
@@ -195,6 +209,25 @@ public class CatalogoActivity extends ParentMenuActivity {
                 lastprodName=producto.getNombre();
             }
 		}
+
+        menuLeft = (RelativeLayout) getMenuLeft();
+        if(menuLeft != null){
+            categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
+            categoriasFiltro.getChildAt(1).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickTextView((TextView) v);
+                }
+            });
+            marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
+            marcasFiltro.getChildAt(1).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickTextView((TextView) v);
+                }
+            });
+
+        }
 
 		carrito = new Carrito();
         adapterCarrito = new BannerProductoCarrito(this, carrito);
@@ -217,7 +250,6 @@ public class CatalogoActivity extends ParentMenuActivity {
                                 //Obtener indice de cliente
 //                                Log.d("DEBUG", ""+clientes.size());
                                 for(int j=0, size= clientes.size(); j<size; j++){
-//                                    Log.d("DEBUG", "j: "+j);
                                     if (clientes.get(j).getNombre().equalsIgnoreCase(clienteNombre)){
                                         clienteSpinner.setSelection(j);
                                         clienteSelected = j;
@@ -278,7 +310,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                         prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad"));
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
-                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
+//                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
                                         adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
                                         adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                     }
@@ -294,6 +326,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             adapterCarrito.showCarrito();
 
         }else{
+            Log.d("DEBUG", "Clonar Pedido "+modificarPedidoId);
             final ArrayList<Producto> prodsModPedido=productos;
             //Pedido Id
             final ParseQuery queryPedido = new ParseQuery("Pedido");
@@ -317,7 +350,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                         prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad"));
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
-                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
+//                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
                                         adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
                                         adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                     }
@@ -478,4 +511,133 @@ public class CatalogoActivity extends ParentMenuActivity {
 		return req;
 	}
 
+    public void onClickTextView(TextView selected){
+        LinearLayout parent = (LinearLayout) selected.getParent();
+        if (((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.categorias))){
+            setCategoriaActual(selected);
+        }else if(((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.marcas))){
+            setMarcaActual(selected);
+        }
+    }
+
+    /*------------- CATEGORIAS -----------------*/
+
+    public void addCategoria(String cat){
+        if((cat != null) && !isInCategorias(cat)){
+            categorias.add(cat);
+            TextView tv = new TextView(mContext);
+            tv.setText(cat);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+            tv.setTextSize(22);
+            tv.setGravity(Gravity.CENTER);
+            tv.setPadding(10, 10, 10, 10);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 5, 0, 5);
+            tv.setLayoutParams(layoutParams);
+            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
+            tv.setTypeface(null, Typeface.BOLD_ITALIC);
+            tv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickTextView((TextView) v);
+                }
+            });
+            categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
+            categoriasFiltro.addView(tv);
+        }
+    }
+
+    public Boolean isInCategorias(String cat){
+        for(int i = 0, size = categorias.size(); i<size; i++){
+            if (cat.equals(categorias.get(i)))
+                return true;
+        }
+        return false;
+    }
+
+    public void setCategoriaActual(TextView selected){
+        categoriaActual = selected.getText().toString();
+        Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
+        updateProductos();
+    }
+
+    /*------------- MARCAS -----------------*/
+
+    public void addMarca(String mar){
+        if((mar != null) && !isInMarcas(mar)){
+            marcas.add(mar);
+            TextView tv = new TextView(mContext);
+            tv.setText(mar);
+            tv.setTextColor(Color.parseColor("#FFFFFF"));
+            tv.setTextSize(22);
+            tv.setGravity(Gravity.CENTER);
+            tv.setPadding(10, 10, 10, 10);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 5, 0, 5);
+            tv.setLayoutParams(layoutParams);
+            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
+            tv.setTypeface(null, Typeface.BOLD_ITALIC);
+            tv.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickTextView((TextView) v);
+                }
+            });
+            marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
+            marcasFiltro.addView(tv);
+        }
+    }
+
+    public Boolean isInMarcas(String cat){
+        for(int i = 0, size = marcas.size(); i<size; i++){
+            if (cat.equals(marcas.get(i)))
+                return true;
+        }
+        return false;
+    }
+
+    public void setMarcaActual(TextView selected){
+        marcaActual = selected.getText().toString();
+        Log.d("DEBUG", "marca seleccionada: "+ marcaActual);
+        updateProductos();
+    }
+
+    public void updateProductos(){
+//        Log.d("DEBUG", "marca actual: "+ marcaActual+" categoria actual: "+categoriaActual);
+        for (Producto prod : catalogoProductos) {
+//            Log.d("DEBUG", "producto: "+prod.getMarca()+" "+prod.getCategoria());
+            if (marcaActual.equals(getString(R.string.todas))) {
+                if(categoriaActual.equals(getString(R.string.todas))){
+                    //No hay filtros puestos
+                    prod.setIsInCatalogo(true);
+                }else if(prod.getCategoria().equals(categoriaActual)){
+                    //la categoria coincide y no hay filtros de marcas
+                    prod.setIsInCatalogo(true);
+                }else{
+                    //No hay filtro de marcas, no son la misma categoria
+                    prod.setIsInCatalogo(false);
+                }
+            }else if(prod.getMarca().equals(marcaActual)){
+                //la marca coincide, verificar contra la categoria
+                if(categoriaActual.equals(getString(R.string.todas))){
+                    //No hay filtro de categoria puesto y la marca coincide
+                    prod.setIsInCatalogo(true);
+                }else if(prod.getCategoria().equals(categoriaActual)){
+                    //la categoria y la marca coinciden
+                    prod.setIsInCatalogo(true);
+                }else{
+                    //La marca coincide pero no es la misma categoria
+                    prod.setIsInCatalogo(false);
+                }
+            }else{
+                //hay filtro de marca puesto, no coinciden
+                prod.setIsInCatalogo(false);
+            }
+
+
+//            Log.d("DEBUG", String.valueOf(prod.getIsInCatalogo()));
+        }
+        adapterCatalogo.notifyDataSetChanged();
+//        Log.d("DEBUG", "notificado el dataset changed");
+    }
 }

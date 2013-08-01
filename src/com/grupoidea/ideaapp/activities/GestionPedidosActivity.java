@@ -35,6 +35,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     /** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
     protected ArrayList<Producto> productos;
     protected String numPedido, idPedido;
+    protected boolean editar = false;
 
     public GestionPedidosActivity() {
 		super(false, false);
@@ -78,9 +79,12 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 text.setText(cliente.getNombre());
             //# Orden Compra
                 if(numPedido==null){
+                    editar = false;
                     Random rand = new Random();
                     numPedido = String.valueOf(56000 + rand.nextInt(10000));
                     Log.d("DEBUG", "numPedido: " + numPedido);
+                }else{
+                    editar = true;
                 }
                 text = (TextView) findViewById(R.id.numero_orden_compra_edit);
                 text.setText("#"+numPedido);
@@ -222,7 +226,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     Log.d("DEBUG", "entrando en Done de Cliente");
                     //Crear Pedido
                     final ParseObject[] pedidoParse = new ParseObject[1];
-                    if(idPedido==null){
+                    if(!editar){
                         //Si es un pedido nuevo
                         pedidoParse[0] = new ParseObject("Pedido");
                         Log.d("DEBUG", "Pidiendo Pedido");

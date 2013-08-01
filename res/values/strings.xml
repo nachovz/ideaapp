@@ -40,7 +40,7 @@
     <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
     <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
     <string name="pedidos_banner_text">Pedidos</string>
-    <string name="existencia">Meta: </string>
+    <string name="meta_restante">Meta Restante: </string>
     <string name="agregar_descuento">Agregar Descuento</string>
     <string name="nombre_producto">Nombre del Producto:</string>
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
@@ -58,6 +58,8 @@
     <string name="verificando_dialog_message">Esta seguro que desea editar pedido en espera de Verificación?</string>
     <string name="copiar_dialog_title">Crear Nuevo Pedido</string>
     <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado?</string>
-    <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string><string name="categorias">Categorias</string><string name="marcas">Marcas</string>
+    <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string>
+    <string name="categorias">Categorias</string><string name="marcas">Marcas</string>
+    <string name="todas">Todas</string>
 
 </resources>

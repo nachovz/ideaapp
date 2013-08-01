@@ -104,8 +104,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		} else {
         	view = convertView;
         }
-		
-		if(producto != null) {
+
+//        Log.d("DEBUG", "Banner:"+producto.getMarca()+" "+producto.getCategoria()+" "+producto.getIsInCatalogo());
+
+        if(producto != null && producto.getIsInCatalogo()==true) {
+            view.setVisibility(View.VISIBLE);
             //Nombre producto
 			if(producto.getNombre() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_titulo_text_view);
@@ -163,7 +166,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
 					//Agrega el producto clickeado al carrito de compras.
 					producto = productos.get(position);
-//					addProductoFlagCarrito(producto);
                     producto.setIsInCarrito(true);
 					adapter.notifyDataSetChanged();
 					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
@@ -238,7 +240,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             if (exced == null) {
                 throw new AssertionError();
             }
-            exced.setText(menuActivity.getText(R.string.existencia)+" "+String.valueOf(producto.getExistencia()));
+            exced.setText(menuActivity.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
 
             exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
             exced.setText(menuActivity.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
@@ -299,7 +301,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 }
             });
 
-		}
+		}else{
+            view.setVisibility(View.GONE);
+        }
 		return view;
 	}
 

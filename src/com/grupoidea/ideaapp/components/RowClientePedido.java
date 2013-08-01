@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,8 +70,6 @@ public class RowClientePedido extends RelativeLayout {
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.row_cliente_pedido_layout, this);
 		rowClienteLayout = (RelativeLayout) view;
-
-        productosPedidoView = inflater.inflate(R.layout.productos_pedido_aprobado_layout, null);
 
 		view = rowClienteLayout.findViewById(R.id.cliente_nombre_pedido_textview);
 		clienteNombre = (TextView) view;
@@ -195,6 +192,7 @@ public class RowClientePedido extends RelativeLayout {
                 }
             });
 
+            //mostrar view pedido aprobado
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -214,12 +212,22 @@ public class RowClientePedido extends RelativeLayout {
                                 double subtotal = 0.0;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
                                 LayoutInflater inflater = ((DashboardActivity)contextDialog).getLayoutInflater();
+                                productosPedidoView = null;
+                                productosPedidoView = inflater.inflate(R.layout.productos_pedido_aprobado_layout, null, false);
                                 builder.setView(productosPedidoView);
                                 builder.setTitle("Informacion del Pedido");
+                                builder.setNegativeButton("Atras", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int whichButton) {
+                                            // Canceled.
+                                            dialog.cancel();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                final AlertDialog alert = builder.create();
                                 TableRow tr; TextView tv; TableRow.LayoutParams params; ParseObject productoPedido;
                                 TableLayout tl = (TableLayout) productosPedidoView.findViewById(R.id.productos_pedido_aprobado);
                                 tl.removeAllViews();
-                                Log.d("DEBUG", "Productos en Pedido Dialogo: "+productosPedido.size());
+//                                Log.d("DEBUG", "Productos en Pedido Dialogo: "+productosPedido.size());
                                 if(productosPedido.size()>0){
                                     for(int i = 0, size = productosPedido.size(); i<size; i++){
                                         productoPedido = productosPedido.get(i);
@@ -297,7 +305,8 @@ public class RowClientePedido extends RelativeLayout {
 
                                             tv = (TextView) productosPedidoView.findViewById(R.id.total_edit_aprobado);
                                             tv.setText(String.valueOf(finalSubtotal+imp));
-                                            finalBuilder.show();
+//                                            finalBuilder.show();
+                                            alert.show();
                                         }
                                     });
                                 }else{
@@ -306,14 +315,17 @@ public class RowClientePedido extends RelativeLayout {
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("1"));
                                     tv.setLayoutParams(params);
                                     tv.setTextColor(Color.parseColor("#FFFFFF"));
-                                    tv.setPadding(18,0,18,0);
+                                    tv.setPadding(18, 0, 18, 0);
                                     tv.setText("Este pedido no tiene productos asociados");
                                     tl.removeAllViews();
                                     tr.addView(tv);
                                     tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                                    builder.show();
+//                                    builder.show();
+                                    alert.show();
+                                    tl.removeAllViews();
                                 }
                                 }
+
                             }
                         });
                         }

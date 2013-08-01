@@ -110,7 +110,7 @@ public class DashboardActivity extends ParentMenuActivity {
                     pedidosSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            Log.d("DEBUG","Estado seleccionado "+estados.get(position));
+                            Log.d("DEBUG","Estado seleccionado en Spinner "+estados.get(position));
                             RowClientePedido row;
                             pedidosList.removeAllViews();
                             for (ParseObject parseObject : pedidos) {
@@ -136,7 +136,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     Log.d("DEBUG", "Carga de pedidos completa");
                 } else {
-                    Log.d("PARSE", e.toString());
+                    Log.d("DEBUG", e.toString());
                 }
             }
         });

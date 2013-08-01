@@ -62,6 +62,7 @@ public class Producto {
 	private Boolean isMenuOpen;
 	/** Boolean que permite determinar si el producto esta en el carrito*/
 	private Boolean isInCarrito;
+    private Boolean isInCatalogo;
     public static DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
 	/** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
@@ -101,6 +102,7 @@ public class Producto {
         this.descuentoAplicado = 0.0;
         this.iva = 0.0;
 		this.isInCarrito = false;
+        this.isInCatalogo = true;
 		this.tablaDescuentos = new SparseArray<Double>();
 	}
 	public String getDenominacion() {
@@ -449,5 +451,13 @@ public class Producto {
 
     public void setGrupoCategoria(GrupoCategoria grupoCategoria) {
         this.grupoCategoria = grupoCategoria;
+    }
+
+    public Boolean getIsInCatalogo() {
+        return isInCatalogo;
+    }
+
+    public void setIsInCatalogo(Boolean inCatalogo) {
+        isInCatalogo = inCatalogo;
     }
 }
