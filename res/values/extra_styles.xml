@@ -7,6 +7,13 @@
         <item name="android:background">#808080</item>
     </style>
 
+    <style name="encabezado_blue">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#3A70B9</item>
+    </style>
+
     <style name="titulo">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">#ffffff</item>

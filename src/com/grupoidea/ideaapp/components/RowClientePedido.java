@@ -6,22 +6,24 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
+import com.grupoidea.ideaapp.activities.DashboardActivity;
 import com.grupoidea.ideaapp.activities.ParentActivity;
 import com.grupoidea.ideaapp.models.Pedido;
+import com.parse.*;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Clase que permite crear una fila con el nombre del cliente con el estado y la
@@ -35,6 +37,7 @@ public class RowClientePedido extends RelativeLayout {
 	private RelativeLayout fillLayout;
 	private RelativeLayout backgroundLayout;
 	private FrameLayout estatusLayout;
+    private View productosPedidoView;
 
 	private TextView clienteNombre;
 	private TextView fechaPedido;
@@ -69,6 +72,8 @@ public class RowClientePedido extends RelativeLayout {
 		view = inflater.inflate(R.layout.row_cliente_pedido_layout, this);
 		rowClienteLayout = (RelativeLayout) view;
 
+        productosPedidoView = inflater.inflate(R.layout.productos_pedido_aprobado_layout, null);
+
 		view = rowClienteLayout.findViewById(R.id.cliente_nombre_pedido_textview);
 		clienteNombre = (TextView) view;
 		clienteNombre.setText(nombreCliente);
@@ -81,9 +86,9 @@ public class RowClientePedido extends RelativeLayout {
         view = rowClienteLayout.findViewById(R.id.cliente_pedido_date_textview);
         fechaPedido = (TextView) view;
         if(createdAt.equals(updatedAt)){
-            fechaPedido.setText("Creado: "+DateFormat.getDateInstance().format(createdAt));
+            fechaPedido.setText(DateFormat.getDateInstance().format(createdAt));
         }else{
-            fechaPedido.setText("Creado: "+DateFormat.getDateInstance().format(createdAt)+" (Editado: "+DateFormat.getDateInstance().format(updatedAt)+")");
+            fechaPedido.setText(DateFormat.getDateInstance().format(createdAt)+"   (Editado: "+DateFormat.getDateInstance().format(updatedAt)+")");
         }
 		view = rowClienteLayout.findViewById(R.id.cliente_pedido_status_layout);
 		estatusLayout = (FrameLayout) view;
@@ -162,8 +167,161 @@ public class RowClientePedido extends RelativeLayout {
                     return true;
                 }
             });
+        }else if(estado == Pedido.ESTADO_APROBADO){
+            //editar pedido
+            this.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View arg0) {
+                    //Levantar dialogo de confirmacion
+                    AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                    builder.setMessage(contextDialog.getString(R.string.copiar_dialog_message))
+                            .setTitle(contextDialog.getString(R.string.copiar_dialog_title))
+                            .setPositiveButton(contextDialog.getString(R.string.dialog_continuar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Bundle bundle;
+                                    bundle = new Bundle();
+                                    bundle.putString("idPedido", idPedido);
+                                    parent.dispatchActivity(CatalogoActivity.class, bundle,false);
+                                }
+                            })
+                            .setNegativeButton(contextDialog.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                    return true;
+                }
+            });
+
+            this.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Obtener ParseObject de Pedido
+                    ParseQuery queryPedido = new ParseQuery("Pedido");
+                    queryPedido.getInBackground(idPedido, new GetCallback() {
+                        @Override
+                        public void done(ParseObject pedidoParse, ParseException e) {
+                        //Obtener productos relacionados al pedido
+                        ParseQuery queryProductosPedido = new ParseQuery("PedidoHasProductos");
+                        queryProductosPedido.whereEqualTo("pedido", pedidoParse);
+                        queryProductosPedido.include("producto");
+                        queryProductosPedido.findInBackground(new FindCallback() {
+                            @Override
+                            public void done(List<ParseObject> productosPedido, ParseException e) {
+                                if(e==null){
+                                double subtotal = 0.0;
+                                AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                                LayoutInflater inflater = ((DashboardActivity)contextDialog).getLayoutInflater();
+                                builder.setView(productosPedidoView);
+                                builder.setTitle("Informacion del Pedido");
+                                TableRow tr; TextView tv; TableRow.LayoutParams params; ParseObject productoPedido;
+                                TableLayout tl = (TableLayout) productosPedidoView.findViewById(R.id.productos_pedido_aprobado);
+                                tl.removeAllViews();
+                                Log.d("DEBUG", "Productos en Pedido Dialogo: "+productosPedido.size());
+                                if(productosPedido.size()>0){
+                                    for(int i = 0, size = productosPedido.size(); i<size; i++){
+                                        productoPedido = productosPedido.get(i);
+                                        tr = new TableRow(productosPedidoView.getContext());
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.5"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(18,5,18,5);
+                                        tv.setText(productoPedido.getParseObject("producto").getString("codigo"));
+                                        tr.addView(tv);
+
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(18,5,18,5);
+                                        tv.setText(productoPedido.get("cantidad").toString());
+                                        tr.addView(tv);
+
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(18,5,18,5);
+                                        if(productoPedido.get("precio_unitario")!= null){
+                                            tv.setText(productoPedido.get("precio_unitario").toString());
+                                        }else{
+                                            tv.setText("");
+                                        }
+                                        tr.addView(tv);
+
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(18,5,0,5);
+                                        tv.setText(productoPedido.get("descuento").toString());
+                                        tr.addView(tv);
+
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.15"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(0,5,18,5);
+                                        if(productoPedido.getBoolean("manual")){
+                                            tv.setText("M");
+                                        }else{
+                                            tv.setText("-");
+                                        }
+                                        tr.addView(tv);
+                                        tv = new TextView(productosPedidoView.getContext());
+                                        params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                                        tv.setLayoutParams(params);
+                                        tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                        tv.setPadding(18, 5, 18, 5);
+                                        tv.setText(productoPedido.get("monto").toString());
+                                        tr.addView(tv);
+                                        subtotal += productoPedido.getDouble("monto");
+                                        tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                                    }
+                                    ParseQuery queryIva = new ParseQuery("Impuestos");
+                                    queryIva.whereEqualTo("nombre","IVA");
+                                    final double finalSubtotal = subtotal;
+                                    final AlertDialog.Builder finalBuilder = builder;
+                                    queryIva.getFirstInBackground(new GetCallback() {
+                                        @Override
+                                        public void done(ParseObject parseImp, ParseException e) {
+                                            TextView tv = (TextView) productosPedidoView.findViewById(R.id.subtotal_edit_aprobado);
+                                            tv.setText(String.valueOf(finalSubtotal));
+
+                                            tv = (TextView) productosPedidoView.findViewById(R.id.impuesto_edit_aprobado);
+                                            Double imp = finalSubtotal * (parseImp.getDouble("porcentaje")/100.0);
+                                            tv.setText(String.valueOf(imp));
+
+                                            tv = (TextView) productosPedidoView.findViewById(R.id.total_edit_aprobado);
+                                            tv.setText(String.valueOf(finalSubtotal+imp));
+                                            finalBuilder.show();
+                                        }
+                                    });
+                                }else{
+                                    tr = new TableRow(productosPedidoView.getContext());
+                                    tv = new TextView(productosPedidoView.getContext());
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("1"));
+                                    tv.setLayoutParams(params);
+                                    tv.setTextColor(Color.parseColor("#FFFFFF"));
+                                    tv.setPadding(18,0,18,0);
+                                    tv.setText("Este pedido no tiene productos asociados");
+                                    tl.removeAllViews();
+                                    tr.addView(tv);
+                                    tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+                                    builder.show();
+                                }
+                                }
+                            }
+                        });
+                        }
+                    });
+                }
+            });
         }else{
-            //estado aprobado estado anulado
+            //estado anulado o error
             this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View arg0) {
@@ -190,6 +348,7 @@ public class RowClientePedido extends RelativeLayout {
                 }
             });
         }
+
 	}
 	
 	/**

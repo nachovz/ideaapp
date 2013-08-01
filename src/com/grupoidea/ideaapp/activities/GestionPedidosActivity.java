@@ -304,8 +304,10 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                         //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
                                                         pedidoHasProductos.put("cantidad", prod.getCantidad());
                                                         pedidoHasProductos.put("excedente", 0);
-                                                        //                                    Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
+                                                        //Log.d("DEBUG", "descuento aplicado: " + prod.getDescuentoAplicadoString());
                                                         pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
+                                                        pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
+                                                        pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
                                                         pedidoHasProductos.put("pedido", pedidoParse[0]);
                                                         pedidoHasProductos.put("producto", productoParse);
                                                         if (prod.getDescuentoManual() != 0.0) {
