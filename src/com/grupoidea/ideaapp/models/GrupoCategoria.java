@@ -1,8 +1,6 @@
 package com.grupoidea.ideaapp.models;
 
-import android.util.Log;
 import android.util.SparseArray;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -58,10 +56,10 @@ public class GrupoCategoria {
 
     public double calcularDescuentoAplicado(int cant){
             int key;
-        Log.d("DEBUG", "tabla size:"+ tablaDescuentos.size());
+//        Log.d("DEBUG", "tabla size:"+ tablaDescuentos.size());
             for( int i = tablaDescuentos.size()-1; i>=0; i--){
                 key = tablaDescuentos.keyAt(i);
-                Log.d("DEBUG", "descuentos: cant: "+key+" desc:"+tablaDescuentos.valueAt(i)/100.0);
+//                Log.d("DEBUG", "descuentos: cant: "+key+" desc:"+tablaDescuentos.valueAt(i)/100.0);
                 if( key != 0 && key<= cant){
                     return tablaDescuentos.valueAt(i)/100.0;
                 }
