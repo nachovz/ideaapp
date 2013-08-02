@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp"
-            android:background="@drawable/detalle_menu_selector">
+            android:background="@drawable/detalle_menu_selector" android:minHeight="1280dp">
 
             <!--Titulo Activity-->
             <RelativeLayout
@@ -361,6 +361,6 @@
                     android:onClick="commitPedido"
                     android:layout_alignParentEnd="false"
                     android:gravity="center"
-                    android:layout_alignParentBottom="true" android:layout_below="@+id/totales_pedido_table"/>
+                    android:layout_alignParentBottom="false" android:layout_below="@+id/totales_pedido_table"/>
         </RelativeLayout>
     </ScrollView>

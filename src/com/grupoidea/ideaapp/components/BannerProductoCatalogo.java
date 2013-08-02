@@ -298,6 +298,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 public void onClick(View view) {
                     View view2 = (View) view.getParent();
                     ((CatalogoActivity)menuActivity).setValorDescuentoManual((Producto)view2.getTag());
+                    Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
                 }
             });
 

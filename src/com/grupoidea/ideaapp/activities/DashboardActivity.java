@@ -68,12 +68,12 @@ public class DashboardActivity extends ParentMenuActivity {
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
         //Dialogo de carga
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Cargando...");
-        progressDialog.setMessage("Cargando Dashboard, por favor espere...");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        catalogoProgressDialog = new ProgressDialog(this);
+        catalogoProgressDialog.setTitle("Cargando...");
+        catalogoProgressDialog.setMessage("Cargando Dashboard, por favor espere...");
+        catalogoProgressDialog.setIndeterminate(true);
+        catalogoProgressDialog.setCancelable(false);
+        catalogoProgressDialog.show();
 
         //Contador de pedidos
         final TextView pedidosCounter;
@@ -225,7 +225,7 @@ public class DashboardActivity extends ParentMenuActivity {
                                 tl.removeViews(1,tl.getChildCount()-1);
                             }
 
-                            progressDialog.show();
+                            catalogoProgressDialog.show();
 
                             for (Meta meta:metas){
                                 if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
@@ -246,6 +246,7 @@ public class DashboardActivity extends ParentMenuActivity {
                                     tcod.setTextColor(Color.parseColor("#262626"));
                                     tcod.setPadding(18, 18, 18, 18);
                                     tcod.setText(meta.getProducto().getCodigo());
+                                    tcod.setTypeface(null, Typeface.BOLD);
                                     tr.addView(tcod);
 
                                     //Crear y agregar TextView de Meta a TableRow
@@ -260,7 +261,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Pedidos a TableRow
                                     tpedido = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
                                     tpedido.setLayoutParams(params);
                                     tpedido.setTextColor(Color.parseColor("#262626"));
                                     tpedido.setPadding(18, 18, 18, 18);
@@ -295,7 +296,7 @@ public class DashboardActivity extends ParentMenuActivity {
                                 }
                             }
                             //quitar dialogo de carga
-                            progressDialog.dismiss();
+                            catalogoProgressDialog.dismiss();
 
                         }
                         @Override

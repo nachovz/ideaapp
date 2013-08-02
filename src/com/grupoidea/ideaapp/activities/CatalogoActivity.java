@@ -66,13 +66,20 @@ public class CatalogoActivity extends ParentMenuActivity {
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
-        //Dialogo de carga
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Cargando...");
-        progressDialog.setMessage("Cargando Catalogo, por favor espere...");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        //Dialogo de carga catalogo
+        catalogoProgressDialog = new ProgressDialog(this);
+        catalogoProgressDialog.setTitle("Cargando...");
+        catalogoProgressDialog.setMessage("Cargando Catalogo, por favor espere...");
+        catalogoProgressDialog.setIndeterminate(true);
+        catalogoProgressDialog.setCancelable(false);
+        catalogoProgressDialog.show();
+
+        //Dialogo de carga carrito
+        carritoProgressDialog = new ProgressDialog(this);
+        carritoProgressDialog.setTitle("Cargando...");
+        carritoProgressDialog.setMessage("Cargando Carrito, por favor espere...");
+        carritoProgressDialog.setIndeterminate(true);
+        carritoProgressDialog.setCancelable(false);
 
         modificarPedidoId= getIntent().getExtras().getString("idPedido");
         modificarPedidoNum= getIntent().getExtras().getString("numPedido");
@@ -157,7 +164,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
                             //Quitar el dialogo con el ultimo descuento del ultimo producto
                             Log.d("DEBUG", "Finalizada carga de productos");
-                            progressDialog.dismiss();
+                            catalogoProgressDialog.dismiss();
                         }
                     }
                 }
@@ -281,11 +288,13 @@ public class CatalogoActivity extends ParentMenuActivity {
             }
         }
 
-        //Si vengo a modificar un pedido
         if(modificarPedidoId == null && getIntent().getExtras().getInt("status")!= Pedido.ESTADO_RECHAZADO){
+            //Pedido nuevo
             Log.d("DEBUG", "Pedido Nuevo "+getIntent().getExtras().getInt("status"));
         }else if(getIntent().getExtras().getInt("status")== Pedido.ESTADO_RECHAZADO){
+            //Editar pedido rechazado
             Log.d("DEBUG", "Modificar Pedido "+modificarPedidoId);
+            carritoProgressDialog.show();
             clienteSpinner.setVisibility(View.INVISIBLE);
             final ArrayList<Producto> prodsModPedido=productos;
             //Pedido Id
@@ -307,7 +316,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                 ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
                                 for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
                                     if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getNombre())) {
-                                        prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad"));
+                                        prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
 //                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
@@ -316,6 +325,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     }
                                 }
                             }
+                            carritoProgressDialog.dismiss();
                         }
                     });
                 }
@@ -476,16 +486,31 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // Valor de Descuento ingresado
-                Double valor = Double.parseDouble(input.getText().toString());
-                if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-                    Log.d("DEBUG", valor.toString());
-                    producto.setDescuentoManual(valor);
+                if ((input.getText().toString() != null) && !input.getText().toString().isEmpty()) {
+                    Double valor = Double.parseDouble(input.getText().toString());
+                    if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
+                        Log.d("DEBUG", valor.toString());
+                        if(valor == 0.0){
+                            producto.setDescuentoManual(0);
+                            adapterCatalogo.notifyDataSetChanged();
+                            adapterCarrito.notifyDataSetChanged();
+                            Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
+                        }else{
+                            producto.setDescuentoManual(valor);
+                            adapterCatalogo.notifyDataSetChanged();
+                            adapterCarrito.notifyDataSetChanged();
+                            Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();
+                        }
+
+                    } else {
+                        Toast.makeText(oThis, "Porcentaje de descuento manual no valido", 3000).show();
+                        Log.d("DEBUG", "porcentaje no valido");
+                    }
+                } else {
+                    producto.setDescuentoManual(0);
                     adapterCatalogo.notifyDataSetChanged();
                     adapterCarrito.notifyDataSetChanged();
-                    Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();
-                } else {
-                    Toast.makeText(oThis, "Porcentaje de descuento manual no valido", 3000).show();
-                    Log.d("DEBUG", "porcentaje no valido");
+                    Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
                 }
             }
         })

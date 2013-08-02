@@ -376,7 +376,7 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
-        final Animation animation = new AlphaAnimation(1, (float) 0.25); // Change alpha from fully visible to invisible
+        final Animation animation = new AlphaAnimation(1, (float) 0.5); // Change alpha from fully visible to invisible
         animation.setDuration(1000); // duration - half a second
         animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
         animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely

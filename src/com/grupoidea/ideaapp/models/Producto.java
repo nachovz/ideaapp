@@ -253,7 +253,7 @@ public class Producto {
 	/** Permite disminuir un item a la cantidad de productos del mismo tipo*/
 	public void substractCantidad() {
 		if(cantidad-- == 0) {
-			this.cantidad = 0;
+			this.cantidad = 1;
 		}
         setDescuentoAplicado(calcularDescuentoAplicado());
 	}

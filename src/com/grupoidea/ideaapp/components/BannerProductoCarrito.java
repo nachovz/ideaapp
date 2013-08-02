@@ -121,7 +121,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
                 @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
                 @Override
                 public void afterTextChanged(Editable editable) {
@@ -144,6 +145,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                         //Calcula el total del carrito
                         setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
                     }
+//                    cantProd.requestFocus();
                 }
             };
 
@@ -189,23 +191,21 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 			}
 
             //descuento aplicado
+            RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
+            rlDesc.setVisibility(View.INVISIBLE);
             if(producto.getDescuentoAplicado() !=0.0){
-                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
+                rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
                 rlDesc.setVisibility(View.VISIBLE);
                 TextView porcDescTextView = (TextView) view.findViewById(R.id.descuento_textView);
                 porcDescTextView.setText(producto.getDescuentoAplicadoPorcString());
-            }else{
-                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
-                rlDesc.setVisibility(View.INVISIBLE);
             }
 
             //Descuento manual
+            rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
+            rlDesc.setVisibility(View.INVISIBLE);
             if(producto.getDescuentoManual() != 0){
-                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
+                rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
                 rlDesc.setVisibility(View.VISIBLE);
-            }else{
-                RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
-                rlDesc.setVisibility(View.INVISIBLE);
             }
 		}
 		return view;

@@ -122,6 +122,10 @@
                     android:textSize="18sp"
                     android:layout_alignParentTop="false"
                         />
+                <TextView android:layout_height="0.5dp"
+                          android:background="#ffffff"
+                          android:id="@+id/textView2" android:layout_width="match_parent"
+                          android:layout_below="@+id/metas_actual_textView"/>
                 <TextView
                     android:id="@+id/metas_total_textView"
                     android:layout_width="fill_parent"
@@ -129,6 +133,8 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:textSize="18sp"
                     android:layout_below="@+id/metas_actual_textView"/>
+                <TextView android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/textView3"
+                          android:layout_width="match_parent" android:layout_below="@+id/metas_total_textView"/>
                 <TextView
                     android:id="@+id/metas_restante_textView"
                     android:layout_width="fill_parent"

@@ -230,6 +230,82 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         //Si es un pedido nuevo
                         pedidoParse[0] = new ParseObject("Pedido");
                         Log.d("DEBUG", "Pidiendo Pedido");
+
+                        pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
+                        pedidoParse[0].put("cliente", clienteParse);
+                        pedidoParse[0].put("direccion", direccion);
+                        pedidoParse[0].put("estado", 0);
+                        pedidoParse[0].put("num_pedido", numPedido);
+                        pedidoParse[0].put("comentario", observaciones);
+                        pedidoParse[0].saveEventually(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                for (final Producto prod : productos) {
+                                    //Obtener Productos de Parse
+                                    Log.d("DEBUG", "Obteniendo Producto de Parse");
+                                    ParseQuery productoParseQuery = new ParseQuery("Producto");
+                                    productoParseQuery.whereEqualTo("codigo", prod.getNombre());
+                                    productoParseQuery.getFirstInBackground(new GetCallback() {
+                                        @Override
+                                        public void done(final ParseObject productoParse, ParseException e) {
+                                            if (e != null) Log.d("DEBUG", e.getMessage());
+                                            Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                                            //Agregar a PedidoHasProducto
+                                            final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
+                                            //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
+                                            ParseQuery queryMetas = new ParseQuery("Metas");
+                                            queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
+                                            queryMetas.whereEqualTo("producto", productoParse);
+                                            queryMetas.getFirstInBackground(new GetCallback() {
+                                                @Override
+                                                public void done(final ParseObject metaParse, ParseException e) {
+                                                    if(e==null){
+                                                        int dispMeta=metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
+                                                        int cant=prod.getCantidad();
+                                                        int cantExced=cant-dispMeta;
+                                                        if(cant>dispMeta){
+                                                            pedidoHasProductos.put("cantidad", dispMeta);
+                                                            pedidoHasProductos.put("excedente", cantExced);
+                                                            metaParse.put("pedido", metaParse.getInt("pedido")+dispMeta);
+                                                            productoParse.put("excedente", productoParse.getInt("excedente")-cantExced);
+                                                        }else{
+                                                            pedidoHasProductos.put("cantidad", cant);
+                                                            pedidoHasProductos.put("excedente", 0);
+                                                            metaParse.put("pedido", metaParse.getInt("pedido")+cant);
+                                                        }
+                                                        pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
+                                                        pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
+                                                        pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
+                                                        pedidoHasProductos.put("pedido", pedidoParse[0]);
+                                                        pedidoHasProductos.put("producto", productoParse);
+                                                        if (prod.getDescuentoManual() != 0.0) {
+                                                            pedidoHasProductos.put("manual", true);
+                                                        } else {
+                                                            pedidoHasProductos.put("manual", false);
+                                                        }
+                                                        pedidoHasProductos.saveEventually(new SaveCallback() {
+                                                            @Override
+                                                            public void done(ParseException e) {
+                                                                if (e != null) e.printStackTrace();
+                                                                Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                                                metaParse.saveEventually(new SaveCallback() {
+                                                                    @Override
+                                                                    public void done(ParseException e) {
+                                                                        Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
+                                                                        dispatchActivity(DashboardActivity.class, null, true);
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
                     }else{
                         //Si es un pedido rechazado que se está modificando
                         Log.d("DEBUG", "Editando pedido "+idPedido);
@@ -276,97 +352,105 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                     }
 
                                                     //borrar el producto del pedido
-                                                    productoPedido.deleteInBackground();
-                                                }   //fin For
-                                            } else {
-                                                Log.d("DEBUG", e.getCause() + e.getMessage());
-                                            }   //fin if e==null
-                                        }   //fin Done
-                                    }); //fin query
-                                }   //fin e==null
-                            }   //fin Done
-                        });   //fin query
-                    }   //fin if editar
-
-                    pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
-                    pedidoParse[0].put("cliente", clienteParse);
-                    pedidoParse[0].put("direccion", direccion);
-                    pedidoParse[0].put("estado", 0);
-                    pedidoParse[0].put("num_pedido", numPedido);
-                    pedidoParse[0].put("comentario", observaciones);
-                    pedidoParse[0].saveEventually(new SaveCallback() {
-                        @Override
-                        public void done(ParseException e) {
-                            for (final Producto prod : productos) {
-                                //Obtener Productos de Parse
-                                Log.d("DEBUG", "Obteniendo Producto de Parse");
-                                ParseQuery productoParseQuery = new ParseQuery("Producto");
-                                productoParseQuery.whereEqualTo("codigo", prod.getNombre());
-                                productoParseQuery.getFirstInBackground(new GetCallback() {
-                                    @Override
-                                    public void done(final ParseObject productoParse, ParseException e) {
-                                        if (e != null) Log.d("DEBUG", e.getMessage());
-                                        Log.d("DEBUG", "Agregando a PedidoHasProducto");
-                                        //Agregar a PedidoHasProducto
-                                        final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
-                                        ParseQuery queryMetas = new ParseQuery("Metas");
-                                        queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
-                                        queryMetas.whereEqualTo("producto", productoParse);
-                                        queryMetas.getFirstInBackground(new GetCallback() {
-                                            @Override
-                                            public void done(final ParseObject metaParse, ParseException e) {
-                                                if(e==null){
-                                                    int dispMeta=metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
-                                                    int cant=prod.getCantidad();
-                                                    int cantExced=cant-dispMeta;
-                                                    //si es mas la cantidad que lo disponible en metas para el asesor
-                                                    if(cant>dispMeta){
-                                                        pedidoHasProductos.put("cantidad", dispMeta);
-                                                        pedidoHasProductos.put("excedente", cantExced);
-                                                        metaParse.put("pedido", metaParse.getInt("pedido")+dispMeta);
-                                                        productoParse.put("excedente", productoParse.getInt("excedente")-cantExced);
-                                                    }else{
-                                                        pedidoHasProductos.put("cantidad", cant);
-                                                        pedidoHasProductos.put("excedente", 0);
-                                                        metaParse.put("pedido", metaParse.getInt("pedido")+cant);
-                                                    }
-                                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
-                                                    pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
-                                                    pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
-                                                    pedidoHasProductos.put("pedido", pedidoParse[0]);
-                                                    pedidoHasProductos.put("producto", productoParse);
-                                                    if (prod.getDescuentoManual() != 0.0) {
-                                                        pedidoHasProductos.put("manual", true);
-                                                    } else {
-                                                        pedidoHasProductos.put("manual", false);
-                                                    }
-                                                    pedidoHasProductos.saveEventually(new SaveCallback() {
+                                                    productoPedido.deleteInBackground(new DeleteCallback() {
                                                         @Override
                                                         public void done(ParseException e) {
-                                                            if (e != null) e.printStackTrace();
-                                                            Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-                                                            metaParse.saveEventually(new SaveCallback() {
-                                                                @Override
-                                                                public void done(ParseException e) {
-                                                                    Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
-                                                                    dispatchActivity(DashboardActivity.class, null, true);
-                                                                }
-                                                            });
+                                                            Log.d("DEBUG", "Producto borrado");
                                                         }
                                                     });
-                                                } //if metaParse == null
-                                            } //Done de metaParse
-                                        }); //metaParse Query getFirst
-                                    } //Done de productoParse
-                                }); //productoParse query
-                            }   //for productos
-                        }   //Done de saveEventually de pedidoParse
-                    }); //SaveEventually de pedidoParse
+                                                }
+                                            } else {
+                                                Log.d("DEBUG", e.getCause() + e.getMessage());
+                                            }
+                                        }
+                                    });
+
+                                    pedidoParse[0].put("asesor", ParseUser.getCurrentUser());
+                                    pedidoParse[0].put("cliente", clienteParse);
+                                    pedidoParse[0].put("direccion", direccion);
+                                    pedidoParse[0].put("estado", 0);
+                                    pedidoParse[0].put("num_pedido", numPedido);
+                                    pedidoParse[0].put("comentario", observaciones);
+                                    pedidoParse[0].saveEventually(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            for (final Producto prod : productos) {
+                                                //Obtener Productos de Parse
+                                                Log.d("DEBUG", "Obteniendo Producto de Parse");
+                                                ParseQuery productoParseQuery = new ParseQuery("Producto");
+                                                productoParseQuery.whereEqualTo("codigo", prod.getNombre());
+                                                productoParseQuery.getFirstInBackground(new GetCallback() {
+                                                    @Override
+                                                    public void done(final ParseObject productoParse, ParseException e) {
+                                                        if (e != null) Log.d("DEBUG", e.getMessage());
+                                                        Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                                                        //Agregar a PedidoHasProducto
+                                                        final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
+                                                        //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
+                                                        ParseQuery queryMetas = new ParseQuery("Metas");
+                                                        queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
+                                                        queryMetas.whereEqualTo("producto", productoParse);
+                                                        queryMetas.getFirstInBackground(new GetCallback() {
+                                                            @Override
+                                                            public void done(final ParseObject metaParse, ParseException e) {
+                                                                if(e==null){
+                                                                    int dispMeta=metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
+                                                                    int cant=prod.getCantidad();
+                                                                    int cantExced=cant-dispMeta;
+                                                                    if(cant>dispMeta){
+                                                                        pedidoHasProductos.put("cantidad", dispMeta);
+                                                                        pedidoHasProductos.put("excedente", cantExced);
+                                                                        metaParse.put("pedido", metaParse.getInt("pedido")+dispMeta);
+                                                                        productoParse.put("excedente", productoParse.getInt("excedente")-cantExced);
+                                                                    }else{
+                                                                        pedidoHasProductos.put("cantidad", cant);
+                                                                        pedidoHasProductos.put("excedente", 0);
+                                                                        metaParse.put("pedido", metaParse.getInt("pedido")+cant);
+                                                                    }
+                                                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
+                                                                    pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
+                                                                    pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
+                                                                    pedidoHasProductos.put("pedido", pedidoParse[0]);
+                                                                    pedidoHasProductos.put("producto", productoParse);
+                                                                    if (prod.getDescuentoManual() != 0.0) {
+                                                                        pedidoHasProductos.put("manual", true);
+                                                                    } else {
+                                                                        pedidoHasProductos.put("manual", false);
+                                                                    }
+                                                                    pedidoHasProductos.saveEventually(new SaveCallback() {
+                                                                        @Override
+                                                                        public void done(ParseException e) {
+                                                                            if (e != null) e.printStackTrace();
+                                                                            Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                                                            metaParse.saveEventually(new SaveCallback() {
+                                                                                @Override
+                                                                                public void done(ParseException e) {
+                                                                                    Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
+                                                                                    dispatchActivity(DashboardActivity.class, null, true);
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    Log.d("DEBUG", e.getCause() + e.getMessage());
+                                }
+                            }
+                        });
+                    }
                 }else{
                     Log.d("DEBUG", e.getCause() + e.getMessage());
                 }
-            }   //fin Done
-        }); //fin query Cliente
+            }
+        });
+
         //Actualizar existencia en Metas
 //        ParseQuery queryMetas = new ParseQuery("Metas");
 //        queryMetas.include("producto");

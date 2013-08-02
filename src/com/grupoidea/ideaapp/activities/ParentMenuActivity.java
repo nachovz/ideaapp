@@ -20,7 +20,8 @@ public abstract class ParentMenuActivity extends ParentActivity {
     protected ImageView refresh;
 	private ImageView menuIcon;
 	private ImageView carrito;
-    protected ProgressDialog progressDialog;
+    protected ProgressDialog catalogoProgressDialog;
+    protected ProgressDialog carritoProgressDialog;
 	protected Spinner clienteSpinner;
     public static int clienteSelected;
     protected ArrayAdapter<String> adapter;
