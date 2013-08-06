@@ -291,7 +291,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(modificarPedidoId == null && getIntent().getExtras().getInt("status")!= Pedido.ESTADO_RECHAZADO){
             //Pedido nuevo
             Log.d("DEBUG", "Pedido Nuevo "+getIntent().getExtras().getInt("status"));
-        }else if(getIntent().getExtras().getInt("status")== Pedido.ESTADO_RECHAZADO){
+        }else if(getIntent().getExtras().getInt("status")== Pedido.ESTADO_RECHAZADO || getIntent().getExtras().getInt("status")== Pedido.ESTADO_VERIFICANDO){
             //Editar pedido rechazado
             Log.d("DEBUG", "Modificar Pedido "+modificarPedidoId);
             carritoProgressDialog.show();
@@ -338,6 +338,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         }else{
             Log.d("DEBUG", "Clonar Pedido "+modificarPedidoId);
             final ArrayList<Producto> prodsModPedido=productos;
+            carritoProgressDialog.show();
             //Pedido Id
             final ParseQuery queryPedido = new ParseQuery("Pedido");
             queryPedido.whereEqualTo("objectId", modificarPedidoId);
@@ -357,7 +358,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                 ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
                                 for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
                                     if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getNombre())) {
-                                        prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad"));
+                                        prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
 //                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
@@ -366,6 +367,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     }
                                 }
                             }
+                            carritoProgressDialog.dismiss();
                         }
                     });
                 }

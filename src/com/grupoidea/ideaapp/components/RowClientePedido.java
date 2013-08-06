@@ -210,19 +210,25 @@ public class RowClientePedido extends RelativeLayout {
                             public void done(List<ParseObject> productosPedido, ParseException e) {
                                 if(e==null){
                                 double subtotal = 0.0;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
-                                LayoutInflater inflater = ((DashboardActivity)contextDialog).getLayoutInflater();
-                                productosPedidoView = null;
-                                productosPedidoView = inflater.inflate(R.layout.productos_pedido_aprobado_layout, null, false);
-                                builder.setView(productosPedidoView);
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
+                                final LayoutInflater inflater = ((DashboardActivity)contextDialog).getLayoutInflater();
+                                View progress = null;
+                                progress = inflater.inflate(R.layout.productos_pedido_aprobado_progress_layout, null, false);
+                                builder.setView(progress);
                                 builder.setTitle("Informacion del Pedido");
                                 builder.setNegativeButton("Atras", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int whichButton) {
-                                            // Canceled.
-                                            dialog.cancel();
-                                            dialog.dismiss();
-                                        }
+                                    // Canceled.
+                                    dialog.cancel();
+                                    dialog.dismiss();
+                                    }
                                     });
+                                final AlertDialog alertProgress = builder.create();
+                                alertProgress.show();
+
+                                productosPedidoView = null;
+                                productosPedidoView = inflater.inflate(R.layout.productos_pedido_aprobado_layout, null, false);
+                                builder.setView(productosPedidoView);
                                 final AlertDialog alert = builder.create();
                                 TableRow tr; TextView tv; TableRow.LayoutParams params; ParseObject productoPedido;
                                 TableLayout tl = (TableLayout) productosPedidoView.findViewById(R.id.productos_pedido_aprobado);
@@ -305,7 +311,7 @@ public class RowClientePedido extends RelativeLayout {
 
                                             tv = (TextView) productosPedidoView.findViewById(R.id.total_edit_aprobado);
                                             tv.setText(String.valueOf(finalSubtotal+imp));
-//                                            finalBuilder.show();
+                                            alertProgress.dismiss();
                                             alert.show();
                                         }
                                     });
@@ -376,7 +382,7 @@ public class RowClientePedido extends RelativeLayout {
 		textView.setTextColor(Color.WHITE);
 		textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
 
-        final Animation animation = new AlphaAnimation(1, (float) 0.5); // Change alpha from fully visible to invisible
+        final Animation animation = new AlphaAnimation(1, (float) 0.6); // Change alpha from fully visible to invisible
         animation.setDuration(1000); // duration - half a second
         animation.setInterpolator(new LinearInterpolator()); // do not alter animation rate
         animation.setRepeatCount(Animation.INFINITE); // Repeat animation infinitely

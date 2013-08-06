@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
     protected JSONArray productosJSON;
     protected double subtotal, desc, flete, misc, imp, total;
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
+    protected DecimalFormat dfParse = new DecimalFormat("#.##");
     protected String denom, direccion, observaciones;
     protected ParseUser vendedor;
     protected Cliente cliente;
@@ -226,6 +228,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     Log.d("DEBUG", "entrando en Done de Cliente");
                     //Crear Pedido
                     final ParseObject[] pedidoParse = new ParseObject[1];
+
+                    // Si es un pedido nuevo
                     if(!editar){
                         //Si es un pedido nuevo
                         pedidoParse[0] = new ParseObject("Pedido");
@@ -252,7 +256,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                             Log.d("DEBUG", "Agregando a PedidoHasProducto");
                                             //Agregar a PedidoHasProducto
                                             final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
-                                            //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
                                             ParseQuery queryMetas = new ParseQuery("Metas");
                                             queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
                                             queryMetas.whereEqualTo("producto", productoParse);
@@ -273,9 +276,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                             pedidoHasProductos.put("excedente", 0);
                                                             metaParse.put("pedido", metaParse.getInt("pedido")+cant);
                                                         }
-                                                        pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
-                                                        pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
-                                                        pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
+                                                        pedidoHasProductos.put("descuento", round(prod.getDescuentoAplicado() * 100.0));
+                                                        pedidoHasProductos.put("precio_unitario", round(prod.getPrecioComercial()));
+                                                        pedidoHasProductos.put("monto", round(prod.getPrecioComercialTotal()));
                                                         pedidoHasProductos.put("pedido", pedidoParse[0]);
                                                         pedidoHasProductos.put("producto", productoParse);
                                                         if (prod.getDescuentoManual() != 0.0) {
@@ -306,6 +309,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             }
                         });
 
+                    //Si es un pedido que se esta editando
                     }else{
                         //Si es un pedido rechazado que se está modificando
                         Log.d("DEBUG", "Editando pedido "+idPedido);
@@ -318,6 +322,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                 if (e == null) {
                                     pedidoParse[0] = parseObject;
                                     //Eliminar productos asociados con el pedido
+                                    Log.d("DEBUG", "Recuperando productos de pedido");
                                     ParseQuery query = new ParseQuery("PedidoHasProductos");
                                     query.include("producto");
                                     query.whereEqualTo("pedido", idPedido);
@@ -339,6 +344,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                         @Override
                                                         public void done(ParseObject meta, ParseException e) {
                                                             //restaurarle la cantidad a campo pedido en metas
+                                                            Log.d("DEBUG", "Restaurando metas para producto "+productoPedido.get("codigo"));
                                                             meta.put("pedido", meta.getInt("pedido") - productoPedido.getInt("cantidad"));
                                                             meta.saveInBackground();
                                                         }
@@ -346,16 +352,21 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                                                     //restaurar excedentes de existir
                                                     if (productoPedido.getInt("excedente") > 0) {
+                                                        Log.d("DEBUG", "Restaurando excedentes");
                                                         ParseObject productoEx = productoPedido.getParseObject("producto");
                                                         productoEx.put("excedente", productoEx.getInt("excedente") + productoPedido.getInt("excedente"));
                                                         productoEx.saveInBackground();
                                                     }
 
                                                     //borrar el producto del pedido
-                                                    productoPedido.deleteInBackground(new DeleteCallback() {
+                                                    Log.d("DEBUG", "Solicitando borrar producto");
+                                                    productoPedido.deleteEventually(new DeleteCallback() {
                                                         @Override
                                                         public void done(ParseException e) {
-                                                            Log.d("DEBUG", "Producto borrado");
+                                                            if (e==null)
+                                                                Log.d("DEBUG", "Producto "+productoPedido.get("codigo")+" borrado");
+                                                            else
+                                                                Log.d("DEBUG", e.getCause() + e.getMessage());
                                                         }
                                                     });
                                                 }
@@ -407,9 +418,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                                         pedidoHasProductos.put("excedente", 0);
                                                                         metaParse.put("pedido", metaParse.getInt("pedido")+cant);
                                                                     }
-                                                                    pedidoHasProductos.put("descuento", prod.getDescuentoAplicado() * 100.0);
-                                                                    pedidoHasProductos.put("precio_unitario", prod.getPrecioComercial());
-                                                                    pedidoHasProductos.put("monto", prod.getPrecioComercialTotal());
+                                                                    pedidoHasProductos.put("descuento", round(prod.getDescuentoAplicado() * 100.0));
+                                                                    pedidoHasProductos.put("precio_unitario", round(prod.getPrecioComercial()));
+                                                                    pedidoHasProductos.put("monto", round(prod.getPrecioComercialTotal()));
                                                                     pedidoHasProductos.put("pedido", pedidoParse[0]);
                                                                     pedidoHasProductos.put("producto", productoParse);
                                                                     if (prod.getDescuentoManual() != 0.0) {
@@ -515,5 +526,14 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         } catch (JSONException e) {
             Log.d("DEBUG", "llenarProductosfromJSON: "+e.getMessage());
         }
+    }
+
+    public static double round(double value) {
+        int places = 2;
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, BigDecimal.ROUND_HALF_UP);
+        return bd.doubleValue();
     }
 }
