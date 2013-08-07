@@ -317,15 +317,16 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         ParseQuery query = new ParseQuery("Pedido");
                         query.getInBackground(idPedido, new GetCallback() {
                             @Override
-                            public void done(ParseObject parseObject, ParseException e) {
-                                Log.d("DEBUG", "Recuperando Pedido " + parseObject.getObjectId());
+                            public void done(final ParseObject pedidoParseObject, ParseException e) {
+                                Log.d("DEBUG", "Recuperando Pedido " + pedidoParseObject.getObjectId());
                                 if (e == null) {
-                                    pedidoParse[0] = parseObject;
+                                    pedidoParse[0] = pedidoParseObject;
                                     //Eliminar productos asociados con el pedido
-                                    Log.d("DEBUG", "Recuperando productos de pedido");
+                                    Log.d("DEBUG", "Recuperando productos antiguos de pedido");
                                     ParseQuery query = new ParseQuery("PedidoHasProductos");
                                     query.include("producto");
-                                    query.whereEqualTo("pedido", idPedido);
+                                    query.include("pedido");
+                                    query.whereEqualTo("pedido", pedidoParseObject);
                                     query.findInBackground(new FindCallback() {
                                         @Override
                                         public void done(List<ParseObject> productosPedido, ParseException e) {
@@ -333,42 +334,68 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                 ParseQuery query;
                                                 //obtener productos del pedido
                                                 for (int i = 0, size = productosPedido.size(); i < size; i++) {
-                                                    final ParseObject productoPedido = productosPedido.get(i);
+                                                     final ParseObject productoPedido = productosPedido.get(i);
                                                     //buscar producto en metas
                                                     query = new ParseQuery("Metas");
                                                     query.include("producto");
                                                     query.include("asesor");
                                                     query.whereEqualTo("asesor", ParseUser.getCurrentUser());
-                                                    query.whereEqualTo("producto", productoPedido);
+                                                    query.whereEqualTo("producto", productoPedido.getParseObject("producto"));
                                                     query.getFirstInBackground(new GetCallback() {
                                                         @Override
-                                                        public void done(ParseObject meta, ParseException e) {
-                                                            //restaurarle la cantidad a campo pedido en metas
-                                                            Log.d("DEBUG", "Restaurando metas para producto "+productoPedido.get("codigo"));
-                                                            meta.put("pedido", meta.getInt("pedido") - productoPedido.getInt("cantidad"));
-                                                            meta.saveInBackground();
+                                                        public void done(final ParseObject meta, ParseException e) {
+                                                            if (e == null) {
+                                                                //restaurarle la cantidad a campo pedido en metas
+                                                                Log.d("DEBUG", "Restaurando metas para producto " + meta.getParseObject("producto").getObjectId());
+                                                                //Obtener el parseObject de PedidoHasProductos ya que se perdio en el loop por la asincronia
+                                                                ParseQuery query = new ParseQuery("PedidoHasProductos");
+                                                                query.include("producto");
+                                                                query.include("pedido");
+                                                                query.whereEqualTo("producto", meta.getParseObject("producto"));
+                                                                query.whereEqualTo("pedido", pedidoParseObject);
+                                                                query.getFirstInBackground(new GetCallback() {
+                                                                    @Override
+                                                                    public void done(ParseObject productoPedido, ParseException e) {
+                                                                        int pedido = meta.getInt("pedido") - productoPedido.getInt("cantidad");
+                                                                        Log.d("DEBUG", "pedido meta: "+meta.get("pedido").toString()+" - producto cantidad: "+productoPedido.get("cantidad").toString()+" = "+pedido);
+                                                                        meta.put("pedido", pedido);
+                                                                        meta.saveEventually(new SaveCallback() {
+                                                                            @Override
+                                                                            public void done(ParseException e) {
+                                                                                if(e==null)
+                                                                                    Log.d("DEBUG", "Meta Actualizada");
+                                                                                else
+                                                                                    Log.d("DEBUG", "No se pudo actualizar meta " + e.getCause() + " " + e.getMessage());
+                                                                            }
+                                                                        });
+
+                                                                        //restaurar excedentes de existir
+                                                                        if (productoPedido.getInt("excedente") > 0) {
+                                                                            Log.d("DEBUG", "Restaurando excedentes");
+                                                                            ParseObject productoEx = productoPedido.getParseObject("producto");
+                                                                            int excedente = productoEx.getInt("excedente") + productoPedido.getInt("excedente");
+                                                                            productoEx.put("excedente", excedente);
+                                                                            productoEx.saveInBackground();
+                                                                        }
+
+                                                                        //borrar el producto del pedido
+                                                                        Log.d("DEBUG", "Solicitando borrar producto");
+                                                                        productoPedido.deleteEventually(new DeleteCallback() {
+                                                                            @Override
+                                                                            public void done(ParseException e) {
+                                                                                if (e != null)
+                                                                                    Log.d("DEBUG", "No se pudo borrar producto " + e.getCause() + " " + e.getMessage());
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+
+                                                            } else {
+                                                                Log.d("DEBUG", "No se encontraron metas para el producto. Cause: " + e.getCause() + " Msg: " + e.getMessage());
+                                                            }
                                                         }
                                                     });
 
-                                                    //restaurar excedentes de existir
-                                                    if (productoPedido.getInt("excedente") > 0) {
-                                                        Log.d("DEBUG", "Restaurando excedentes");
-                                                        ParseObject productoEx = productoPedido.getParseObject("producto");
-                                                        productoEx.put("excedente", productoEx.getInt("excedente") + productoPedido.getInt("excedente"));
-                                                        productoEx.saveInBackground();
-                                                    }
-
-                                                    //borrar el producto del pedido
-                                                    Log.d("DEBUG", "Solicitando borrar producto");
-                                                    productoPedido.deleteEventually(new DeleteCallback() {
-                                                        @Override
-                                                        public void done(ParseException e) {
-                                                            if (e==null)
-                                                                Log.d("DEBUG", "Producto "+productoPedido.get("codigo")+" borrado");
-                                                            else
-                                                                Log.d("DEBUG", e.getCause() + e.getMessage());
-                                                        }
-                                                    });
                                                 }
                                             } else {
                                                 Log.d("DEBUG", e.getCause() + e.getMessage());
@@ -397,7 +424,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                         Log.d("DEBUG", "Agregando a PedidoHasProducto");
                                                         //Agregar a PedidoHasProducto
                                                         final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
-                                                        //TODO hacer query de las metas y verificar cuanto va a Metas y cuanto va a excedentes
                                                         ParseQuery queryMetas = new ParseQuery("Metas");
                                                         queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
                                                         queryMetas.whereEqualTo("producto", productoParse);
@@ -432,12 +458,17 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                                         @Override
                                                                         public void done(ParseException e) {
                                                                             if (e != null) e.printStackTrace();
-                                                                            Log.d("DEBUG", "Pedido: " + pedidoParse[0].getObjectId() + " y Producto: " + productoParse.getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                                                            Log.d("DEBUG", "Producto: " + productoParse.getObjectId() + " agregado a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                                                             metaParse.saveEventually(new SaveCallback() {
                                                                                 @Override
                                                                                 public void done(ParseException e) {
-                                                                                    Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
-                                                                                    dispatchActivity(DashboardActivity.class, null, true);
+                                                                                    if(e == null){
+                                                                                        Log.d("DEBUG", "Meta actualizada: "+metaParse.get("pedido"));
+                                                                                        Toast.makeText(mContext, R.string.pedidoCompletado, 3000).show();
+                                                                                        dispatchActivity(DashboardActivity.class, null, true);
+                                                                                    } else {
+                                                                                        Log.d("DEBUG", e.getCause() + e.getMessage());
+                                                                                    }
                                                                                 }
                                                                             });
                                                                         }

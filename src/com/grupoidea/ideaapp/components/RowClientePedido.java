@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -139,6 +140,7 @@ public class RowClientePedido extends RelativeLayout {
             this.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View arg0) {
+                    arg0.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     //Levantar dialogo de confirmacion
                     AlertDialog.Builder builder = new AlertDialog.Builder(contextDialog);
                     builder.setMessage(contextDialog.getString(R.string.verificando_dialog_message))
