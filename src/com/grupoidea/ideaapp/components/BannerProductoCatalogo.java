@@ -121,6 +121,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				textView.setText(producto.getNombre());
 			}
 
+            //Marca producto
+            if(producto.getMarca() != null) {
+                textView = (TextView) view.findViewById(R.id.banner_producto_marca_textView);
+                textView.setText(producto.getMarca());
+            }
+
             //Precio producto
 			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_precio_text_view);

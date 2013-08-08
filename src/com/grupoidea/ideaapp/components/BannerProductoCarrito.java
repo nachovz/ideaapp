@@ -177,6 +177,12 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 				textView.setText(producto.getNombre());
 			}
 
+            //Marca producto
+            if(producto.getMarca() != null) {
+                textView = (TextView) view.findViewById(R.id.banner_carrito_marca_textView);
+                textView.setText(producto.getMarca());
+            }
+
             //Precio producto
 			if(producto.getStringPrecioComercial() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_precio_text_view);

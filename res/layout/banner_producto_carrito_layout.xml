@@ -44,6 +44,14 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:textStyle="bold|italic" />
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                       android:id="@+id/imageView" android:background="@drawable/pedidos_marca_img_bannerproducto"
+                       android:layout_below="@+id/banner_carrito_tittle_image_view"
+                    />
+            <TextView android:id="@+id/banner_carrito_marca_textView" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" android:layout_marginLeft="7dp"
+                      android:layout_marginTop="30dp" android:text="@string/marcas" android:textColor="#ffffff"
+                      android:textSize="14sp" android:textStyle="bold|italic"/>
 
         </RelativeLayout>
 

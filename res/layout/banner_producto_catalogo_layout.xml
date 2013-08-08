@@ -24,8 +24,13 @@
 	            android:layout_centerInParent="true"
 	            android:scaleType="fitCenter"
 	            android:src="@drawable/prod_background" />
-	
-	        <ImageView
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView" android:background="@drawable/marca_img_bannerproducto"
+                    android:layout_below="@+id/banner_producto_tittle_image_view"/>
+            <ImageView
 	            android:id="@+id/banner_producto_tittle_image_view"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
@@ -42,8 +47,12 @@
 	            android:textColor="#ffffff"
 	            android:textSize="16sp"
 	            android:textStyle="bold|italic"/>
-	
-	        <ImageView
+
+            <TextView android:id="@+id/banner_producto_marca_textView" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" android:layout_marginLeft="7dp"
+                      android:layout_marginTop="50dp" android:text="@string/nombre_producto" android:textColor="#ffffff"
+                      android:textSize="16sp" android:textStyle="bold|italic"/>
+            <ImageView
 	            android:id="@+id/banner_producto_menu_image_view"
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"

@@ -78,7 +78,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         catalogoProgressDialog.setTitle("Cargando...");
         catalogoProgressDialog.setMessage("Cargando Catalogo, por favor espere...");
         catalogoProgressDialog.setIndeterminate(true);
-        catalogoProgressDialog.setCancelable(true);
+        catalogoProgressDialog.setCancelable(false);
         catalogoProgressDialog.show();
 
         //Dialogo de carga carrito
@@ -558,6 +558,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         query.include("categoria");
         query.include("iva");
         query.include("grupo_categorias");
+        query.orderByAscending("marca");
 		req.setRequest(query);
 		
 		return req;
