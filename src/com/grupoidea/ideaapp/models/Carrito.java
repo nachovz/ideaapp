@@ -44,7 +44,7 @@ public class Carrito {
 	 *  del carrito, es necesario suministrar el identificador unico del producto.
 	 *  @param id Entero con el identificador unico del producto
 	 *  @return Entero con la posicion del producto en el listado de productos del carrito.*/
-	public int findProductoIndex(String id) {
+	public int findProductoIndexById(String id) {
 		Producto productoActual = null;
 		int index = -1;
 		

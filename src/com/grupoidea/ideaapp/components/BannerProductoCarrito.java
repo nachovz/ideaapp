@@ -25,7 +25,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 	private Producto producto;
 	/** Objeto que contiene el adaptador actual*/
 	private BannerProductoCarrito carritoAdapter;
-	
+	private View superView;
+
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
 	 *  @param carrito Arreglo de productos. */
@@ -67,6 +68,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		} else {
 			view = convertView;
 		}
+
+        superView = view;
 			
 		if(producto != null) {
             //cantidad de productos de esta clase
@@ -121,8 +124,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
                 @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                }
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
                 @Override
                 public void afterTextChanged(Editable editable) {
@@ -158,13 +160,13 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 				public void onClick(View view) {
 					CatalogoActivity catalogoActivity;
 					Producto producto;
-					
 					producto = (Producto) getItem(position);
                     producto.setCantidad(1);
 					catalogoActivity = (CatalogoActivity) menuActivity;
 					catalogoActivity.adapterCatalogo.removeProductoFlagCarrito(producto);
 					catalogoActivity.adapterCatalogo.notifyDataSetChanged();
-					
+
+                    carrito.recalcularDescuentosGrupoCategoria(producto);
 					carrito.removeProducto(position);
 					carritoAdapter.notifyDataSetChanged();
 					//Calcula el total del carrito

@@ -120,7 +120,7 @@ public class DashboardActivity extends ParentMenuActivity {
                                     row.idPedido = parseObject.getObjectId();
                                     row.numPedido = parseObject.getString("num_pedido");
                                     if(position == Pedido.ESTADO_RECHAZADO || parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO){
-                                        row.observacionesRechazoPedido = parseObject.getString("comentario_rechazo");
+                                        row.observacionesRechazoPedido = parseObject.getString("comentario_cambio_status");
                                     }
                                     pedidosList.addView(row);
                                 }

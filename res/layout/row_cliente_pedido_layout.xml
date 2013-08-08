@@ -39,7 +39,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textStyle="italic|bold" />
+        android:textStyle="italic|bold" android:layout_marginTop="8dp"/>
 
     <FrameLayout
         android:id="@+id/cliente_pedido_status_layout"
@@ -51,5 +51,12 @@
         android:layout_marginRight="10dp" >
 
     </FrameLayout>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#808080"
+            android:id="@+id/textView"
+            android:layout_marginTop="5dp" android:layout_below="@+id/cliente_pedido_status_layout"
+            />
 
 </RelativeLayout>

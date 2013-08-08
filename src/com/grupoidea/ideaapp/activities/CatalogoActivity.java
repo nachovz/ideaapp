@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +42,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 	private String clienteNombre;
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
 	private static ArrayList<Producto> catalogoProductos;
+    /** Objeto que representa al catalogo.*/
+    private static Catalogo catalogo;
 	/** Objeto que representa al carrito de compras del catalogo.*/
 	private Carrito carrito;
 	/** Adapter utilizado como puente entre el ArrayList de productos del carrito y el layout de cada producto*/
@@ -122,9 +129,16 @@ public class CatalogoActivity extends ParentMenuActivity {
 		double precio = producto.getDouble("costo");
 		final String objectId = producto.getObjectId();
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
+
+        if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
+            ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
+            imgDownloader.execute(producto.getString("picture"));
+        }
+
         //asignar IVA
         prod.setIva(producto.getParseObject("iva").getDouble("porcentaje"));
         prod.setExcedente(producto.getInt("excedente"));
+
         //Obtener existencia
         ParseQuery queryExistencia = new ParseQuery("Metas");
         queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
@@ -140,9 +154,10 @@ public class CatalogoActivity extends ParentMenuActivity {
                         prod.setExistencia(0);
                     }
                 }
-                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla UserHasProducto");
+                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
             }
         });
+
         //Obtener categoria
         ParseObject categoria = producto.getParseObject("categoria");
 		prod.setMarca(producto.getString("marca"));
@@ -150,8 +165,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		prod.setCategoria(categoria.getString("nombre"));
         addCategoria(categoria.getString("nombre"));
         prod.setIdCategoria(categoria.getObjectId());
-        //Obtener categorias relacionadas
-//        prod.setCategoriasRelatedJSONArray(categoria.getJSONArray("relacionadas"));
+
         //Obtener descuentos
         final SparseArray<Double> tablaDescuentos= new SparseArray<Double>();
         ParseQuery descuentosQuery = categoria.getRelation("descuentos").getQuery();
@@ -161,11 +175,18 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if (e == null && descuentos != null) {
                     for (ParseObject descuento : descuentos) {
                         tablaDescuentos.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+
+                        //Quitar el dialogo con el ultimo descuento del ultimo producto
                         if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
-                            //Quitar el dialogo con el ultimo descuento del ultimo producto
                             Log.d("DEBUG", "Finalizada carga de productos");
                             catalogoProgressDialog.dismiss();
                         }
+                    }
+                }else{
+                    //Quitar el dialogo con el ultimo descuento del ultimo producto
+                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
+                        Log.d("DEBUG", "Finalizada carga de productos");
+                        catalogoProgressDialog.dismiss();
                     }
                 }
             }
@@ -173,25 +194,25 @@ public class CatalogoActivity extends ParentMenuActivity {
         prod.setTablaDescuentos(tablaDescuentos);
 
         if(null != producto.getParseObject("grupo_categorias") && null != producto.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
-        //almacenar grupo categoria
-        GrupoCategoria grupo = new GrupoCategoria();
-        grupo.setRelacionadasJSONArray(producto.getParseObject("grupo_categorias").getJSONArray("relacionadas"));
+            //almacenar grupo categoria
+            GrupoCategoria grupo = new GrupoCategoria();
+            grupo.setRelacionadasJSONArray(producto.getParseObject("grupo_categorias").getJSONArray("relacionadas"));
 
-        //obtener descuentos por grupo de categoria
-        final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
-        descuentosQuery = producto.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
-        descuentosQuery.findInBackground(new FindCallback() {
-            @Override
-            public void done(List<ParseObject> descuentos, ParseException e) {
-                if (e == null && descuentos != null) {
-                    for (ParseObject descuento : descuentos) {
-                        tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+            //obtener descuentos por grupo de categoria
+            final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
+            descuentosQuery = producto.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
+            descuentosQuery.findInBackground(new FindCallback() {
+                @Override
+                public void done(List<ParseObject> descuentos, ParseException e) {
+                    if (e == null && descuentos != null) {
+                        for (ParseObject descuento : descuentos) {
+                            tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+                        }
                     }
                 }
-            }
-        });
-        grupo.setTablaDescuentos(tablaDescuentosGrupo);
-        prod.setGrupoCategoria(grupo);
+            });
+            grupo.setTablaDescuentos(tablaDescuentosGrupo);
+            prod.setGrupoCategoria(grupo);
         }
 
         return prod;
@@ -317,6 +338,8 @@ public class CatalogoActivity extends ParentMenuActivity {
                                 for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
                                     if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getNombre())) {
                                         prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
+                                        Log.d("DEBUG", "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia()));
+                                        prodsModPedido.get(i).setExistencia(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia());
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
 //                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
@@ -379,10 +402,12 @@ public class CatalogoActivity extends ParentMenuActivity {
             adapterCarrito.showCarrito();
         }
 
-		catalogoProductos = productos;
+//		catalogoProductos = productos;
+        catalogo = new Catalogo(this, productos);
 		
 		if(listCarrito != null) {
-			adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, listCarrito);
+//            adapterCatalogo = new BannerProductoCatalogo(this, catalogoProductos, listCarrito);
+            adapterCatalogo = new BannerProductoCatalogo(this, catalogo, listCarrito);
 			grid = (GridView) this.findViewById(R.id.catalogo_grid);
 			grid.setOnTouchListener(new OnTouchListener() {
 				private int xDown;
@@ -455,7 +480,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     public static void updatePreciosComerciales(){
         Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
         Double precio = 0.0;
-        for(Producto prod: catalogoProductos){
+        for(Producto prod: catalogo.getProductosCatalogo()){
             precio = prod.getPrecio();
             prod.setPrecioComercial(precio - (precio * descCliente));
         }
@@ -465,7 +490,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     public void updatePreciosComerciales(int i){
         Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
-        Producto prod = catalogoProductos.get(i);
+        Producto prod = catalogo.getProductosCatalogo().get(i);
         Double precio = prod.getPrecio();
         prod.setPrecioComercial(precio -(precio*descCliente));
     }
@@ -542,8 +567,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         LinearLayout parent = (LinearLayout) selected.getParent();
         if (((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.categorias))){
             setCategoriaActual(selected);
+            catalogo.filter(marcaActual, categoriaActual);
+            adapterCatalogo.notifyDataSetChanged();
         }else if(((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.marcas))){
             setMarcaActual(selected);
+            catalogo.filter(marcaActual, categoriaActual);
+            adapterCatalogo.notifyDataSetChanged();
         }
     }
 
@@ -585,7 +614,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     public void setCategoriaActual(TextView selected){
         categoriaActual = selected.getText().toString();
         Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
-        updateProductos();
+//        updateProductos();
     }
 
     /*------------- MARCAS -----------------*/
@@ -626,12 +655,12 @@ public class CatalogoActivity extends ParentMenuActivity {
     public void setMarcaActual(TextView selected){
         marcaActual = selected.getText().toString();
         Log.d("DEBUG", "marca seleccionada: "+ marcaActual);
-        updateProductos();
+//        updateProductos();
     }
 
     public void updateProductos(){
 //        Log.d("DEBUG", "marca actual: "+ marcaActual+" categoria actual: "+categoriaActual);
-        for (Producto prod : catalogoProductos) {
+        for (Producto prod : catalogo.getProductosCatalogo()) {
 //            Log.d("DEBUG", "producto: "+prod.getMarca()+" "+prod.getCategoria());
             if (marcaActual.equals(getString(R.string.todas))) {
                 if(categoriaActual.equals(getString(R.string.todas))){
@@ -666,5 +695,43 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
         adapterCatalogo.notifyDataSetChanged();
 //        Log.d("DEBUG", "notificado el dataset changed");
+    }
+
+    public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<Producto> productoWeakReference;
+
+        public ImageDownloadTask(Producto producto) {
+            productoWeakReference = new WeakReference<Producto>(producto);
+        }
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            try {
+                InputStream in = new java.net.URL(params[0]).openStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(in);
+                return bitmap;
+            } catch (Exception e) {
+//                Log.e("ImageDownload Exception: ", e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled()) {
+                bitmap = null;
+            }
+            if (productoWeakReference != null) {
+                Producto prod = productoWeakReference.get();
+                if (prod != null) {
+                    Log.d("DEBUG","Imagen de producto "+prod.getCodigo()+" obtenida");
+                    prod.setImagen(bitmap);
+                    if(adapterCatalogo != null){
+                        adapterCatalogo.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -16,6 +16,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
+import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Producto;
 
 import java.util.ArrayList;
@@ -26,22 +27,25 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	private ListView listCarrito;
 	/** Arreglo de productos.*/
 	private ArrayList<Producto> productos;
+    private Catalogo catalogo;
 	/** ViewGroup que permite mostrar el menu del producto.*/
 	private LinearLayout menu;
 	protected Producto producto;
-	private BannerProductoCatalogo adapter;
+	private BannerProductoCatalogo catalogoAdapter;
 	private Context mContext;
 	
 	protected AsyncTask<Object, Object, Object> tarea;
 	
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
-	 *  @param productos Arreglo de productos. */
-	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
+	 *  @param catalogo Arreglo de productos. */
+//	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
+    public BannerProductoCatalogo(Context context, Catalogo catalogo, ListView listCarrito) {
 		super(context);
-		this.productos = productos;
+//		this.productos = productos;
+        this.catalogo = catalogo;
 		this.listCarrito = listCarrito;
-		this.adapter = this;
+		this.catalogoAdapter = this;
 		this.mContext = context;
 		menu = null;
 	}
@@ -74,12 +78,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	
 	@Override
 	public int getCount() {
-		return productos.size();
+		return catalogo.getProductosCatalogo().size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return productos.get(position);
+		return catalogo.getProductosCatalogo().get(position);
 	}
 
 	@Override
@@ -105,9 +109,11 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         	view = convertView;
         }
 
-//        Log.d("DEBUG", "Banner:"+producto.getMarca()+" "+producto.getCategoria()+" "+producto.getIsInCatalogo());
+//        //inicializar Menu
+//        menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
+//        menu.removeAllViews();
 
-        if(producto != null && producto.getIsInCatalogo()==true) {
+        if(producto != null && producto.getIsInCatalogo()) {
             view.setVisibility(View.VISIBLE);
             //Nombre producto
 			if(producto.getNombre() != null) {
@@ -130,11 +136,15 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
-			
+
+            //Cargar Imagen
 			if(producto.getImagen() != null) {
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
 				imageView.setImageBitmap(producto.getImagen());
-			}
+			}else{
+                imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
+                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+            }
 			
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_tittle_image_view);
@@ -142,7 +152,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				@Override
 				public void onClick(View v) {
 					Producto producto;
-					producto = productos.get(position);
+					producto = catalogo.getProductosCatalogo().get(position);
 					
 					Bundle extras = new Bundle();
 					extras.putString("nombre",producto.getNombre());
@@ -165,41 +175,15 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					showCarrito();
 
 					//Agrega el producto clickeado al carrito de compras.
-					producto = productos.get(position);
+					producto = catalogo.getProductosCatalogo().get(position);
                     producto.setIsInCarrito(true);
-					adapter.notifyDataSetChanged();
+					catalogoAdapter.notifyDataSetChanged();
 					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
 					adapterCarrito.getCarrito().addProducto(producto);
 					//Realiza el scroll al elemento agregado o incrementado.
-					index = adapterCarrito.getCarrito().findProductoIndex(producto.getId());
+					index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
 					adapterCarrito.notifyDataSetChanged();
-		        	
-/*					tarea = new AsyncTask<Object, Object, Object>() {
-						RelativeLayout relativeLayout;
-						@Override
-						protected void onPreExecute() {
-							relativeLayout = (RelativeLayout) listCarrito.getChildAt(index);
-							if(relativeLayout != null) {
-								relativeLayout.setBackgroundColor(0xFF00FF00);
-							}
-						}
-						@Override
-						protected Object doInBackground(Object... params) {
-							try {
-								Thread.sleep(3000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-							return null;
-						}
-						@Override
-						protected void onPostExecute(Object result) {
-							if(relativeLayout != null) {
-								relativeLayout.setBackgroundColor(0x00000000);
-							}
-						}
-					};*/
-					
+
 					listCarrito.post(new Runnable() {
 				        public void run() {
 				        	listCarrito.smoothScrollToPosition(index);
@@ -213,7 +197,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			});
 
             //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
-//            menu = new LinearLayout(menuActivity);
 			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
             menu.setTag(producto);
 
@@ -237,15 +220,13 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
             //Actualizar Existencia
             TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-2);
-            if (exced == null) {
-                throw new AssertionError();
-            }
             exced.setText(menuActivity.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
 
             exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
             exced.setText(menuActivity.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
 
             // Listar descuentos en el menu de producto
+            menu.removeViews(1, menu.getChildCount()-3);
             ArrayList<String> menu_prod = producto.getDescuentosString();
             if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+3)){
                 for(int i=0, size=menu_prod.size(); i<size; i++) {
@@ -267,7 +248,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				public void onClick(View view) {
                     LayoutParams layoutParams;
 					Producto producto;
-					producto = productos.get(position);
+					producto = catalogo.getProductosCatalogo().get(position);
 					
 					if(producto.getIsMenuOpen()) {
 						//El menu esta abierto... cerrarlo

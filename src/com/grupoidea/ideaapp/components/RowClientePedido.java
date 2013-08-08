@@ -129,7 +129,6 @@ public class RowClientePedido extends RelativeLayout {
             this.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.d("DEBUG", "obs rechazo: " + observacionesRechazoPedido);
                     new AlertDialog.Builder(contextDialog).setMessage(observacionesRechazoPedido).setTitle(contextDialog.getString(R.string.obs_rechazo_pedido_alert_title)).show();
                 }
             });
