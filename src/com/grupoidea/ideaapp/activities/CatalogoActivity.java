@@ -78,7 +78,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         catalogoProgressDialog.setTitle("Cargando...");
         catalogoProgressDialog.setMessage("Cargando Catalogo, por favor espere...");
         catalogoProgressDialog.setIndeterminate(true);
-        catalogoProgressDialog.setCancelable(false);
+        catalogoProgressDialog.setCancelable(true);
         catalogoProgressDialog.show();
 
         //Dialogo de carga carrito
@@ -182,7 +182,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                             catalogoProgressDialog.dismiss();
                         }
                     }
-                }else{
+                }else if(e != null){
                     //Quitar el dialogo con el ultimo descuento del ultimo producto
                     if(lastprodName.equalsIgnoreCase(prod.getNombre())){
                         Log.d("DEBUG", "Finalizada carga de productos");
@@ -614,7 +614,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     public void setCategoriaActual(TextView selected){
         categoriaActual = selected.getText().toString();
         Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
-//        updateProductos();
     }
 
     /*------------- MARCAS -----------------*/
@@ -655,46 +654,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     public void setMarcaActual(TextView selected){
         marcaActual = selected.getText().toString();
         Log.d("DEBUG", "marca seleccionada: "+ marcaActual);
-//        updateProductos();
-    }
-
-    public void updateProductos(){
-//        Log.d("DEBUG", "marca actual: "+ marcaActual+" categoria actual: "+categoriaActual);
-        for (Producto prod : catalogo.getProductosCatalogo()) {
-//            Log.d("DEBUG", "producto: "+prod.getMarca()+" "+prod.getCategoria());
-            if (marcaActual.equals(getString(R.string.todas))) {
-                if(categoriaActual.equals(getString(R.string.todas))){
-                    //No hay filtros puestos
-                    prod.setIsInCatalogo(true);
-                }else if(prod.getCategoria().equals(categoriaActual)){
-                    //la categoria coincide y no hay filtros de marcas
-                    prod.setIsInCatalogo(true);
-                }else{
-                    //No hay filtro de marcas, no son la misma categoria
-                    prod.setIsInCatalogo(false);
-                }
-            }else if(prod.getMarca().equals(marcaActual)){
-                //la marca coincide, verificar contra la categoria
-                if(categoriaActual.equals(getString(R.string.todas))){
-                    //No hay filtro de categoria puesto y la marca coincide
-                    prod.setIsInCatalogo(true);
-                }else if(prod.getCategoria().equals(categoriaActual)){
-                    //la categoria y la marca coinciden
-                    prod.setIsInCatalogo(true);
-                }else{
-                    //La marca coincide pero no es la misma categoria
-                    prod.setIsInCatalogo(false);
-                }
-            }else{
-                //hay filtro de marca puesto, no coinciden
-                prod.setIsInCatalogo(false);
-            }
-
-
-//            Log.d("DEBUG", String.valueOf(prod.getIsInCatalogo()));
-        }
-        adapterCatalogo.notifyDataSetChanged();
-//        Log.d("DEBUG", "notificado el dataset changed");
     }
 
     public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
@@ -730,8 +689,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                         adapterCatalogo.notifyDataSetChanged();
                     }
                 }
+
+                //Quitar dialogo de carga
+                if(lastprodName!= null && lastprodName.equalsIgnoreCase(prod.getNombre())){
+                    Log.d("DEBUG", "Finalizada carga de productos");
+                    catalogoProgressDialog.dismiss();
+                }
             }
         }
-
     }
 }

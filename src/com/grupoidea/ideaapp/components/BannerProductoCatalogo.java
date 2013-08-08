@@ -54,8 +54,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	public void removeProductoFlagCarrito(Producto producto) {
 		Producto prod;
 		if(producto != null) {
-			for (int i = 0; i < productos.size(); i++) {
-				prod = productos.get(i);
+			for (int i = 0; i < catalogo.getProductos().size(); i++) {
+				prod = catalogo.getProductos().get(i);
 				if(producto.getId() == prod.getId()) {
 					prod.setIsInCarrito(false);
 				}
@@ -67,8 +67,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	public void addProductoFlagCarrito(Producto producto) {
 		Producto prod;
 		if(producto != null) {
-			for (int i = 0; i < productos.size(); i++) {
-				prod = productos.get(i);
+			for (int i = 0; i < catalogo.getProductos().size(); i++) {
+				prod = catalogo.getProductos().get(i);
 				if(producto.getId() == prod.getId()) {
 					prod.setIsInCarrito(true);
 				}

@@ -23,6 +23,11 @@ public class Catalogo {
 	public ArrayList<Producto> getProductosCatalogo() {
 		return productosCatalogo;
 	}
+
+    public ArrayList<Producto> getProductos() {
+        return productos;
+    }
+
 	public void setProductos(ArrayList<Producto> productos) {
 		this.productos = productos;
 	}
@@ -62,42 +67,6 @@ public class Catalogo {
 		}
 		return productoFinal;
 	}
-
-    public ArrayList<Producto> filterByMarca(String marca){
-        productosCatalogo = new ArrayList<Producto>();
-        Producto producto = null;
-        for(int i=0; i<productos.size(); i++) {
-            producto = productos.get(i);
-            if(producto != null && producto.getMarca().equals(marca)) {
-                producto.setIsInCatalogo(true);
-                productosCatalogo.add(producto);
-            }else if(producto != null && marca.equals(mContext.getString(R.string.todas))) {
-                producto.setIsInCatalogo(true);
-                productosCatalogo.add(producto);
-            }else if(producto != null ){
-                producto.setIsInCatalogo(false);
-            }
-        }
-        return productosCatalogo;
-    }
-
-    public ArrayList<Producto> filterByCategoria(String categoria){
-        productosCatalogo = new ArrayList<Producto>();
-        Producto producto = null;
-        for(int i=0; i<productos.size(); i++) {
-            producto = productos.get(i);
-            if(producto != null && producto.getCategoria().equals(categoria)) {
-                producto.setIsInCatalogo(true);
-                productosCatalogo.add(producto);
-            }else if(producto != null && categoria.equals(mContext.getString(R.string.todas))) {
-                producto.setIsInCatalogo(true);
-                productosCatalogo.add(producto);
-            }else if(producto != null ){
-                producto.setIsInCatalogo(false);
-            }
-        }
-        return productosCatalogo;
-    }
 
     public ArrayList<Producto> filter(String marcaActual, String categoriaActual){
         productosCatalogo = new ArrayList<Producto>();

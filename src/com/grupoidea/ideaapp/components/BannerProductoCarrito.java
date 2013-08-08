@@ -25,7 +25,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 	private Producto producto;
 	/** Objeto que contiene el adaptador actual*/
 	private BannerProductoCarrito carritoAdapter;
-	private View superView;
 
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
@@ -68,8 +67,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		} else {
 			view = convertView;
 		}
-
-        superView = view;
 			
 		if(producto != null) {
             //cantidad de productos de esta clase
