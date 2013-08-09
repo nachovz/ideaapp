@@ -139,25 +139,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         prod.setIva(producto.getParseObject("iva").getDouble("porcentaje"));
         prod.setExcedente(producto.getInt("excedente"));
 
-        //Obtener existencia
-        ParseQuery queryExistencia = new ParseQuery("Metas");
-        queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
-        queryExistencia.whereEqualTo("producto", producto);
-        queryExistencia.getFirstInBackground(new GetCallback() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if (e == null){
-                    int exist = parseObject.getInt("meta")-parseObject.getInt("pedido")-parseObject.getInt("facturado");
-                    if(exist >0){
-                        prod.setExistencia(exist);
-                    }else{
-                        prod.setExistencia(0);
-                    }
-                }
-                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
-            }
-        });
-
         //Obtener categoria
         ParseObject categoria = producto.getParseObject("categoria");
 		prod.setMarca(producto.getString("marca"));
@@ -176,17 +157,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                     for (ParseObject descuento : descuentos) {
                         tablaDescuentos.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
 
-                        //Quitar el dialogo con el ultimo descuento del ultimo producto
-                        if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
-                            Log.d("DEBUG", "Finalizada carga de productos");
-                            catalogoProgressDialog.dismiss();
-                        }
-                    }
-                }else if(e != null){
-                    //Quitar el dialogo con el ultimo descuento del ultimo producto
-                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
-                        Log.d("DEBUG", "Finalizada carga de productos");
-                        catalogoProgressDialog.dismiss();
+//                        //Quitar el dialogo con el ultimo descuento del ultimo producto
+//                        if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
+//                            Log.d("DEBUG", "Finalizada carga de productos");
+//                            catalogoProgressDialog.dismiss();
+//                        }
                     }
                 }
             }
@@ -215,6 +190,31 @@ public class CatalogoActivity extends ParentMenuActivity {
             prod.setGrupoCategoria(grupo);
         }
 
+        //Obtener existencia
+        ParseQuery queryExistencia = new ParseQuery("Metas");
+        queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
+        queryExistencia.whereEqualTo("producto", producto);
+        queryExistencia.getFirstInBackground(new GetCallback() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null){
+                    int exist = parseObject.getInt("meta")-parseObject.getInt("pedido")-parseObject.getInt("facturado");
+                    if(exist >0){
+                        prod.setExistencia(exist);
+                    }else{
+                        prod.setExistencia(0);
+                    }
+                    //Quitar el dialogo con el ultimo descuento del ultimo producto
+                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
+                        Log.d("DEBUG", "Finalizada carga de productos");
+                        catalogoProgressDialog.dismiss();
+                    }
+                }
+
+                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
+            }
+        });
+
         return prod;
 	}
 	 
@@ -238,22 +238,53 @@ public class CatalogoActivity extends ParentMenuActivity {
             }
 		}
 
+
         menuLeft = (RelativeLayout) getMenuLeft();
         if(menuLeft != null){
+            //onCLick en Categorias
             categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
-            categoriasFiltro.getChildAt(1).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickTextView((TextView) v);
-                }
-            });
+            View child = categoriasFiltro.getChildAt(1);
+            if(child!= null){
+                child.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //poner todos los views en default
+                        TextView item;
+                        for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
+                            item = (TextView) categoriasFiltro.getChildAt(i);
+                            if (item != null) {
+                                item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+                                item.setTextColor(Color.parseColor("#FFFFFF"));
+                            }
+                        }
+                        //aplicar item seleccionado de filtro
+                        onClickTextView((TextView) v);
+                    }
+                });
+            }
+
+            //onClick en Marcas
             marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
-            marcasFiltro.getChildAt(1).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onClickTextView((TextView) v);
-                }
-            });
+            child = marcasFiltro.getChildAt(1);
+            if(child!= null){
+                child.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //poner todos los views en default
+                        TextView item;
+                        for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
+                            item = (TextView) marcasFiltro.getChildAt(i);
+                            if (item != null) {
+                                item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+                                item.setTextColor(Color.parseColor("#FFFFFF"));
+                            }
+
+                        }
+                        //aplicar item seleccionado de filtro
+                        onClickTextView((TextView) v);
+                    }
+                });
+            }
 
         }
 
@@ -575,6 +606,11 @@ public class CatalogoActivity extends ParentMenuActivity {
             catalogo.filter(marcaActual, categoriaActual);
             adapterCatalogo.notifyDataSetChanged();
         }
+        if(!selected.equals(parent.getChildAt(1))){
+            //actualizar estilo
+            selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
+            selected.setTextColor(Color.parseColor("#3A70B9"));
+        }
     }
 
     /*------------- CATEGORIAS -----------------*/
@@ -596,6 +632,16 @@ public class CatalogoActivity extends ParentMenuActivity {
             tv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //poner todos los views en default
+                    TextView item;
+                    for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
+                        item = (TextView) categoriasFiltro.getChildAt(i);
+                        if (item != null) {
+                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+                            item.setTextColor(Color.parseColor("#FFFFFF"));
+                        }
+                    }
+                    //aplicar item seleccionado de filtro
                     onClickTextView((TextView) v);
                 }
             });
@@ -636,6 +682,16 @@ public class CatalogoActivity extends ParentMenuActivity {
             tv.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //poner todos los views en default
+                    TextView item;
+                    for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
+                        item = (TextView) marcasFiltro.getChildAt(i);
+                        if (item != null) {
+                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+                            item.setTextColor(Color.parseColor("#FFFFFF"));
+                        }
+                    }
+                    //aplicar item seleccionado de filtro
                     onClickTextView((TextView) v);
                 }
             });
@@ -689,12 +745,6 @@ public class CatalogoActivity extends ParentMenuActivity {
                     if(adapterCatalogo != null){
                         adapterCatalogo.notifyDataSetChanged();
                     }
-                }
-
-                //Quitar dialogo de carga
-                if(lastprodName!= null && lastprodName.equalsIgnoreCase(prod.getNombre())){
-                    Log.d("DEBUG", "Finalizada carga de productos");
-                    catalogoProgressDialog.dismiss();
                 }
             }
         }

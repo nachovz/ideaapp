@@ -199,13 +199,18 @@
             android:layout_below="@+id/cliente_relative_layout"
             android:text="@string/nuevo_pedido_button_text"
             android:textSize="20dp"
-            android:onClick="createNewPedido" />
+            android:onClick="createNewPedido" android:layout_marginTop="5dp"/>
 
+        <TextView android:layout_width="match_parent" android:layout_height="3dp" android:background="#3A70B9"
+                  android:id="@+id/textView4"
+                  android:layout_below="@+id/cliente_nuevo_pedido_boton" android:layout_marginTop="10dp"
+                  android:layout_marginLeft="8dp" android:layout_marginRight="8dp"/>
         <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:id="@+id/pedidos_spinner" android:layout_below="@+id/cliente_nuevo_pedido_boton"
-                android:layout_marginTop="20dp" android:layout_marginBottom="10dp"/>
+                android:id="@+id/pedidos_spinner"
+                android:layout_below="@+id/textView4" android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"/>
         <ScrollView
             android:id="@+id/cliente_scroll_view"
             android:layout_width="fill_parent"

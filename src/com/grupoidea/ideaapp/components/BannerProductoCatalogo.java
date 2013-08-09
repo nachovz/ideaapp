@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -33,8 +32,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	protected Producto producto;
 	private BannerProductoCatalogo catalogoAdapter;
 	private Context mContext;
-	
-	protected AsyncTask<Object, Object, Object> tarea;
 	
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
@@ -108,10 +105,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		} else {
         	view = convertView;
         }
-
-//        //inicializar Menu
-//        menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
-//        menu.removeAllViews();
 
         if(producto != null && producto.getIsInCatalogo()) {
             view.setVisibility(View.VISIBLE);
@@ -268,6 +261,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					} else {
 						//El menu esta cerrado... abrirlo
 						if(menu != null) {
+                            for (Producto prod:catalogo.getProductosCatalogo()){
+                                prod.setIsMenuOpen(false);
+                            }
 							producto.setIsMenuOpen(true);
 							notifyDataSetChanged();
 						}
