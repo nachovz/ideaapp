@@ -44,7 +44,7 @@
             <TableLayout
                 android:id="@+id/encabezado_pedido_table"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@id/gestion_header_layout">
 
                 <TableRow>
@@ -148,8 +148,8 @@
                             style="@style/encabezado"/>
                     <EditText
                             android:id="@+id/direccion_envio_edit"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="500dp"
+                            android:layout_height="wrap_content"
                             android:inputType="textMultiLine"
                             android:lines="2"
                             android:maxLines="2"
@@ -157,7 +157,8 @@
                             android:layout_span="1"
                             android:padding="18dip"
                             android:layout_weight="0.6"
-                            style="@style/edit_text"/>
+                            style="@style/edit_text" android:minLines="2" android:maxWidth="220dp"
+                            android:maxLength="240"/>
                 </TableRow>
 
             </TableLayout>

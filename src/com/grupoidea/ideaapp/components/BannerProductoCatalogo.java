@@ -181,7 +181,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					adapterCarrito.getCarrito().addProducto(producto);
 					//Realiza el scroll al elemento agregado o incrementado.
 					index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
-					adapterCarrito.notifyDataSetChanged();
+                    adapterCarrito.notifyDataSetChanged();
 
 					listCarrito.post(new Runnable() {
 				        public void run() {
