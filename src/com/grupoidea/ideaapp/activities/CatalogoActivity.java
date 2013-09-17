@@ -740,7 +740,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             if (productoWeakReference != null) {
                 Producto prod = productoWeakReference.get();
                 if (prod != null) {
-                    Log.d("DEBUG","Imagen de producto "+prod.getCodigo()+" obtenida");
+//                    Log.d("DEBUG","Imagen de producto "+prod.getCodigo()+" obtenida");
                     prod.setImagen(bitmap);
                     if(adapterCatalogo != null){
                         adapterCatalogo.notifyDataSetChanged();

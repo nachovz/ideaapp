@@ -1,14 +1,14 @@
 package com.grupoidea.ideaapp.components;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.grupoidea.ideaapp.R;
@@ -25,6 +25,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 	private Producto producto;
 	/** Objeto que contiene el adaptador actual*/
 	private BannerProductoCarrito carritoAdapter;
+    private Context mContext;
 
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
@@ -55,8 +56,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		View view = null;
 		TextView textView;
 		ImageView imageView;
-		LayoutInflater inflater;
-		EditText editText;
+		LayoutInflater inflater = null;
+		TextView editText;
 		
 		producto = (Producto) getItem(position);
         carrito.recalcularDescuentosGrupoCategoria(producto);
@@ -67,10 +68,11 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		} else {
 			view = convertView;
 		}
+        mContext= view.getContext();
 			
 		if(producto != null) {
             //cantidad de productos de esta clase
-			editText = (EditText) view.findViewById(R.id.banner_carrito_cantidad);
+			editText = (TextView) view.findViewById(R.id.banner_carrito_cantidad);
 			if(editText != null) {
 				editText.setText(String.valueOf(producto.getCantidad()));
 			}
@@ -114,41 +116,79 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 			});
 
             //Cantidad cambiada con teclado
-            final EditText cantProd = (EditText) view.findViewById(R.id.banner_carrito_cantidad);
+            TextView cantProd = (TextView) view.findViewById(R.id.banner_carrito_cantidad);
 
-            TextWatcher tw = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            //numberPicker Dialog
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View dialog = inflater.inflate(R.layout.cantidad_picker, null);
+            final NumberPicker np = (NumberPicker) dialog.findViewById(R.id.numberPicker);
+            np.setValue(producto.getCantidad());
+            np.setMinValue(1);
+            np.setMaxValue(producto.getExcedente()+producto.getExistencia());
+            np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+            builder.setView(dialog);
+            final LayoutInflater finalInflater = inflater;
+            builder.setMessage(R.string.set_cantidad)
+                    .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogi, int id) {
+                            // Send the positive button event back to the host activity
+                            producto.setCantidad(np.getValue());
+                            carrito.recalcularDescuentosGrupoCategoria(producto);
+                            carritoAdapter.notifyDataSetChanged();
+                            //Calcula el total del carrito
+                            setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if(!cantProd.getText().toString().isEmpty()){
-                        int cant = Integer.valueOf(cantProd.getText().toString());
-                        int max = producto.getExcedente()+producto.getExistencia();
-                        if(cant > max){
-                            producto.setCantidad(max);
-                        }else{
-                            producto.setCantidad(cant);
                         }
-                        carrito.recalcularDescuentosGrupoCategoria(producto);
-                        carritoAdapter.notifyDataSetChanged();
-                        //Calcula el total del carrito
-                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-                    }else{
-                        producto.setCantidad(1);
-                        carrito.recalcularDescuentosGrupoCategoria(producto);
-                        carritoAdapter.notifyDataSetChanged();
-                        //Calcula el total del carrito
-                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-                    }
-//                    cantProd.requestFocus();
-                }
-            };
+                    })
+                    .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialogi, int id) {
+                            // Send the negative button event back to the host activity
+                        }
+                    });
 
-            cantProd.addTextChangedListener(tw);
+            final AlertDialog.Builder tempBuilder = builder;
+            cantProd.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //display dialog
+                    tempBuilder.create().show();
+                }
+            });
+
+//            TextWatcher tw = new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//                @Override
+//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+//
+//                @Override
+//                public void afterTextChanged(Editable editable) {
+//                    if(!cantProd.getText().toString().isEmpty()){
+//                        int cant = Integer.valueOf(cantProd.getText().toString());
+//                        int max = producto.getExcedente()+producto.getExistencia();
+//                        if(cant > max){
+//                            producto.setCantidad(max);
+//                        }else{
+//                            producto.setCantidad(cant);
+//                        }
+//                        carrito.recalcularDescuentosGrupoCategoria(producto);
+//                        carritoAdapter.notifyDataSetChanged();
+//                        //Calcula el total del carrito
+//                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+//                    }else{
+//                        producto.setCantidad(1);
+//                        carrito.recalcularDescuentosGrupoCategoria(producto);
+//                        carritoAdapter.notifyDataSetChanged();
+//                        //Calcula el total del carrito
+//                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+//                    }
+////                    cantProd.requestFocus();
+//                }
+//            };
+//
+//            cantProd.addTextChangedListener(tw);
 
             //Eliminar producto del carrito
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_eliminar_image_view);

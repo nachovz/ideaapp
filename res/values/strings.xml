@@ -61,5 +61,6 @@
     <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string>
     <string name="categorias">Categorias</string><string name="marcas">Marcas</string>
     <string name="todas">Todas</string>
+    <string name="set_cantidad">Establecer Cantidad</string>
 
 </resources>
