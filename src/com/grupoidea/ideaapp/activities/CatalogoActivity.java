@@ -122,7 +122,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         marcaActual = getString(R.string.todas);
 //        Log.d("DEBUG", "marca actual: "+ marcaActual+" categoria actual: "+categoriaActual);
 	}
-	
+
+    /**
+     * Instanciar nuevo producto en base a un ParseObject
+     * @param producto producto obtenido de Parse
+     * @return Instancia de Clase Producto
+     */
 	private Producto retrieveProducto(final ParseObject producto){
 		String codigo = producto.getString("codigo");
 		String nombre = producto.getString("nombre");
@@ -615,6 +620,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /*------------- CATEGORIAS -----------------*/
 
+    /**
+     * Agrega la categoria cat a la lista de categorias en el menu lateral de filtros
+     * @param cat categoria
+     */
     public void addCategoria(String cat){
         if((cat != null) && !isInCategorias(cat)){
             categorias.add(cat);
@@ -650,6 +659,11 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
     }
 
+    /**
+     * Revisa si el string cat está contenido dentro de las categorias almacenadas en el servidor
+     * @param cat categoria
+     * @return Exito en la busqueda
+     */
     public Boolean isInCategorias(String cat){
         for(int i = 0, size = categorias.size(); i<size; i++){
             if (cat.equals(categorias.get(i)))
@@ -658,6 +672,10 @@ public class CatalogoActivity extends ParentMenuActivity {
         return false;
     }
 
+    /**
+     * Establecer categoria seleccionada
+     * @param selected categoria seleccionada
+     */
     public void setCategoriaActual(TextView selected){
         categoriaActual = selected.getText().toString();
         Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
@@ -665,6 +683,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /*------------- MARCAS -----------------*/
 
+    /**
+     * Agregar marca al menu lateral de filtros
+     * @param mar marca a agregar
+     */
     public void addMarca(String mar){
         if((mar != null) && !isInMarcas(mar)){
             marcas.add(mar);
@@ -700,6 +722,11 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
     }
 
+    /**
+     * Revisa si el string cat está contenido dentro de las marcas almacenadas en el servidor
+     * @param cat
+     * @return Exito en la busqueda
+     */
     public Boolean isInMarcas(String cat){
         for(int i = 0, size = marcas.size(); i<size; i++){
             if (cat.equals(marcas.get(i)))
@@ -708,11 +735,18 @@ public class CatalogoActivity extends ParentMenuActivity {
         return false;
     }
 
+    /**
+     * Establece la marca actual
+     * @param selected marca seleccionada
+     */
     public void setMarcaActual(TextView selected){
         marcaActual = selected.getText().toString();
-        Log.d("DEBUG", "marca seleccionada: "+ marcaActual);
+//        Log.d("DEBUG", "marca seleccionada: "+ marcaActual);
     }
 
+    /**
+     * Clase AsyncTask que se encarga de descargar las imagenes de los productos del catalogo
+     */
     public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<Producto> productoWeakReference;
 

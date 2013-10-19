@@ -1,13 +1,16 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
@@ -16,6 +19,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.io.*;
 import java.util.List;
 
 /**
@@ -50,6 +54,8 @@ public abstract class ParentActivity extends Activity {
 	/** Layout que contiene informacion sobre el estatus del request actual. */
 	private RelativeLayout parentAvailableLayout;
 
+    private ParentActivity activityForContextInstance;
+
 	/**
 	 * Constructor que define los atributos de carga automatica y almacenamiento
 	 * en cache (si es requerido por las clases hijas).
@@ -66,6 +72,7 @@ public abstract class ParentActivity extends Activity {
 	public ParentActivity(boolean autoLoad, boolean useCache) {
 		this.autoLoad = autoLoad;
 		this.useCache = useCache;
+        this.activityForContextInstance = this;
 	}
 
 	/**
@@ -107,13 +114,12 @@ public abstract class ParentActivity extends Activity {
 	 * hijos en cualquier momento que deseen iniciar el proceso descrito.
 	 */
 	protected void loadData() {
-		Request request;
+		Request request = getRequestAction();
 
 		if (useCache) {
 			loadFromCache();
 		}
 
-		request = getRequestAction();
 		if (request != null) {
 			loadingTextView.setText(getString(R.string.cargando));
 			if (request.getRequestType() == Request.PARSE_REQUEST) {
@@ -151,10 +157,54 @@ public abstract class ParentActivity extends Activity {
 	 * <code>drawData(Response response, boolean isLiveData)</code>
 	 */
 	private void loadFromCache() {
-		Response response = null;
-		// TODO: Implementar carga desde el cache (Implementar y utilizar
-		// PersistentStores)
-		manageResponse(response, false);
+        ParseQuery query;
+        Context mContext = activityForContextInstance.getApplicationContext();
+        if(isExternalStorageReadable()){
+            try
+            {
+                String fileName = "cachedProductQuery.idea";
+                FileInputStream fis;
+                ObjectInputStream is;
+                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
+                File file2 = new File(file1, fileName);
+                fileName = file2.getAbsolutePath();
+                fis = mContext.openFileInput(fileName);
+                is = new ObjectInputStream(fis);
+                query = (ParseQuery)is.readObject();
+                is.close();
+                fis.close();
+                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+                query.findInBackground(new FindCallback() {
+                    @Override
+                    public void done(List<ParseObject> parseData, ParseException e) {
+                    if (e == null) {
+                        if (parseData != null) {
+                            response = new Response();
+                            response.setResponse(parseData);
+                            manageResponse(response, true);
+
+                            if (useCache) {
+                                setCache(response);
+                            }
+
+                            loadingTextView.setText(getString(R.string.end_cargando));
+                        }
+                    } else {
+                        Log.e("Exception", "Parse Exception: " + e.getMessage());
+                    }
+                    }
+
+                });
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Toast.makeText(mContext, "Error: No se puede cargar la cahce, no se encuentra tarjeta SD", 5000).show();
+        }
 	}
 
 	/**
@@ -164,9 +214,49 @@ public abstract class ParentActivity extends Activity {
 	 *           forma persistente en el dispositivo
 	 */
 	private void setCache(Object response) {
-		// TODO: Implementar almacenamiento de objetos en el cache (Implementar
-		// y utilizar PersistentStores)
+        Context mContext = activityForContextInstance.getApplicationContext();
+        if(isExternalStorageWritable()){
+            try
+            {
+                String fileName = "cachedProductQuery.idea";
+                FileOutputStream fos;
+                ObjectOutputStream os;
+                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
+                File file2 = new File(file1, fileName);
+                fileName = file2.getAbsolutePath();
+                fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+                os = new ObjectOutputStream(fos);
+                os.writeObject(response);
+                os.close();
+                fos.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }else{
+            Toast.makeText(mContext, "Error: No se puede guardar la cache, no se encuentra tarjeta SD", 5000).show();
+        }
 	}
+
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Checks if external storage is available to at least read */
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
 
 	/**
 	 * Se encarga de ejecutar la consulta de parse en background utilizando
