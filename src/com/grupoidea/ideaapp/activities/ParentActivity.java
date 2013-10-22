@@ -54,7 +54,7 @@ public abstract class ParentActivity extends Activity {
 	/** Layout que contiene informacion sobre el estatus del request actual. */
 	private RelativeLayout parentAvailableLayout;
 
-    public ParentActivity activityForContextInstance;
+    public Context instanceContext;
 
 	/**
 	 * Constructor que define los atributos de carga automatica y almacenamiento
@@ -160,14 +160,17 @@ public abstract class ParentActivity extends Activity {
 	private void loadFromCache() {
         Log.d("DEBUG", "Cargando Cache");
         ParseQuery query;
-        Context mContext = activityForContextInstance.getBaseContext();
+        Context mContext = this.getBaseContext();
         if(isExternalStorageReadable()){
             try
             {
                 String fileName = "cachedProductQuery.idea";
                 FileInputStream fis;
                 ObjectInputStream is;
-                File file1 = this.activityForContextInstance.getApplicationContext().getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
+
+                //Despues de corregido propagar a setCache
+                ////////---------------- PROBLEM ------------------------
+                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
                 if(file1!= null){
                     Log.d("DEBUG",file1.toString());
                     Log.d("DEBUG",file1.getAbsolutePath());
@@ -175,9 +178,13 @@ public abstract class ParentActivity extends Activity {
                 }else{
                     Log.d("DEBUG", "file 1 == null");
                 }
+
+                ////////---------------- PROBLEM ------------------------
+
+
                 File file2 = new File(file1, fileName);
                 fileName = file2.getAbsolutePath();
-                Log.d("DEBUG","path file " + file2.getAbsolutePath());
+                Log.d("DEBUG","fileName " + fileName);
                 fis = mContext.openFileInput(fileName);
                 is = new ObjectInputStream(fis);
                 query = (ParseQuery)is.readObject();
@@ -225,7 +232,7 @@ public abstract class ParentActivity extends Activity {
 	 */
 	private void setCache(Object response) {
         Log.d("DEBUG", "Guardando Cache");
-        Context mContext = activityForContextInstance.getApplicationContext();
+        Context mContext = instanceContext.getApplicationContext();
         if(isExternalStorageWritable()){
             try
             {

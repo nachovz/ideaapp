@@ -62,7 +62,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 	
 	public CatalogoActivity() {
 		super(true, true, true, true); //hasCache (segundo param) :true!
-        super.activityForContextInstance = this;
 	}
 
 	@Override
@@ -70,6 +69,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 		super.onCreate(savedInstanceState);
         mContext = getBaseContext();
+        super.instanceContext = mContext;
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
