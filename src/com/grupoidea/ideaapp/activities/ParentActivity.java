@@ -54,7 +54,7 @@ public abstract class ParentActivity extends Activity {
 	/** Layout que contiene informacion sobre el estatus del request actual. */
 	private RelativeLayout parentAvailableLayout;
 
-    private ParentActivity activityForContextInstance;
+    public ParentActivity activityForContextInstance;
 
 	/**
 	 * Constructor que define los atributos de carga automatica y almacenamiento
@@ -72,7 +72,6 @@ public abstract class ParentActivity extends Activity {
 	public ParentActivity(boolean autoLoad, boolean useCache) {
 		this.autoLoad = autoLoad;
 		this.useCache = useCache;
-        this.activityForContextInstance = this;
 	}
 
 	/**
@@ -114,9 +113,11 @@ public abstract class ParentActivity extends Activity {
 	 * hijos en cualquier momento que deseen iniciar el proceso descrito.
 	 */
 	protected void loadData() {
+        Log.d("DEBUG", "Cargando Data");
 		Request request = getRequestAction();
 
 		if (useCache) {
+            Log.d("DEBUG", "useCache: true");
 			loadFromCache();
 		}
 
@@ -157,17 +158,26 @@ public abstract class ParentActivity extends Activity {
 	 * <code>drawData(Response response, boolean isLiveData)</code>
 	 */
 	private void loadFromCache() {
+        Log.d("DEBUG", "Cargando Cache");
         ParseQuery query;
-        Context mContext = activityForContextInstance.getApplicationContext();
+        Context mContext = activityForContextInstance.getBaseContext();
         if(isExternalStorageReadable()){
             try
             {
                 String fileName = "cachedProductQuery.idea";
                 FileInputStream fis;
                 ObjectInputStream is;
-                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
+                File file1 = this.activityForContextInstance.getApplicationContext().getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
+                if(file1!= null){
+                    Log.d("DEBUG",file1.toString());
+                    Log.d("DEBUG",file1.getAbsolutePath());
+                    Log.d("DEBUG",file1.getAbsoluteFile().toString());
+                }else{
+                    Log.d("DEBUG", "file 1 == null");
+                }
                 File file2 = new File(file1, fileName);
                 fileName = file2.getAbsolutePath();
+                Log.d("DEBUG","path file " + file2.getAbsolutePath());
                 fis = mContext.openFileInput(fileName);
                 is = new ObjectInputStream(fis);
                 query = (ParseQuery)is.readObject();
@@ -214,6 +224,7 @@ public abstract class ParentActivity extends Activity {
 	 *           forma persistente en el dispositivo
 	 */
 	private void setCache(Object response) {
+        Log.d("DEBUG", "Guardando Cache");
         Context mContext = activityForContextInstance.getApplicationContext();
         if(isExternalStorageWritable()){
             try

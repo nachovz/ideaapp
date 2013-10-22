@@ -61,7 +61,8 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected static  Context mContext;
 	
 	public CatalogoActivity() {
-		super(true, false, true, true); //TODO: Modificar a autoLoad:true, hasCache:true!
+		super(true, true, true, true); //hasCache (segundo param) :true!
+        super.activityForContextInstance = this;
 	}
 
 	@Override
