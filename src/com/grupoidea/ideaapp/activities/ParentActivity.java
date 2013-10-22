@@ -170,26 +170,19 @@ public abstract class ParentActivity extends Activity {
 
                 //Despues de corregido propagar a setCache
                 ////////---------------- PROBLEM ------------------------
-                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
-                if(file1!= null){
-                    Log.d("DEBUG",file1.toString());
-                    Log.d("DEBUG",file1.getAbsolutePath());
-                    Log.d("DEBUG",file1.getAbsoluteFile().toString());
-                }else{
-                    Log.d("DEBUG", "file 1 == null");
-                }
+                File appDir = mContext.getExternalFilesDir(null);
+                File file2 = new File(appDir, fileName);
 
-                ////////---------------- PROBLEM ------------------------
-
-
-                File file2 = new File(file1, fileName);
                 fileName = file2.getAbsolutePath();
-                Log.d("DEBUG","fileName " + fileName);
-                fis = mContext.openFileInput(fileName);
+                Log.d("DEBUG","file2 abs path:" + file2.getAbsolutePath());
+                fis = mContext.openFileInput(file2.getName());
                 is = new ObjectInputStream(fis);
                 query = (ParseQuery)is.readObject();
                 is.close();
                 fis.close();
+
+                ////////---------------- PROBLEM ------------------------
+
                 query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
                 query.findInBackground(new FindCallback() {
                     @Override
@@ -232,17 +225,17 @@ public abstract class ParentActivity extends Activity {
 	 */
 	private void setCache(Object response) {
         Log.d("DEBUG", "Guardando Cache");
-        Context mContext = instanceContext.getApplicationContext();
+        Context mContext = this.getBaseContext();
         if(isExternalStorageWritable()){
             try
             {
                 String fileName = "cachedProductQuery.idea";
                 FileOutputStream fos;
                 ObjectOutputStream os;
-                File file1 = mContext.getExternalFilesDir("/Android/data/com.grupoidea.ideaaapp/");
-                File file2 = new File(file1, fileName);
+                File appDir = mContext.getExternalFilesDir(null);
+                File file2 = new File(appDir, fileName);
                 fileName = file2.getAbsolutePath();
-                fos = mContext.openFileOutput(fileName, Context.MODE_PRIVATE);
+                fos = mContext.openFileOutput(file2.toString(), Context.MODE_PRIVATE);
                 os = new ObjectOutputStream(fos);
                 os.writeObject(response);
                 os.close();
