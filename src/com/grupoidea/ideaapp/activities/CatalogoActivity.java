@@ -138,6 +138,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		final String objectId = producto.getObjectId();
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
 
+        //Obtener imagen
         if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
             ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
             imgDownloader.execute(producto.getString("picture"));
@@ -761,37 +762,46 @@ public class CatalogoActivity extends ParentMenuActivity {
         protected Bitmap doInBackground(String... params) {
             try {
                 Bitmap bitmap; File appDir, file2;
+
+                //Extraer nombre de archivo de URL
+                String temp[] = params[0].split("/");
+                String fileName = temp[temp.length-1];
+
                 if(isExternalStorageReadable()){
                     appDir = mContext.getExternalFilesDir("img/");
-                    file2 = new File(appDir, params[0]);
-                    Log.d("DEBUG", "Abriendo imagen en "+ file2.getAbsolutePath());
+                    file2 = new File(appDir, fileName);
+                    Log.d("DEBUG", "Buscando imagen en SD "+ file2.getAbsolutePath());
                     bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
+
+
 
                     if(bitmap == null){
                         //Descarga imagen del server de IDEA
-                        Log.d("DEBUG", "Descargando imagen del servidor");
+                        Log.d("DEBUG", "Imagen no existe localmente. Descargando del servidor");
                         InputStream in = new java.net.URL(params[0]).openStream();
                         bitmap = BitmapFactory.decodeStream(in);
 
                         //Guardar imagen en SD
                         if(isExternalStorageWritable()){
                             appDir = mContext.getExternalFilesDir("img/");
-                            file2 = new File(appDir, params[0]);
+                            file2 = new File(appDir, fileName);
                             Log.d("DEBUG", "Guardando imagen en "+ file2.getAbsolutePath());
                             FileOutputStream out = openFileOutput(file2.getAbsolutePath(), Context.MODE_PRIVATE);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                            out.close();
                         }else{
-                            Log.d("DEBUG", "No se pudo salvar la imagen "+params[0]);
-                            Toast.makeText(mContext, "No se pudo salvar la imagen "+params[0], 1000).show();
+                            Log.d("DEBUG", "No se pudo salvar la imagen "+fileName);
+                            Toast.makeText(mContext, "No se pudo salvar la imagen "+fileName, 1000).show();
                         }
 
                         return bitmap;
                     }else{
+                        //Imagen está en SD
                         return bitmap;
                     }
                 }else{
-                    Log.d("DEBUG", "No se pudo salvar la imagen "+params[0]);
-                    Toast.makeText(mContext, "No se pudo salvar la imagen "+params[0], 1000).show();
+                    Log.d("DEBUG", "Tarjeta SD no disponible ");
+                    Toast.makeText(mContext, "Tarjeta SD no disponible ", 1000).show();
                 }
             } catch (Exception e) {
 //                Log.e("ImageDownload Exception: ", e.getMessage());
