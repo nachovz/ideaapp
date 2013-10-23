@@ -30,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -758,9 +760,39 @@ public class CatalogoActivity extends ParentMenuActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             try {
-                InputStream in = new java.net.URL(params[0]).openStream();
-                Bitmap bitmap = BitmapFactory.decodeStream(in);
-                return bitmap;
+                Bitmap bitmap; File appDir, file2;
+                if(isExternalStorageReadable()){
+                    appDir = mContext.getExternalFilesDir("img/");
+                    file2 = new File(appDir, params[0]);
+                    Log.d("DEBUG", "Abriendo imagen en "+ file2.getAbsolutePath());
+                    bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
+
+                    if(bitmap == null){
+                        //Descarga imagen del server de IDEA
+                        Log.d("DEBUG", "Descargando imagen del servidor");
+                        InputStream in = new java.net.URL(params[0]).openStream();
+                        bitmap = BitmapFactory.decodeStream(in);
+
+                        //Guardar imagen en SD
+                        if(isExternalStorageWritable()){
+                            appDir = mContext.getExternalFilesDir("img/");
+                            file2 = new File(appDir, params[0]);
+                            Log.d("DEBUG", "Guardando imagen en "+ file2.getAbsolutePath());
+                            FileOutputStream out = openFileOutput(file2.getAbsolutePath(), Context.MODE_PRIVATE);
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        }else{
+                            Log.d("DEBUG", "No se pudo salvar la imagen "+params[0]);
+                            Toast.makeText(mContext, "No se pudo salvar la imagen "+params[0], 1000).show();
+                        }
+
+                        return bitmap;
+                    }else{
+                        return bitmap;
+                    }
+                }else{
+                    Log.d("DEBUG", "No se pudo salvar la imagen "+params[0]);
+                    Toast.makeText(mContext, "No se pudo salvar la imagen "+params[0], 1000).show();
+                }
             } catch (Exception e) {
 //                Log.e("ImageDownload Exception: ", e.getMessage());
             }

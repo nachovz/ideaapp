@@ -235,7 +235,7 @@ public abstract class ParentActivity extends Activity {
                 File appDir = mContext.getExternalFilesDir(null);
                 File file2 = new File(appDir, fileName);
                 fileName = file2.getAbsolutePath();
-                fos = mContext.openFileOutput(file2.toString(), Context.MODE_PRIVATE);
+                fos = mContext.openFileOutput(file2.getName(), Context.MODE_PRIVATE);
                 os = new ObjectOutputStream(fos);
                 os.writeObject(response);
                 os.close();
