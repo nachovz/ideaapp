@@ -18,14 +18,34 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
-import com.grupoidea.ideaapp.models.*;
-import com.parse.*;
+import com.grupoidea.ideaapp.models.Carrito;
+import com.grupoidea.ideaapp.models.Catalogo;
+import com.grupoidea.ideaapp.models.Cliente;
+import com.grupoidea.ideaapp.models.GrupoCategoria;
+import com.grupoidea.ideaapp.models.Pedido;
+import com.grupoidea.ideaapp.models.Producto;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,8 +101,8 @@ public class CatalogoActivity extends ParentMenuActivity {
         catalogoProgressDialog.setTitle("Cargando...");
         catalogoProgressDialog.setMessage("Cargando Catalogo, por favor espere...");
         catalogoProgressDialog.setIndeterminate(true);
-        catalogoProgressDialog.setCancelable(false);
-        catalogoProgressDialog.show();
+        catalogoProgressDialog.setCancelable(true);
+//        catalogoProgressDialog.show();
 
         //Dialogo de carga carrito
         carritoProgressDialog = new ProgressDialog(this);
@@ -138,12 +158,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 		final String objectId = producto.getObjectId();
 		final Producto prod = new Producto(objectId,codigo, nombre, precio);
 
-        //Obtener imagen
-        if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
-            ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
-            imgDownloader.execute(producto.getString("picture"));
-        }
-
         //asignar IVA
         prod.setIva(producto.getParseObject("iva").getDouble("porcentaje"));
         prod.setExcedente(producto.getInt("excedente"));
@@ -193,6 +207,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                             tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                         }
                     }
+
+
+                    //Quitar el dialogo con el ultimo descuento del ultimo producto
+                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
+                        Log.d("DEBUG", "Finalizada carga de productos");
+                        catalogoProgressDialog.dismiss();
+                    }
                 }
             });
             grupo.setTablaDescuentos(tablaDescuentosGrupo);
@@ -213,11 +234,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     }else{
                         prod.setExistencia(0);
                     }
-                    //Quitar el dialogo con el ultimo descuento del ultimo producto
-                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
-                        Log.d("DEBUG", "Finalizada carga de productos");
-                        catalogoProgressDialog.dismiss();
-                    }
+
                 }
 
                 else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
@@ -226,6 +243,15 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         return prod;
 	}
+
+    public void retrieveImage(Producto prod, ParseObject producto){
+//        Toast.makeText(mContext, "Finalizada la carga de productos", Toast.LENGTH_SHORT).show();
+        //Obtener imagen
+        if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
+            ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
+            imgDownloader.execute(producto.getString("picture"));
+        }
+    }
 	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
@@ -241,6 +267,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //cargar productos desde Parse
 		for (ParseObject parseObject : productosParse) {
 			producto = retrieveProducto(parseObject);
+            retrieveImage(producto, parseObject);
 			productos.add(producto);
             if(parseObject.equals(productosParse.get(productosParse.size()-1))){
                 lastprodName=producto.getNombre();
@@ -773,8 +800,6 @@ public class CatalogoActivity extends ParentMenuActivity {
                     Log.d("DEBUG", "Buscando imagen en SD "+ file2.getAbsolutePath());
                     bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
 
-
-
                     if(bitmap == null){
                         //Descarga imagen del server de IDEA
                         Log.d("DEBUG", "Imagen no existe localmente. Descargando del servidor");
@@ -784,10 +809,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                         //Guardar imagen en SD
                         if(isExternalStorageWritable()){
                             appDir = mContext.getExternalFilesDir("img/");
-                            file2 = new File(appDir, fileName);
-                            Log.d("DEBUG", "Guardando imagen en "+ file2.getAbsolutePath());
-                            FileOutputStream out = openFileOutput(file2.getAbsolutePath(), Context.MODE_PRIVATE);
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                            File fileSave = new File(appDir,fileName);
+                            if(!fileSave.exists()) fileSave.createNewFile();
+                            Log.d("DEBUG", "Guardando imagen en "+ fileSave.getAbsolutePath());
+                            FileOutputStream out = new FileOutputStream(fileSave);
+                            Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
+                            bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                            out.flush();
                             out.close();
                         }else{
                             Log.d("DEBUG", "No se pudo salvar la imagen "+fileName);

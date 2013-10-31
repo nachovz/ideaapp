@@ -20,6 +20,6 @@ local.properties
 .project
 
 # IntelliJ Project Files
-*.iml
-*.ipr
+#*.iml
+#*.ipr
 *.iws
