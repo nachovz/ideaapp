@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/banner_carrito_relative_layout"
     android:layout_width="300dp"
-    android:layout_height="280dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="3dp" >
 
@@ -127,55 +127,43 @@
 
     <RelativeLayout
         android:id="@+id/banner_carrito_info"
-        android:layout_width="270dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/banner_carrito_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp" >
+        android:layout_below="@+id/banner_carrito_layout"
+        android:layout_alignParentLeft="true">
 
         <RelativeLayout
             android:id="@+id/banner_carrito_total_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/pedidos_bkg_monto" >
+            android:background="@drawable/pedidos_bkg_monto"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/banner_carrito_cantidad_layout">
 
             <TextView
                 android:id="@+id/banner_carrito_total_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:text="999.999 Bs."
                 android:textColor="#ffffff"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold|italic"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/banner_carrito_cantidad_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="10dp">
 
-            <ImageView
-                android:id="@+id/banner_carrito_menos_image_view"
-                android:layout_width="wrap_content"
+            <NumberPicker
+                android:layout_width="112dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/pedidos_manager_cantidad_menos" />
-
-            <TextView
-                android:id="@+id/banner_carrito_cantidad"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:background="@drawable/pedidos_manager_cantidad_center"
-                android:gravity="center_vertical|center_horizontal"
-                android:textColor="#ffffff"
-                android:textStyle="bold"/>
-            <ImageView
-                android:id="@+id/banner_carrito_mas_image_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/pedidos_manager_cantidad_mas" />
-
+                android:id="@+id/numberPicker"
+                android:layout_gravity="center"
+                android:clickable="false" />
         </LinearLayout>
     </RelativeLayout>
 

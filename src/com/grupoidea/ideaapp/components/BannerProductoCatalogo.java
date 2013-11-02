@@ -5,13 +5,25 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
@@ -28,7 +40,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	private ArrayList<Producto> productos;
     private Catalogo catalogo;
 	/** ViewGroup que permite mostrar el menu del producto.*/
-	private LinearLayout menu;
+    private LinearLayout menu;
+    private PopupMenu popup;
+    private ScrollView menuScroll;
 	protected Producto producto;
 	private BannerProductoCatalogo catalogoAdapter;
 	private Context mContext;
@@ -169,29 +183,33 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					final int index;
 					Producto producto;
 					BannerProductoCarrito adapterCarrito;
-					
-					//Muestra el carrito de compras.
-					showCarrito();
 
 					//Agrega el producto clickeado al carrito de compras.
 					producto = catalogo.getProductosCatalogo().get(position);
-                    producto.setIsInCarrito(true);
-					catalogoAdapter.notifyDataSetChanged();
-					adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
-					adapterCarrito.getCarrito().addProducto(producto);
-					//Realiza el scroll al elemento agregado o incrementado.
-					index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
-                    adapterCarrito.notifyDataSetChanged();
 
-					listCarrito.post(new Runnable() {
-				        public void run() {
-				        	listCarrito.smoothScrollToPosition(index);
-//				        	tarea.execute();
-				        }
-				    });
+                    if(producto.getExistencia()+producto.getExcedente() > 0){
+                        //Muestra el carrito de compras.
+                        showCarrito();
+                        producto.setIsInCarrito(true);
+                        catalogoAdapter.notifyDataSetChanged();
+                        adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
+                        adapterCarrito.getCarrito().addProducto(producto);
+                        //Realiza el scroll al elemento agregado o incrementado.
+                        index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
+                        adapterCarrito.notifyDataSetChanged();
 
-					//Calcula el total del carrito
-					setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                        listCarrito.post(new Runnable() {
+                            public void run() {
+                                listCarrito.smoothScrollToPosition(index);
+    //				        	tarea.execute();
+                            }
+                        });
+
+                        //Calcula el total del carrito
+                        setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                    }else{
+                        Toast.makeText(mContext, "No hay disponibilidad del producto", 3000).show();
+                    }
 				}
 			});
 
@@ -248,29 +266,31 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                     LayoutParams layoutParams;
 					Producto producto;
 					producto = catalogo.getProductosCatalogo().get(position);
+
+                    showPopup(view);
 					
-					if(producto.getIsMenuOpen()) {
-						//El menu esta abierto... cerrarlo
-						if(menu != null) {
-							producto.setIsMenuOpen(false);
-							notifyDataSetChanged();
-						}
-						layoutParams = new LayoutParams(40, 40);
-						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-						view.setLayoutParams(layoutParams);
-					} else {
-						//El menu esta cerrado... abrirlo
-						if(menu != null) {
-                            for (Producto prod:catalogo.getProductosCatalogo()){
-                                prod.setIsMenuOpen(false);
-                            }
-							producto.setIsMenuOpen(true);
-							notifyDataSetChanged();
-						}
-						layoutParams = new LayoutParams(180, 40);
-						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-						view.setLayoutParams(layoutParams);
-					}
+//					if(producto.getIsMenuOpen()) {
+//						//El menu esta abierto... cerrarlo
+//						if(menu != null) {
+//							producto.setIsMenuOpen(false);
+//							notifyDataSetChanged();
+//						}
+//						layoutParams = new LayoutParams(40, 40);
+//						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//						view.setLayoutParams(layoutParams);
+//					} else {
+//						//El menu esta cerrado... abrirlo
+//						if(menu != null) {
+//                            for (Producto prod:catalogo.getProductosCatalogo()){
+//                                prod.setIsMenuOpen(false);
+//                            }
+//							producto.setIsMenuOpen(true);
+//							notifyDataSetChanged();
+//						}
+//						layoutParams = new LayoutParams(180, 40);
+//						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//						view.setLayoutParams(layoutParams);
+//					}
 				}
 			});
 
@@ -290,6 +310,69 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         }
 		return view;
 	}
+
+    public void showPopup(final View v) {
+        PopupMenu popup = new PopupMenu(mContext, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.layout.banner_producto_catalogo_popup_layout, popup.getMenu());
+        final View parentPopUpView = v;
+
+        //Actualizar Existencia
+        popup.getMenu().add(mContext.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
+
+        popup.getMenu().add(mContext.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
+
+        //Descuento Producto
+        popup.getMenu().getItem(1).setEnabled(false);
+
+        //Descuento Categoria
+        SubMenu descCatSubmenu = popup.getMenu().getItem(2).getSubMenu();
+        if(descCatSubmenu != null){
+            descCatSubmenu.clear();
+            ArrayList<String> menu_prod = producto.getDescuentosString();
+            for(int i=0, size=menu_prod.size(); i<size; i++) {
+                descCatSubmenu.add(menu_prod.get(i));
+            }
+        }
+
+        //Descuento Grupo Categoria
+        SubMenu descGrupoSubmenu = popup.getMenu().getItem(3).getSubMenu();
+        if(descGrupoSubmenu != null && producto.getGrupoCategoria()!= null){
+            descGrupoSubmenu.clear();
+            ArrayList<String> menu_prod = producto.getGrupoCategoria().getDescuentosString();
+            Log.d("DEBUG", "size: "+producto.getCantidadDescuentosGroup());
+            for(int i=0, size=menu_prod.size(); i<size; i++) {
+                descGrupoSubmenu.add(menu_prod.get(i));
+            }
+        }else{
+            popup.getMenu().getItem(3).setEnabled(false);
+        }
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_desc_popup_menu:
+                        //agregar descuento
+                        ((CatalogoActivity) menuActivity).setValorDescuentoManual((Producto) parentPopUpView.getTag());
+                        Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
+                        break;
+                    case R.id.add_desc_cat_popup_menu:
+                        Log.d("DEBUG", "Tap en desc cat");
+                        break;
+                    case R.id.add_desc_grupo_cat_popup_menu:
+                        Log.d("DEBUG", "Tap en desc grupo");
+                        break;
+                    default:
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+        popup.show();
+    }
 
     /**
      * Funcion que retorna un TextView configurado para el menu de producto, con el contexto y texto especificado

@@ -44,7 +44,7 @@
         <activity
             android:name="com.grupoidea.ideaapp.activities.CatalogoActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustPan|stateAlwaysHidden"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
             android:label="@string/app_name" >
         </activity>
     </application>

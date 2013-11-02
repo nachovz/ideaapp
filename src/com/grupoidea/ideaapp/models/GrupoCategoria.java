@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.models;
 
 import android.util.SparseArray;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -73,5 +74,17 @@ public class GrupoCategoria {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public String getStringDescuentoAt(int index){
+        return ">"+(tablaDescuentos.keyAt(index)-1)+" : "+tablaDescuentos.valueAt(index)+"%";
+    }
+
+    public ArrayList<String> getDescuentosString(){
+        ArrayList<String> descuentos = new ArrayList<String>();
+        for (int i=0, size = tablaDescuentos.size(); i<size; i++){
+            descuentos.add(getStringDescuentoAt(i));
+        }
+        return descuentos;
     }
 }

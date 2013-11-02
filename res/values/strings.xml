@@ -2,7 +2,7 @@
 
     <string name="app_name">IDEA app</string>
     <string name="cargando">Cargando</string>
-    <string name="end_cargando"/>
+    <string name="end_cargando">Carga finalizada</string>
     <string name="nombre_usuario">Usuario</string>
     <string name="password">Contraseña</string>
 	<string name="ingresar">Ingresar</string>
@@ -42,6 +42,9 @@
     <string name="pedidos_banner_text">Pedidos</string>
     <string name="meta_restante">Meta Restante: </string>
     <string name="agregar_descuento">Agregar Descuento</string>
+    <string name="descuentos_producto">Descuentos Producto</string>
+    <string name="descuentos_categoria">Descuentos Categoria</string>
+    <string name="descuentos_grupo">Descuentos Grupo</string>
     <string name="nombre_producto">Nombre del Producto:</string>
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
     <string name="facturado">Facturado</string>

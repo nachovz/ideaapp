@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <menu xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content">
+        <item android:id="@+id/add_desc_popup_menu"
+            android:title="@string/agregar_descuento"/>
+        <item android:id="@+id/add_desc_prod_popup_menu"
+            android:title="@string/descuentos_producto">
+            <menu></menu>
+        </item>
+        <item android:id="@+id/add_desc_cat_popup_menu"
+            android:title="@string/descuentos_categoria">
+            <menu></menu>
+        </item>
+        <item android:id="@+id/add_desc_grupo_cat_popup_menu"
+            android:title="@string/descuentos_grupo">
+            <menu></menu>
+        </item>
+     </menu>

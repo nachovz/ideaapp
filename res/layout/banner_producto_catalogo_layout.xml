@@ -93,47 +93,52 @@
 	        android:layout_marginBottom="10dp"
 	        android:layout_marginRight="10dp"
 	        android:src="@drawable/client_boton_carrito" />
-	
-	    <LinearLayout
-	        android:id="@+id/banner_producto_menu_layout"
-	        android:layout_width="180dp"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentRight="true"
-	        android:layout_marginTop="39dp"
-	        android:background="#ffffff"
-	        android:orientation="vertical"
-	        android:visibility="gone" >
 
-	        <TextView
-	            android:id="@+id/banner_producto_menu_item_descuento_manual"
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:background="@drawable/menu_producto_selector"
-	            android:gravity="center_vertical|center_horizontal"
-	            android:text="@string/agregar_descuento"
-	            android:textColor="#646464"
-	            android:textStyle="bold|italic" />
-
-	        <TextView
-	            android:id="@+id/banner_producto_menu_item_existencia"
-	            android:layout_width="fill_parent"
-	            android:layout_height="40dp"
-	            android:background="@drawable/menu_producto_selector"
-	            android:gravity="center_vertical|center_horizontal"
-	            android:text="@string/meta_restante"
-	            android:textColor="#646464"
-	            android:textStyle="bold|italic" />
-
-            <TextView
-                    android:id="@+id/banner_producto_menu_item_excedente"
+        <ScrollView
+            android:layout_alignParentRight="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content">
+            <LinearLayout
+                android:layout_marginTop="39dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:background="#ffffff"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_width="180dp"
+                android:orientation="vertical"
+                android:id="@+id/banner_producto_menu_layout">
+                <TextView
+                    android:id="@+id/banner_producto_menu_item_descuento_manual"
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
                     android:background="@drawable/menu_producto_selector"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="@string/excedentes"
+                    android:text="@string/agregar_descuento"
                     android:textColor="#646464"
                     android:textStyle="bold|italic" />
-	
-	    </LinearLayout>
+
+                <TextView
+                    android:id="@+id/banner_producto_menu_item_existencia"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/menu_producto_selector"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/meta_restante"
+                    android:textColor="#646464"
+                    android:textStyle="bold|italic" />
+
+                <TextView
+                        android:id="@+id/banner_producto_menu_item_excedente"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:background="@drawable/menu_producto_selector"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/excedentes"
+                        android:textColor="#646464"
+                        android:textStyle="bold|italic" />
+
+            </LinearLayout>
+        </ScrollView>
 	</RelativeLayout>
 </RelativeLayout>

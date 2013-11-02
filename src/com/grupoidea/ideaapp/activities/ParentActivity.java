@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
@@ -19,7 +20,12 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**
@@ -288,12 +294,11 @@ public abstract class ParentActivity extends Activity {
 						response.setResponse(parseData);
 						manageResponse(response, true);
 
-						if (useCache) {
-							setCache(response);
-						}
+//						if (useCache) {
+//							setCache(response);
+//						}
 
-						loadingTextView
-								.setText(getString(R.string.end_cargando));
+						loadingTextView.setText(getString(R.string.end_cargando));
 					}
 				} else {
 					Log.e("Exception", "Parse Exception: " + e.getMessage());

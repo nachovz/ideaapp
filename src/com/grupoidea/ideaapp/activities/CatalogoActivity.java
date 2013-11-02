@@ -83,7 +83,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected static  Context mContext;
 	
 	public CatalogoActivity() {
-		super(true, true, true, true); //hasCache (segundo param) :true!
+		super(true, false, true, true); //hasCache (segundo param) :true!
 	}
 
 	@Override
@@ -181,7 +181,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         tablaDescuentos.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
 
 //                        //Quitar el dialogo con el ultimo descuento del ultimo producto
-//                        if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName.equalsIgnoreCase(prod.getNombre())){
+//                        if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName!=null && lastprodName.equalsIgnoreCase(prod.getNombre())){
 //                            Log.d("DEBUG", "Finalizada carga de productos");
 //                            catalogoProgressDialog.dismiss();
 //                        }
@@ -210,8 +210,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 
                     //Quitar el dialogo con el ultimo descuento del ultimo producto
-                    if(lastprodName.equalsIgnoreCase(prod.getNombre())){
-                        Log.d("DEBUG", "Finalizada carga de productos");
+                    if(lastprodName!=null && lastprodName.equalsIgnoreCase(prod.getNombre())){
+//                        Toast.makeText(mContext, "Finalizada carga de productos", 3000).show();
+//                        catalogoProgressDialog.dismiss();
+//                        Log.d("DEBUG", "Finalizada carga de productos");
                         catalogoProgressDialog.dismiss();
                     }
                 }
@@ -235,6 +237,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                         prod.setExistencia(0);
                     }
 
+                    //Quitar el dialogo con el ultimo producto
+//                    if(lastprodName!=null && lastprodName.equalsIgnoreCase(prod.getNombre())){
+//                        Toast.makeText(mContext, "Finalizada carga de Productos", 2000).show();
+//                        Log.d("DEBUG", "Finalizada carga de Productos");
+//                    }
                 }
 
                 else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
@@ -249,8 +256,10 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Obtener imagen
         if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
             ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
-            imgDownloader.execute(producto.getString("picture"));
+            imgDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,producto.getString("picture"));
+//            imgDownloader.execute(producto.getString("picture"));
         }
+
     }
 	 
 	@Override
@@ -273,6 +282,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 lastprodName=producto.getNombre();
             }
 		}
+        catalogoProgressDialog.dismiss();
 
 
         menuLeft = (RelativeLayout) getMenuLeft();
