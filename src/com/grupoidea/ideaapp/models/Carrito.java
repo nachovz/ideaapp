@@ -5,12 +5,26 @@ import java.util.ArrayList;
 
 public class Carrito {
 	private ArrayList<Producto> productos;
+    private ArrayList<GrupoCategorias> gruposCategorias;
+    private ArrayList<Categoria> categorias;
     public DecimalFormat df = new DecimalFormat("###,###,##0.##");
 	
 	/** Constructor por defecto, permite instanciar el listado de productos.*/
 	public Carrito() {
-		productos = new ArrayList<Producto>();
+        productos = new ArrayList<Producto>();
+        categorias = new ArrayList<Categoria>();
+        gruposCategorias = new ArrayList<GrupoCategorias>();
 	}
+
+    /**
+     * Constructor que recibe grupos de categorias existentes
+     * @param grupos
+     */
+    public Carrito(ArrayList<Categoria> categorias, ArrayList<GrupoCategorias> grupos) {
+        productos = new ArrayList<Producto>();
+        this.categorias = categorias;
+        gruposCategorias = grupos;
+    }
 	
 	public ArrayList<Producto> getProductos() {
 		return productos;
@@ -75,6 +89,7 @@ public class Carrito {
 		}
 		return productoFinal;
 	}
+
 	/** Permite determinar si un producto existe en el carrito para agregarlo al listado 
 	 *  de productos del carrito o sumarle la cantidad del existente
 	 *  @parama producto Objeto que contiene la definicion del producto ha ser agregado al carrito.*/
@@ -86,56 +101,37 @@ public class Carrito {
 		} else {
 			this.productos.add(productoAdd);
 		}
-		
 	}
 	/** Permite remover un producto especifico del listado de productos del carrito.
 	 *  @param indice Entero con el indice del producto que se desea eliminar.*/
 	public void removeProducto(int indice) {
 		this.productos.remove(indice);
 	}
+
 	/** Retorna el numero de elementos en el carrito.
 	 */
-	public int count(){
+	public int getCount(){
 		return productos.size();
 	}
 
-    public void recalcularDescuentosGrupoCategoria(Producto prodPivot){
-        ArrayList<String> catsGrupo;
-        ArrayList<Producto> prodGroup = new ArrayList<Producto>();
-        int cantGrupo=0, size=productos.size();
-        String categoriaProd = prodPivot.getCategoria();
-//        Log.d("DEBUG", "Calculando descuento para " + prodPivot.getNombre()+" cantidad: "+prodPivot.getCantidad());
-//        Log.d("DEBUG","categoria: "+ categoriaProd);
-        if(prodPivot.getRelacionadas() != null){
-            catsGrupo= prodPivot.getRelacionadas();
+    public void recalcularMontos(){
+        GrupoCategorias grupo;
+        Categoria categoria;
+        Producto producto;
+        //recorrer grupos categorias y actualizar descuentos
+        for(int g = 0, size = gruposCategorias.size(); g < size; g++){
+            gruposCategorias.get(g).calcularDescuento();
+        }
 
-            //cantidad incial es la cantidad de productos pivot
-            cantGrupo=prodPivot.getCantidad();
-//            Log.d("DEBUG","categorias: "+catsGrupo.get(0));
+        //recorrer categorias y actualizar descuentos
+        for(int c = 0, size = categorias.size(); c < size; c++){
+            categorias.get(c).calcularDescuento();
+        }
 
-            //desplazarse por los productos buscando productos en categorias relacionadas que estén en el carrito
-            for(int i=0; i<size; i++){
-                if(productos.get(i).getIsInCarrito() && !(productos.get(i).getId().equals(prodPivot.getId())) && productos.get(i).isInCategoryGroup(catsGrupo)){
-                    //agrego los productos que coincidan con sus cantidades
-                    cantGrupo+=productos.get(i).getCantidad();
-                    prodGroup.add(productos.get(i));
-//                    Log.d("DEBUG", "Producto relacionado: " + productos.get(i).getNombre()+" cantidad: "+productos.get(i).getCantidad());
-                }
-            }
-            //agrego mi producto pivot al final
-            prodGroup.add(prodPivot);
-//            Log.d("DEBUG", "Cantidad total: " + cantGrupo);
-            //calcular descuento aplicado y guardar el mayor
-            double descAplGroup= prodPivot.getGrupoCategoria().calcularDescuentoAplicado(cantGrupo);
-//            Log.d("DEBUG", "desc aplicado= "+descAplGroup);
-            //aplicar mayor descuento a todos los productos
-            for(Producto prod:prodGroup){
-                if(prod.getDescuentoAplicado()<=descAplGroup){
-                    prod.setDescuentoAplicado(descAplGroup);
-                }else{
-                    prod.setDescuentoAplicado(prod.calcularDescuentoAplicado());
-                }
-            }
+        //recorrer productos en carrito ,actualizar y aplicar descuentos
+        for(int p = 0, size = productos.size(); p < size; p++){
+            productos.get(p).calcularDescuento();
+            productos.get(p).calcularDescuentoAplicado();
         }
     }
 }

@@ -79,7 +79,7 @@
 	            android:layout_marginBottom="32dp"
 	            android:layout_marginLeft="50dp"
 	            android:textColor="#ffffff"
-	            android:textSize="16sp"
+	            android:textSize="14sp"
 	            android:textStyle="bold|italic"/>
 	
 	    </RelativeLayout>

@@ -8,13 +8,28 @@ import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Producto;
-import com.parse.*;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,7 +140,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 nombreTextView.setLayoutParams(params);
                 nombreTextView.setTextColor(Color.parseColor("#262626"));
                 nombreTextView.setPadding(18, 18, 18, 18);
-                nombreTextView.setText(prod.getNombre());
+                nombreTextView.setText(prod.getCodigo());
                 tr.addView(nombreTextView);
                 if(darkBackground) nombreTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
                 else nombreTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
@@ -248,7 +263,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     //Obtener Productos de Parse
                                     Log.d("DEBUG", "Obteniendo Producto de Parse");
                                     ParseQuery productoParseQuery = new ParseQuery("Producto");
-                                    productoParseQuery.whereEqualTo("codigo", prod.getNombre());
+                                    productoParseQuery.whereEqualTo("codigo", prod.getCodigo());
                                     productoParseQuery.getFirstInBackground(new GetCallback() {
                                         @Override
                                         public void done(final ParseObject productoParse, ParseException e) {
@@ -416,7 +431,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                 //Obtener Productos de Parse
                                                 Log.d("DEBUG", "Obteniendo Producto de Parse");
                                                 ParseQuery productoParseQuery = new ParseQuery("Producto");
-                                                productoParseQuery.whereEqualTo("codigo", prod.getNombre());
+                                                productoParseQuery.whereEqualTo("codigo", prod.getCodigo());
                                                 productoParseQuery.getFirstInBackground(new GetCallback() {
                                                     @Override
                                                     public void done(final ParseObject productoParse, ParseException e) {

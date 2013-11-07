@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -50,10 +49,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 	/** Constructor por default, permite crear el listado de Views de productos utilizando un ArrayList de Productos
 	 *  @param context Contexto actual de la aplicacion.
 	 *  @param catalogo Arreglo de productos. */
-//	public BannerProductoCatalogo(Context context, ArrayList<Producto> productos, ListView listCarrito) {
     public BannerProductoCatalogo(Context context, Catalogo catalogo, ListView listCarrito) {
 		super(context);
-//		this.productos = productos;
         this.catalogo = catalogo;
 		this.listCarrito = listCarrito;
 		this.catalogoAdapter = this;
@@ -123,9 +120,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         if(producto != null && producto.getIsInCatalogo()) {
             view.setVisibility(View.VISIBLE);
             //Nombre producto
-			if(producto.getNombre() != null) {
+			if(producto.getCodigo() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_producto_titulo_text_view);
-				textView.setText(producto.getNombre());
+				textView.setText(producto.getCodigo());
 			}
 
             //Marca producto
@@ -139,7 +136,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				textView = (TextView) view.findViewById(R.id.banner_producto_precio_text_view);
 				textView.setText(producto.getPrecioComercialSinIvaConIvaString());
 			}
-			
+
+            //Boton de agregar a carrito
 			if(producto.getIsInCarrito()) {
 				/* Mostrar el boton del carrito como seleccionado si el producto se encuentra dentro del mismo*/
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
@@ -149,6 +147,46 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
+
+            //Listener de agregar al carrito y mostrar carrito
+            imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int index;
+                    Producto producto;
+                    BannerProductoCarrito adapterCarrito;
+
+                    //Agrega el producto clickeado al carrito de compras.
+                    producto = catalogo.getProductosCatalogo().get(position);
+
+                    if(producto.getExistencia()+producto.getExcedente() > 0){
+                        //Muestra el carrito de compras.
+                        showCarrito();
+                        producto.setIsInCarrito(true);
+                        producto.addCantidad();
+                        catalogoAdapter.notifyDataSetChanged();
+                        adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
+                        adapterCarrito.getCarrito().addProducto(producto);
+                        //Realiza el scroll al elemento agregado o incrementado.
+                        index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
+                        //Recalcular montos y actualizar vista
+                        adapterCarrito.getCarrito().recalcularMontos();
+                        adapterCarrito.notifyDataSetChanged();
+
+                        listCarrito.post(new Runnable() {
+                            public void run() {
+                                listCarrito.smoothScrollToPosition(index);
+                            }
+                        });
+
+                        //Calcula el total del carrito
+                        setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                    }else{
+                        Toast.makeText(mContext, "No hay disponibilidad del producto", 3000).show();
+                    }
+                }
+            });
 
             //Cargar Imagen
 			if(producto.getImagen() != null) {
@@ -168,129 +206,20 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					producto = catalogo.getProductosCatalogo().get(position);
 					
 					Bundle extras = new Bundle();
-					extras.putString("nombre",producto.getNombre());
+					extras.putString("codigo",producto.getCodigo());
 					extras.putDouble("precio", producto.getPrecio());
 					extras.putParcelable("bitmap", producto.getImagen());
 					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
 				}
 			});
 
-            /*Crear Listener para cuando el producto es agregado al carrito, agregar el producto al carrito y mostrar carrito*/
-			imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
-			imageView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					final int index;
-					Producto producto;
-					BannerProductoCarrito adapterCarrito;
-
-					//Agrega el producto clickeado al carrito de compras.
-					producto = catalogo.getProductosCatalogo().get(position);
-
-                    if(producto.getExistencia()+producto.getExcedente() > 0){
-                        //Muestra el carrito de compras.
-                        showCarrito();
-                        producto.setIsInCarrito(true);
-                        catalogoAdapter.notifyDataSetChanged();
-                        adapterCarrito = (BannerProductoCarrito) listCarrito.getAdapter();
-                        adapterCarrito.getCarrito().addProducto(producto);
-                        //Realiza el scroll al elemento agregado o incrementado.
-                        index = adapterCarrito.getCarrito().findProductoIndexById(producto.getId());
-                        adapterCarrito.notifyDataSetChanged();
-
-                        listCarrito.post(new Runnable() {
-                            public void run() {
-                                listCarrito.smoothScrollToPosition(index);
-    //				        	tarea.execute();
-                            }
-                        });
-
-                        //Calcula el total del carrito
-                        setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                    }else{
-                        Toast.makeText(mContext, "No hay disponibilidad del producto", 3000).show();
-                    }
-				}
-			});
-
-            //cargar menu desde layout.xml, actualizar excedentes y agregar descuentos
-			menu = (LinearLayout) view.findViewById(R.id.banner_producto_menu_layout);
-            menu.setTag(producto);
-
-            menu.setOnFocusChangeListener(new View.OnFocusChangeListener(){
-                LayoutParams layoutParams;
-                @Override
-                public void onFocusChange(View v, boolean hasFocus){
-                    if(producto.getIsMenuOpen() && !hasFocus){
-                        //El menu esta abierto... cerrarlo
-                        if(menu != null) {
-                            producto.setIsMenuOpen(false);
-                            menu.setVisibility(LinearLayout.VISIBLE);
-                            notifyDataSetChanged();
-                        }
-                        layoutParams = new LayoutParams(40, 40);
-                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                        v.setLayoutParams(layoutParams);
-                    }
-                }
-            });
-
-            //Actualizar Existencia
-            TextView exced = (TextView) menu.getChildAt(menu.getChildCount()-2);
-            exced.setText(menuActivity.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
-
-            exced = (TextView) menu.getChildAt(menu.getChildCount()-1);
-            exced.setText(menuActivity.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
-
-            // Listar descuentos en el menu de producto
-            menu.removeViews(1, menu.getChildCount()-3);
-            ArrayList<String> menu_prod = producto.getDescuentosString();
-            if (menu_prod.size()>0 && (menu.getChildCount() != menu_prod.size()+3)){
-                for(int i=0, size=menu_prod.size(); i<size; i++) {
-                    TextView descProd = createProductoMenuTextView(menuActivity, menu_prod.get(i));
-                    menu.addView(descProd, menu.getChildCount()-2);
-                }
-            }
-
-			if(producto.getIsMenuOpen()) {
-				menu.setVisibility(LinearLayout.VISIBLE);
-			} else {
-				menu.setVisibility(LinearLayout.GONE);
-			}
-
             // Imagen (Flecha) de menu emergente de producto
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_menu_image_view);
+            imageView.setTag(producto);
 			imageView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-                    LayoutParams layoutParams;
-					Producto producto;
-					producto = catalogo.getProductosCatalogo().get(position);
-
                     showPopup(view);
-					
-//					if(producto.getIsMenuOpen()) {
-//						//El menu esta abierto... cerrarlo
-//						if(menu != null) {
-//							producto.setIsMenuOpen(false);
-//							notifyDataSetChanged();
-//						}
-//						layoutParams = new LayoutParams(40, 40);
-//						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//						view.setLayoutParams(layoutParams);
-//					} else {
-//						//El menu esta cerrado... abrirlo
-//						if(menu != null) {
-//                            for (Producto prod:catalogo.getProductosCatalogo()){
-//                                prod.setIsMenuOpen(false);
-//                            }
-//							producto.setIsMenuOpen(true);
-//							notifyDataSetChanged();
-//						}
-//						layoutParams = new LayoutParams(180, 40);
-//						layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//						view.setLayoutParams(layoutParams);
-//					}
 				}
 			});
 
@@ -316,35 +245,50 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.layout.banner_producto_catalogo_popup_layout, popup.getMenu());
         final View parentPopUpView = v;
+        Producto producto = (Producto)v.getTag();
 
         //Actualizar Existencia
         popup.getMenu().add(mContext.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
-
         popup.getMenu().add(mContext.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
 
         //Descuento Producto
-        popup.getMenu().getItem(1).setEnabled(false);
+        SubMenu descProdSubmenu = popup.getMenu().getItem(1).getSubMenu();
+        if(descProdSubmenu != null && producto.hasDescuentos()){
+            descProdSubmenu.clear();
+            ArrayList<String> menu_prod = producto.getDescuentosString();
+            for(int i=0, size=menu_prod.size(); i<size; i++) {
+                descProdSubmenu.add(menu_prod.get(i));
+            }
+        }else{
+            //Desactivar Item
+            popup.getMenu().getItem(1).setEnabled(false);
+        }
+
 
         //Descuento Categoria
         SubMenu descCatSubmenu = popup.getMenu().getItem(2).getSubMenu();
-        if(descCatSubmenu != null){
+        if(descCatSubmenu != null && producto.getCategoria()!= null){
             descCatSubmenu.clear();
-            ArrayList<String> menu_prod = producto.getDescuentosString();
+            ArrayList<String> menu_prod = producto.getCategoria().getDescuentosString();
             for(int i=0, size=menu_prod.size(); i<size; i++) {
                 descCatSubmenu.add(menu_prod.get(i));
             }
+        }else{
+            //Desactivar Item
+            popup.getMenu().getItem(2).setEnabled(false);
         }
 
         //Descuento Grupo Categoria
         SubMenu descGrupoSubmenu = popup.getMenu().getItem(3).getSubMenu();
-        if(descGrupoSubmenu != null && producto.getGrupoCategoria()!= null){
+        if(descGrupoSubmenu != null && producto.getGrupoCategorias()!= null){
             descGrupoSubmenu.clear();
-            ArrayList<String> menu_prod = producto.getGrupoCategoria().getDescuentosString();
-            Log.d("DEBUG", "size: "+producto.getCantidadDescuentosGroup());
+            ArrayList<String> menu_prod = producto.getGrupoCategorias().getDescuentosString();
+//            Log.d("DEBUG", "size: "+menu_prod.size());
             for(int i=0, size=menu_prod.size(); i<size; i++) {
                 descGrupoSubmenu.add(menu_prod.get(i));
             }
         }else{
+            //Desactivar Item
             popup.getMenu().getItem(3).setEnabled(false);
         }
 
@@ -358,10 +302,10 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                         Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
                         break;
                     case R.id.add_desc_cat_popup_menu:
-                        Log.d("DEBUG", "Tap en desc cat");
+//                        Log.d("DEBUG", "Tap en desc cat");
                         break;
                     case R.id.add_desc_grupo_cat_popup_menu:
-                        Log.d("DEBUG", "Tap en desc grupo");
+//                        Log.d("DEBUG", "Tap en desc grupo");
                         break;
                     default:
                         break;

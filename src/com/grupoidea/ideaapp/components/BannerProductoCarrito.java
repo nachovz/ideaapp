@@ -1,7 +1,7 @@
 package com.grupoidea.ideaapp.components;
 
-import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,7 +59,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		TextView editText;
 		
 		producto = (Producto) getItem(position);
-        carrito.recalcularDescuentosGrupoCategoria(producto);
+//        carrito.recalcularDescuentosGrupoCategoria(producto);
+//        carrito.recalcularMontos();
 		
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -70,174 +71,67 @@ public class BannerProductoCarrito extends ParentBannerProducto{
         mContext= view.getContext();
 			
 		if(producto != null) {
+            view.setTag(producto);
             NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker);
-            if(producto.getCantidad() > 1){
-                np.setMinValue(producto.getCantidad());
-            }else{
-                np.setMinValue(1);
-            }
+            np.setValue(producto.getCantidad());
+            np.setTag(producto);
 
+            np.setMinValue(1);
             np.setMaxValue(producto.getExcedente()+producto.getExistencia());
 
             np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i2) {
-                    producto.setCantidad(i2);
-                    carrito.recalcularDescuentosGrupoCategoria(producto);
-//                    carritoAdapter.notifyDataSetChanged();
-//                    //Calcula el total del carrito
+                public void onValueChange(NumberPicker numberPicker, int prev, int act) {
+                    Producto productoListener = (Producto)numberPicker.getTag();
+                    productoListener.setCantidad(act);
+                    carrito.recalcularMontos();
+                    carritoAdapter.notifyDataSetChanged();
+                    if(productoListener.hasDescuentos()){
+                        Log.d("DEBUG", productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+" % : "+productoListener.getDescuentoAplicado());
+                    }
+                    if(productoListener.getCategoria()!= null){
+                        Log.d("DEBUG", productoListener.getCodigo()+ "Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+" % : "+productoListener.getCategoria().getDescActual());
+                    }
+                    if(productoListener.getGrupoCategorias() != null){
+                        Log.d("DEBUG", productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+"  % : "+productoListener.getGrupoCategorias().getDescActual());
+                    }
+                    //Calcula el total del carrito
                     setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
                 }
             });
 
-//            RelativeLayout rl = (RelativeLayout) view.findViewById(R.id.banner_carrito_cantidad_layout);
-//            rl.addView(np);
-
-            /*//cantidad de productos de esta clase
-			editText = (TextView) view.findViewById(R.id.banner_carrito_cantidad);
-			if(editText != null) {
-				editText.setText(String.valueOf(producto.getCantidad()));
-			}*/
-
-            //monto total de productos de esta clase
+            //Monto total de productos de este tipo
 			textView = (TextView) view.findViewById(R.id.banner_carrito_total_text_view);
 			if(textView != null) {
-				textView.setText(producto.getStringPrecioComercialTotal());
+				textView.setText(producto.getPrecioComercialTotalConIvaString());
 			}
-
-            /*//Aumentar cantidad
-			imageView = (ImageView) view.findViewById(R.id.banner_carrito_mas_image_view);
-			imageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					TextView textView;
-					RelativeLayout layout;
-					ParentMenuActivity menuActivity;
-					producto = (Producto) getItem(position);
-					producto.addCantidad();
-                    carrito.recalcularDescuentosGrupoCategoria(producto);
-
-					carritoAdapter.notifyDataSetChanged();
-					//Calcula el total del carrito
-					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-				}
-			});
-
-            //Disminuir cantidad
-			imageView = (ImageView) view.findViewById(R.id.banner_carrito_menos_image_view);
-			imageView.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					producto = (Producto) getItem(position);
-					producto.substractCantidad();
-                    carrito.recalcularDescuentosGrupoCategoria(producto);
-					carritoAdapter.notifyDataSetChanged();
-					//Calcula el total del carrito
-					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-				}
-			});
-
-            //Cantidad cambiada con teclado
-            TextView cantProd = (TextView) view.findViewById(R.id.banner_carrito_cantidad);*/
-
-            //numberPicker Dialog
-            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View dialog = inflater.inflate(R.layout.cantidad_picker, null);
-//            final NumberPicker np = (NumberPicker) dialog.findViewById(R.id.numberPicker);
-//            final NumberPicker np = (NumberPicker) dialog.findViewById(R.id.numberPicker);
-//            np.setValue(producto.getCantidad());
-//            np.setMinValue(1);
-//            np.setMaxValue(producto.getExcedente()+producto.getExistencia());
-//            np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-//            builder.setView(dialog);
-//            final LayoutInflater finalInflater = inflater;
-//            builder.setMessage(R.string.set_cantidad)
-//                    .setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialogi, int id) {
-//                            // Send the positive button event back to the host activity
-//                            producto.setCantidad(np.getValue());
-//                            carrito.recalcularDescuentosGrupoCategoria(producto);
-//                            carritoAdapter.notifyDataSetChanged();
-//                            //Calcula el total del carrito
-//                            setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-//
-//                        }
-//                    })
-//                    .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-//                        public void onClick(DialogInterface dialogi, int id) {
-//                            // Send the negative button event back to the host activity
-//                        }
-//                    });
-
-            /*final AlertDialog.Builder tempBuilder = builder;
-            cantProd.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //display dialog
-                    tempBuilder.create().show();
-                }
-            });*/
-
-//            TextWatcher tw = new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-//
-//                @Override
-//                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-//
-//                @Override
-//                public void afterTextChanged(Editable editable) {
-//                    if(!cantProd.getText().toString().isEmpty()){
-//                        int cant = Integer.valueOf(cantProd.getText().toString());
-//                        int max = producto.getExcedente()+producto.getExistencia();
-//                        if(cant > max){
-//                            producto.setCantidad(max);
-//                        }else{
-//                            producto.setCantidad(cant);
-//                        }
-//                        carrito.recalcularDescuentosGrupoCategoria(producto);
-//                        carritoAdapter.notifyDataSetChanged();
-//                        //Calcula el total del carrito
-//                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-//                    }else{
-//                        producto.setCantidad(1);
-//                        carrito.recalcularDescuentosGrupoCategoria(producto);
-//                        carritoAdapter.notifyDataSetChanged();
-//                        //Calcula el total del carrito
-//                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-//                    }
-////                    cantProd.requestFocus();
-//                }
-//            };
-//
-//            cantProd.addTextChangedListener(tw);
 
             //Eliminar producto del carrito
 			imageView = (ImageView) view.findViewById(R.id.banner_carrito_eliminar_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					CatalogoActivity catalogoActivity;
-					Producto producto;
-					producto = (Producto) getItem(position);
-                    producto.setCantidad(1);
-					catalogoActivity = (CatalogoActivity) menuActivity;
-					catalogoActivity.adapterCatalogo.removeProductoFlagCarrito(producto);
-					catalogoActivity.adapterCatalogo.notifyDataSetChanged();
+                Producto producto;
+                producto = (Producto) getItem(position);
+                producto.setCantidad(0);
+                CatalogoActivity.adapterCatalogo.removeProductoFlagCarrito(producto);
+                CatalogoActivity.adapterCatalogo.notifyDataSetChanged();
 
-                    carrito.recalcularDescuentosGrupoCategoria(producto);
-					carrito.removeProducto(position);
-					carritoAdapter.notifyDataSetChanged();
-					//Calcula el total del carrito
-					setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                carrito.removeProducto(position);
+                carrito.recalcularMontos();
+                carritoAdapter.notifyDataSetChanged();
+                //Calcula el total del carrito
+                setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                if(carrito.getCount() == 0){
+                    hideCarrito();
+                }
 				}
 			});
 
             //Nombre producto
-			if(producto.getNombre() != null) {
+			if(producto.getCodigo() != null) {
 				textView = (TextView) view.findViewById(R.id.banner_carrito_titulo_text_view);
-				textView.setText(producto.getNombre());
+				textView.setText(producto.getCodigo());
 			}
 
             //Marca producto
@@ -252,23 +146,30 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 				textView.setText(producto.getPrecioCarritoSinIvaConIvaString());
 			}
 
-            //imagen del producto
+            //Imagen del producto
 			if(producto.getImagen() != null) {
-				imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-				imageView.setImageBitmap(producto.getImagen());
-			}
+                //Tiene imagen
+                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
+                imageView.setImageBitmap(producto.getImagen());
+            }else{
+                //No tiene imagen, colocar imagen por default
+                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
+                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+            }
 
-            //descuento aplicado
+            //Etiqueta de Descuento Aplicado
             RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
             rlDesc.setVisibility(View.INVISIBLE);
-            if(producto.getDescuentoAplicado() !=0.0){
+//            if(producto.getDescuentoAplicado() != 0.0){
+            if(producto.calcularDescuentoAplicado() > 0.0){
+                Log.d("DEBUG", "Descuento aplicado : " + producto.calcularDescuentoAplicado());
                 rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
                 rlDesc.setVisibility(View.VISIBLE);
                 TextView porcDescTextView = (TextView) view.findViewById(R.id.descuento_textView);
                 porcDescTextView.setText(producto.getDescuentoAplicadoPorcString());
             }
 
-            //Descuento manual
+            //Etiqueta de Descuento Manual
             rlDesc = (RelativeLayout) view.findViewById(R.id.descuento_manual_indicator);
             rlDesc.setVisibility(View.INVISIBLE);
             if(producto.getDescuentoManual() != 0){

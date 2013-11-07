@@ -19,6 +19,10 @@ public abstract class ParentBannerProducto extends BaseAdapter {
 	public void showCarrito() {
 		menuActivity.showRightMenu();
 	}
+
+    public void hideCarrito() {
+        menuActivity.hideMenuRight();
+    }
 	
 	public void setTotalCarrito(String total) {
 		TextView textView;

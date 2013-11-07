@@ -1,14 +1,19 @@
 package com.grupoidea.ideaapp.models;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.util.SparseArray;
+
 import com.parse.ParseObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+
+import static java.lang.Math.max;
 
 /** Clase que contiene la representaci�n de un producto*/
 public class Producto {
@@ -34,10 +39,9 @@ public class Producto {
 	private String idCategoria;
 	/** Nombre de la marca del producto */
 	private String marca;
-	/** Clase dentro de la marca del producto */
-	private String categoria;
 
-    private GrupoCategoria grupoCategoria;
+	private Categoria categoria;
+    private GrupoCategorias grupoCategorias;
 
 	/** Conjunto de descuentos: cant(cantidad)->porc(porcentaje) para el producto */
 	private SparseArray<Double> tablaDescuentos;
@@ -51,27 +55,25 @@ public class Producto {
 
     private int excedente;
 
-    private int cantidadDescuentosGroup;
 	/** Double que representa el descuentoManual aplicado al producto (manualmente)*/
 	private double descuentoManual;
     /** Double que representa el descuento aplicado al producto segun cantidad y categoria*/
     private double descuentoAplicado;
     private double iva;
 
-    /** Boolean que permite determinar si el menu del producto es visible al usuario*/
-	private Boolean isMenuOpen;
 	/** Boolean que permite determinar si el producto esta en el carrito*/
 	private Boolean isInCarrito;
     private Boolean isInCatalogo;
     public static DecimalFormat df = new DecimalFormat("###,###,##0.##");
+    private int prevCantDesc, nextCantDesc;
+    private double descActual;
 
-	/** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
+    /** Construye un producto con nombre y precio utilizando como denominacion "Bs." sin imagen del producto (imagen = null)
 	 *  @param id Entero que contiene el identificador unico del producto
 	 *  @param nombre Cadena de texto que contiene el nombre del producto
 	 *  @param precio Numero con el precio unitario del producto */
 	public Producto(String id, String nombre, String codigo, double precio) {
 		this(id, nombre, precio, "Bs.", null, codigo);
-		isMenuOpen = false;
 	}
 	
 	/** Construye un producto con nombre y precio sin imagen del producto (imagen = null)
@@ -97,13 +99,16 @@ public class Producto {
 		this.denominacion = denominacion;
 		this.imagen = imagen;
 		this.codigo = codigo;
-		this.cantidad = 1;
+		this.cantidad = 0;
         this.descuentoManual = 0.0;
         this.descuentoAplicado = 0.0;
         this.iva = 0.0;
 		this.isInCarrito = false;
         this.isInCatalogo = true;
 		this.tablaDescuentos = new SparseArray<Double>();
+        this.nextCantDesc = 0;
+        this.prevCantDesc = 1000;
+        this.descActual = 0.0;
 	}
 	public String getDenominacion() {
 		return denominacion;
@@ -122,9 +127,60 @@ public class Producto {
 	public int getCantidad() {
 		return cantidad;
 	}
+
 	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
+        if(cantidad >= 0 && cantidad < existencia+excedente){
+            int calc = cantidad - this.cantidad;
+            if(calc >= 0){
+                //add
+                if(this.categoria != null){
+                    this.categoria.addCantidad(calc);
+                }
+                if(this.grupoCategorias != null){
+                    this.grupoCategorias.addCantidad(calc);
+                }
+            }else{
+                //substract
+                if(this.categoria != null){
+                    this.categoria.substractCantidad((-1) * calc);
+                }
+                if(this.grupoCategorias != null){
+                    this.grupoCategorias.substractCantidad((-1) * calc);
+                }
+
+            }
+            this.cantidad = cantidad;
+        }
 	}
+
+    /** Permite agregar un item a la cantidad de productos del mismo tipo*/
+    public void addCantidad() {
+//        setCantidad(getCantidad()+1);
+        if(cantidad < existencia+excedente){
+            cantidad++;
+            if(this.categoria != null){
+                this.categoria.addCantidad();
+            }
+            if(this.grupoCategorias != null){
+                this.grupoCategorias.addCantidad();
+            }
+        }
+    }
+
+    /** Permite disminuir un item a la cantidad de productos del mismo tipo*/
+    public void substractCantidad() {
+//        setCantidad(getCantidad()-1);
+        if(cantidad > 1){
+            cantidad--;
+            if(this.categoria != null){
+                this.categoria.substractCantidad();
+            }
+            if(this.grupoCategorias != null){
+                this.grupoCategorias.substractCantidad();
+            }
+        }
+    }
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -139,7 +195,7 @@ public class Producto {
         if(descuentoManual == 0){
             return precio;
         }else{
-            return precio * descuentoManual /100.0;
+            return precio - (precio*(descuentoManual/100.0));
         }
     }
 	public void setPrecio(double precio) {
@@ -150,14 +206,6 @@ public class Producto {
 	}
 	public void setImagen(Bitmap imagen) {
 		this.imagen = imagen;
-	}
-	
-	public Boolean getIsMenuOpen() {
-		return isMenuOpen;
-	}
-
-	public void setIsMenuOpen(Boolean isMenuOpen) {
-		this.isMenuOpen = isMenuOpen;
 	}
 	
 	public String getId() {
@@ -173,7 +221,7 @@ public class Producto {
 	}
 
 	public void setDescuentoManual(double descuentoManual) {
-		this.descuentoManual = descuentoManual/100.0;
+		this.descuentoManual = descuentoManual;
 	}
 	
 	public String getCodigo() {
@@ -208,18 +256,17 @@ public class Producto {
 		this.marca = marca;
 	}
 
-	public String getCategoria() {
+	public Categoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(String categoria) {
+	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
-		//setDescuentosFromParse();
 	}
 
     /** Permite calcular el precio comercial de los productos del mismo tipo.*/
     public double getPrecioComercialTotal() {
-        double precioTotal, desc= 1.0 - getDescuentoAplicado();
+        double precioTotal, desc= 1.0 - (getDescuentoAplicado()/100.0);
         precioTotal = cantidad * precioComercial * desc;
 //        Log.d("DEBUG", "getPrecioTotal= "+String.valueOf(cantidad)+" * "+String.valueOf(precioComercial)+" * "+String.valueOf(desc)+" = "+String.valueOf(precioTotal));
         return precioTotal;
@@ -235,27 +282,12 @@ public class Producto {
     }
 
     public String getStringPrecioDescuento() {
-        return precioDenominacionToString(getPrecioComercial()-(getPrecioComercial()*getDescuentoAplicado()));
+        return precioDenominacionToString(getPrecioComercial()-(getPrecioComercial()*(getDescuentoAplicado()/100.0)));
     }
 
 	/** Permite construir el string del precio unitario concatenandole al precio la denominacion*/
 	public String getStringPrecio() {
 		return precioDenominacionToString(getPrecio());
-	}
-	/** Permite agregar un item a la cantidad de productos del mismo tipo*/
-	public void addCantidad() {
-		if(cantidad < existencia+excedente){
-            this.cantidad++;
-            setDescuentoAplicado(calcularDescuentoAplicado());
-        }
-	}
-	
-	/** Permite disminuir un item a la cantidad de productos del mismo tipo*/
-	public void substractCantidad() {
-		if(cantidad-- == 0) {
-			this.cantidad = 1;
-		}
-        setDescuentoAplicado(calcularDescuentoAplicado());
 	}
 
 	/** Permite construir el string de algun precio suministrado concatenandole al precio la denominacion*/
@@ -302,24 +334,41 @@ public class Producto {
 	public void setCantidadDescuento(int c, double d){
 		tablaDescuentos.append(c, d);
 	}
+
+    public void calcularDescuento() {
+        int key;
+        if(cantidad >= nextCantDesc || cantidad < prevCantDesc){
+            descActual = 0.0;
+            for (int i = tablaDescuentos.size() - 1; i >= 0; i--) {
+                key = tablaDescuentos.keyAt(i);
+                if (key != 0 && key <= cantidad) {
+                    //guardar cantidad previa y siguiente
+                    if((i-1) > -1) prevCantDesc = tablaDescuentos.keyAt(i - 1);
+                    if((i+1) < tablaDescuentos.size()) nextCantDesc = tablaDescuentos.keyAt(i + 1);
+                    //establecer descuento para cantidad actual
+                    descActual = tablaDescuentos.valueAt(i);
+                    Log.d("DEBUG", "key: " + String.valueOf(tablaDescuentos.keyAt(i)));
+                    break;
+                }
+            }
+        }
+    }
 	
 	public double calcularDescuentoAplicado(){
         if(descuentoManual == 0.0){
-            int key;
-            for( int i = tablaDescuentos.size()-1; i>=0; i--){
-                key = tablaDescuentos.keyAt(i);
-                if( key != 0 && key<= cantidad){
-                    return tablaDescuentos.valueAt(i)/100.0;
-                }
-            }
+            double descCat, descGrupo;
+            if(categoria != null){ descCat = categoria.getDescActual();}else{ descCat = 0.0;}
+            if(grupoCategorias != null){ descGrupo = grupoCategorias.getDescActual();}else{ descGrupo = 0.0;}
+
+            descuentoAplicado = max(max(descCat, descGrupo), descActual);
         }else{
-            return descuentoManual /100.0;
+            descuentoAplicado = descuentoManual;
         }
-        return 0.0;
+        return descuentoAplicado;
 	}
 
     public String getDescuentoAplicadoString(){
-        return df.format(getDescuentoAplicado() * 100.0);
+        return df.format(getDescuentoAplicado());
     }
 	
 	public int getCountDescuentos(){
@@ -343,6 +392,14 @@ public class Producto {
         this.tablaDescuentos=tablaDescuentos;
     }
 
+    public boolean hasDescuentos(){
+        if(tablaDescuentos.size()>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public ParseObject getProductoParse() {
         return productoParse;
     }
@@ -361,7 +418,7 @@ public class Producto {
     }
 
     public String getDescuentoAplicadoPorcString(){
-        return ""+df.format(getDescuentoAplicado() * 100.0)+"%";
+        return ""+df.format(getDescuentoAplicado())+"%";
     }
 
     public void setDescuentoAplicado(double descuentoAplicado) {
@@ -384,17 +441,25 @@ public class Producto {
         this.iva = iva/100.0;
     }
 
-    public String getPrecioComercialConIva(){
+    public String getPrecioComercialConIvaString(){
         return precioDenominacionToString(getPrecioComercial() + (getPrecioComercial()*getIva()));
     }
 
+    public double getPrecioComercialTotalConIva(){
+        return (getPrecioComercialTotal() + (getPrecioComercialTotal()*getIva()));
+    }
+
+    public String getPrecioComercialTotalConIvaString(){
+        return precioDenominacionToString(getPrecioComercialTotal() + (getPrecioComercialTotal()*getIva()));
+    }
+
     public String getPrecioComercialSinIvaConIvaString(){
-        return getStringPrecioComercial()+" / "+getPrecioComercialConIva();
+        return getStringPrecioComercial()+" / "+ getPrecioComercialConIvaString();
     }
 
     public String getPrecioDescuentoConIva(){
         double precio = getPrecioComercial();
-        precio = precio - (precio*getDescuentoAplicado());
+        precio = precio - (precio*(getDescuentoAplicado()/100.0));
         return precioDenominacionToString(precio + (precio*getIva()));
     }
 
@@ -402,21 +467,17 @@ public class Producto {
         return getStringPrecioDescuento()+" / "+getPrecioDescuentoConIva();
     }
 
-    public int getCantidadDescuentosGroup() {
-        return cantidadDescuentosGroup;
-    }
-
-    public void setCantidadDescuentosGroup(int cantidadDescuentosGroup) {
-        this.cantidadDescuentosGroup = cantidadDescuentosGroup;
-    }
-
     public boolean isInCategoryGroup(ArrayList<String> grupoCategorias){
         for(int i=0, size=grupoCategorias.size(); i<size; i++){
-            if(grupoCategorias.get(i).equalsIgnoreCase(this.getCategoria())){
+            if(grupoCategorias.get(i).equalsIgnoreCase(this.getCategoria().getNombre())){
                 return true;
             }
         }
         return false;
+    }
+
+    public boolean isInCategoryGroup(String name){
+        return (grupoCategorias.getNombre().equalsIgnoreCase(name));
     }
 
     public int getExcedente() {
@@ -428,29 +489,29 @@ public class Producto {
     }
 
     public ArrayList<String> getRelacionadas(){
-        if(null != getGrupoCategoria())
-            return getGrupoCategoria().getRelacionadas();
+        if(null != getGrupoCategorias())
+            return getGrupoCategorias().getRelacionadas();
         else
             return  null;
     }
 
     public void setRelacionadas(JSONArray related){
-        getGrupoCategoria().setRelacionadasJSONArray(related);
+        getGrupoCategorias().setRelacionadasJSONArray(related);
     }
 
     public void setRelacionadas(ArrayList<String> related){
-        getGrupoCategoria().setRelacionadas(related);
+        getGrupoCategorias().setRelacionadas(related);
     }
 
-    public GrupoCategoria getGrupoCategoria() {
-        if(null!= grupoCategoria)
-            return grupoCategoria;
+    public GrupoCategorias getGrupoCategorias() {
+        if(null!= grupoCategorias)
+            return grupoCategorias;
         else
             return null;
     }
 
-    public void setGrupoCategoria(GrupoCategoria grupoCategoria) {
-        this.grupoCategoria = grupoCategoria;
+    public void setGrupoCategorias(GrupoCategorias grupoCategorias) {
+        this.grupoCategorias = grupoCategorias;
     }
 
     public Boolean getIsInCatalogo() {
@@ -459,5 +520,15 @@ public class Producto {
 
     public void setIsInCatalogo(Boolean inCatalogo) {
         isInCatalogo = inCatalogo;
+    }
+
+    public String getNombreCategoria(){
+        if(categoria != null) return categoria.getNombre();
+        return null;
+    }
+
+    public String getNombreGrupoCategorias(){
+        if(grupoCategorias!=null) return grupoCategorias.getNombre();
+        return null;
     }
 }

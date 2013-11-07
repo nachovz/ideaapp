@@ -110,9 +110,8 @@
                 android:layout_centerInParent="true"
                 android:layout_marginBottom="32dp"
                 android:layout_marginLeft="50dp"
-                android:text="999.999 Bs."
                 android:textColor="#ffffff"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold|italic" />
         </RelativeLayout>
 
@@ -148,7 +147,8 @@
                 android:textColor="#ffffff"
                 android:textStyle="bold|italic"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+                android:textSize="16sp" />
         </RelativeLayout>
 
         <LinearLayout

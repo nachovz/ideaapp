@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.models;
 
 import android.content.Context;
+
 import com.grupoidea.ideaapp.R;
 
 import java.text.DecimalFormat;
@@ -78,7 +79,7 @@ public class Catalogo {
                     //No hay filtros puestos
                     prod.setIsInCatalogo(true);
                     productosCatalogo.add(prod);
-                }else if(prod.getCategoria().equals(categoriaActual)){
+                }else if(prod.getNombreCategoria().equals(categoriaActual)){
                     //la categoria coincide y no hay filtros de marcas
                     prod.setIsInCatalogo(true);
                     productosCatalogo.add(prod);
@@ -92,7 +93,7 @@ public class Catalogo {
                     //No hay filtro de categoria puesto y la marca coincide
                     prod.setIsInCatalogo(true);
                     productosCatalogo.add(prod);
-                }else if(prod.getCategoria().equals(categoriaActual)){
+                }else if(prod.getNombreCategoria().equals(categoriaActual)){
                     //la categoria y la marca coinciden
                     prod.setIsInCatalogo(true);
                     productosCatalogo.add(prod);
