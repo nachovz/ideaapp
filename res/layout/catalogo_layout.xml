@@ -45,4 +45,14 @@
 
     </GridView>
 
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:id="@+id/descuentosProgressBar"
+        android:visibility="visible"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignBottom="@+id/catalogo_grid" />
+
 </RelativeLayout>

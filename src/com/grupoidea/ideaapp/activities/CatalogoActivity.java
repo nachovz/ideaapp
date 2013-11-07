@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,7 +85,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     public static ArrayAdapter marcasAdapter, categoriasAdapter;
     public LinearLayout categoriasFiltro, marcasFiltro;
     protected static  Context mContext;
-	
+    protected ProgressBar descuentosProgressBar;
 	public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
 	}
@@ -113,6 +114,9 @@ public class CatalogoActivity extends ParentMenuActivity {
         carritoProgressDialog.setMessage("Cargando Carrito, por favor espere...");
         carritoProgressDialog.setIndeterminate(true);
         carritoProgressDialog.setCancelable(false);
+
+        //ProgressBar Descuentos
+//        descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
 
         modificarPedidoId= getIntent().getExtras().getString("idPedido");
         modificarPedidoNum= getIntent().getExtras().getString("numPedido");
@@ -205,7 +209,9 @@ public class CatalogoActivity extends ParentMenuActivity {
                         tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                     }
                 }
+                descuentosProgressBar.incrementProgressBy(1);
             }
+
         });
         producto.setTablaDescuentos(tablaDescuentosProducto);
 
@@ -235,6 +241,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         for (ParseObject descuento : descuentos) {
                             tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                         }
+                        descuentosProgressBar.incrementProgressBy(1);
                     }
                 }
             });
@@ -272,10 +279,14 @@ public class CatalogoActivity extends ParentMenuActivity {
                             //Quitar el dialogo con el ultimo descuento del ultimo producto
                             if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName!=null && lastprodName.equalsIgnoreCase(producto.getCodigo())){
                                 Log.d("DEBUG", "Finalizada carga de productos");
-                                Toast.makeText(mContext, "Finalizada carga de productos", 3000).show();
+                                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                                 catalogoProgressDialog.dismiss();
                             }
                         }
+                    }
+                    descuentosProgressBar.incrementProgressBy(1);
+                    if(producto.getCodigo().equalsIgnoreCase(lastprodName)){
+                        descuentosProgressBar.setVisibility(View.GONE);
                     }
                 }
             });
@@ -316,6 +327,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         ArrayList<Producto> productos = new ArrayList<Producto>();
         gruposCategorias = new ArrayList<GrupoCategorias>();
         categorias = new ArrayList<Categoria>();
+        descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
+        descuentosProgressBar.setVisibility(View.VISIBLE);
+        descuentosProgressBar.setMax(productosParse.size()*3);
+        descuentosProgressBar.setProgress(1);
+        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_LONG).show();
+
 		Producto producto = null;
 		RelativeLayout menuRight, menuLeft;
 		RelativeLayout relativeLayout;
@@ -717,10 +734,8 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     public void addCategoriaTextView(Categoria categoria){
         String cat = categoria.getNombre();
-        Log.d("DEBUG", "fuera agregando TextView con "+categoria+" y "+isInCategorias(cat));
         if((cat != null) && !isInCategorias(cat)){
             categorias.add(categoria);
-            Log.d("DEBUG", "agregando TextView con "+cat);
             TextView tv = new TextView(mContext);
             tv.setText(cat);
             tv.setTextColor(Color.parseColor("#FFFFFF"));
