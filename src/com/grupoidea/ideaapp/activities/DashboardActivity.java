@@ -171,9 +171,9 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     for (ParseObject parseObject: parseObjects){
                         meta = new Meta();
-                        meta.setValorFinal(parseObject.getInt("meta"));
-                        meta.setValorActual(parseObject.getInt("facturado"));
-                        meta.setValorEspera(parseObject.getInt("pedido"));
+                        meta.setCantMeta(parseObject.getInt("meta"));
+                        meta.setCantFacturado(parseObject.getInt("facturado"));
+                        meta.setCantPedido(parseObject.getInt("pedido"));
                         meta.setValorBs(parseObject.getDouble("meta_bs"));
                         String producto1 = parseObject.getParseObject("producto").getObjectId();
                         String codigo = parseObject.getParseObject("producto").getString("codigo");
@@ -187,9 +187,9 @@ public class DashboardActivity extends ParentMenuActivity {
                         metas.add(meta);
 
                         //Acumular metas y cosas
-                        facturadoMetas += meta.getValorActual();
-                        pedidoMetas +=meta.getValorEspera();
-                        totalMetas += meta.getValorFinal();
+                        facturadoMetas += meta.getCantFacturado();
+                        pedidoMetas +=meta.getCantPedido();
+                        totalMetas += meta.getCantMeta();
                     }
                     acumMetas=facturadoMetas+pedidoMetas;
 
@@ -255,7 +255,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Codigo a TableRow
                                     tcod = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
                                     tcod.setLayoutParams(params);
                                     tcod.setTextColor(Color.parseColor("#262626"));
                                     tcod.setPadding(18, 18, 18, 18);
@@ -265,37 +265,37 @@ public class DashboardActivity extends ParentMenuActivity {
 
                                     //Crear y agregar TextView de Meta a TableRow
                                     tmeta = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
                                     tmeta.setLayoutParams(params);
                                     tmeta.setTextColor(Color.parseColor("#262626"));
                                     tmeta.setPadding(18, 18, 18, 18);
-                                    tmeta.setText(String.valueOf(meta.getValorFinal()));
+                                    tmeta.setText(String.valueOf(meta.getCantMeta()));
                                     tmeta.setGravity(Gravity.CENTER);
                                     tr.addView(tmeta);
 
                                     //Crear y agregar TextView de Pedidos a TableRow
                                     tpedido = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
                                     tpedido.setLayoutParams(params);
                                     tpedido.setTextColor(Color.parseColor("#262626"));
                                     tpedido.setPadding(18, 18, 18, 18);
-                                    tpedido.setText(String.valueOf(meta.getValorEspera()));
+                                    tpedido.setText(String.valueOf(meta.getCantPedido()));
                                     tpedido.setGravity(Gravity.CENTER);
                                     tr.addView(tpedido);
 
                                     //Crear y agregar TextView de Facturado a TableRow
                                     tfacturado = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.3"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
                                     tfacturado.setLayoutParams(params);
                                     tfacturado.setTextColor(Color.parseColor("#262626"));
                                     tfacturado.setPadding(18, 18, 18, 18);
-                                    tfacturado.setText(String.valueOf(meta.getValorActual()));
+                                    tfacturado.setText(String.valueOf(meta.getCantFacturado()));
                                     tfacturado.setGravity(Gravity.CENTER);
                                     tr.addView(tfacturado);
 
                                     //Crear y agregar TextView de Bolivares a TableRow
                                     tbs = new TextView(mContext);
-                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
                                     tbs.setLayoutParams(params);
                                     tbs.setTextColor(Color.parseColor("#262626"));
                                     tbs.setPadding(18, 18, 18, 18);

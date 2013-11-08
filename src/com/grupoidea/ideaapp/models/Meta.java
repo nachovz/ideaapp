@@ -2,29 +2,29 @@ package com.grupoidea.ideaapp.models;
 
 public class Meta {
 	/** Valor entero o decimal con el valor final de la meta*/
-	private double valorFinal;
-	private double valorActual;
-	private double valorRestante;
-    private double valorEspera;
+	private int cantMeta;
+	private int cantFacturado;
+	private int valorRestante;
+    private int cantPedido;
     private double valorBs;
     private Producto producto;
 
-	public double getValorFinal() {
-		return valorFinal;
+	public int getCantMeta() {
+		return cantMeta;
 	}
-	public void setValorFinal(double valorFinal) {
-		this.valorFinal = valorFinal;
+	public void setCantMeta(int cantMeta) {
+		this.cantMeta = cantMeta;
 	}
-	public double getValorActual() {
-		return valorActual;
+	public int getCantFacturado() {
+		return cantFacturado;
 	}
-	public void setValorActual(double valorActual) {
-		this.valorActual = valorActual;
+	public void setCantFacturado(int cantFacturado) {
+		this.cantFacturado = cantFacturado;
 	}
-	public double getValorRestante() {
+	public int getValorRestante() {
 		return valorRestante;
 	}
-	public void setValorRestante(double valorRestante) {
+	public void setValorRestante(int valorRestante) {
 		this.valorRestante = valorRestante;
 	}
     public Producto getProducto() {
@@ -34,12 +34,12 @@ public class Meta {
         this.producto = producto;
     }
 
-    public double getValorEspera() {
-        return valorEspera;
+    public int getCantPedido() {
+        return cantPedido;
     }
 
-    public void setValorEspera(double valorEspera) {
-        this.valorEspera = valorEspera;
+    public void setCantPedido(int cantPedido) {
+        this.cantPedido = cantPedido;
     }
 
     public double getValorBs() {

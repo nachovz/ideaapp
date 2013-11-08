@@ -39,7 +39,7 @@
     <string name="observaciones_hint">Agregue observaciones sobre el pedido aqui</string>
     <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
     <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
-    <string name="pedidos_banner_text">Pedidos</string>
+    <string name="pedidos_banner_text">Pedido</string>
     <string name="meta_restante">Meta Restante: </string>
     <string name="agregar_descuento">Agregar Descuento</string>
     <string name="descuentos_producto">Descuentos Producto</string>
@@ -51,7 +51,7 @@
     <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
     <string name="M">M</string>
     <string name="hintObsPedido">Agregue observaciones sobre el pedido aqui</string>
-    <string name="Bs">Bs.</string>
+    <string name="Bs">Monto (Bs.)</string>
 
     <string name="dialog_continuar_button">Continuar</string>
     <string name="dialog_cancelar_button">Cancelar</string>

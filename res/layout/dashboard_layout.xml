@@ -31,7 +31,8 @@
                         android:textColor="#ffffff"
                         android:textStyle="bold"
                         android:layout_gravity="center"
-                        android:layout_centerHorizontal="true" android:layout_marginTop="12dp"/>
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="12dp"/>
                 <Spinner
                         android:id="@+id/metas_spinner"
                         android:textColor="#2B2B2B"
@@ -65,41 +66,41 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/codigo"
-                                android:layout_span="1"
+
                                 android:padding="18dip"
-                                android:layout_weight="0.4"
+                                android:layout_weight="4"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/meta"
-                                android:layout_span="1"
+
                                 android:padding="18dip"
-                                android:layout_weight="0.3"
+                                android:layout_weight="1"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/pedidos"
-                                android:layout_span="1"
+
                                 android:padding="18dip"
-                                android:layout_weight="0.2"
+                                android:layout_weight="1"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="@string/facturado"
-                                android:layout_span="1"
+
                                 android:padding="18dip"
-                                android:layout_weight="0.2"
+                                android:layout_weight="1"
                                 style="@style/encabezado"/>
                         <TextView style="@style/encabezado"
                                   android:layout_width="fill_parent"
                                   android:layout_height="wrap_content"
                                   android:text="@string/Bs"
-                                  android:layout_span="1"
+
                                   android:padding="18dip"
-                                  android:layout_weight="0.2"
+                                  android:layout_weight="1"
                                   android:id="@+id/textView"/>
                     </TableRow>
                 </TableLayout>
