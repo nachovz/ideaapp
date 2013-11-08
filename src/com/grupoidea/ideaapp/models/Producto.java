@@ -131,7 +131,7 @@ public class Producto {
 	public void setCantidad(int cantidad) {
         if(cantidad >= 0 && cantidad < existencia+excedente){
             int calc = cantidad - this.cantidad;
-            if(calc >= 0){
+            if(calc > 0){
                 //add
                 if(this.categoria != null){
                     this.categoria.addCantidad(calc);
@@ -139,7 +139,7 @@ public class Producto {
                 if(this.grupoCategorias != null){
                     this.grupoCategorias.addCantidad(calc);
                 }
-            }else{
+            }else if(calc < 0){
                 //substract
                 if(this.categoria != null){
                     this.categoria.substractCantidad((-1) * calc);
@@ -304,7 +304,9 @@ public class Producto {
 		productoJSON.put("codigo", getCodigo());
         productoJSON.put("precio", getPrecio());
         productoJSON.put("precioComercial", getPrecioComercial());
-		productoJSON.put("cantidad", getCantidad());
+        productoJSON.put("cantidad", getCantidad());
+        productoJSON.put("existencia", getExistencia());
+        productoJSON.put("excedente", getExcedente());
 		productoJSON.put("totalComercial", getPrecioComercialTotal());
         productoJSON.put("descuentoManual", getDescuentoManual());
         productoJSON.put("descuentoAplicado", getDescuentoAplicado());
@@ -319,13 +321,18 @@ public class Producto {
             Double precio = json.getDouble("precio");
             Producto producto = new Producto(id, nombre, precio, "Bs.");
             producto.setCodigo(json.getString("codigo"));
+            producto.setExistencia(json.getInt("existencia"));
+            producto.setExcedente(json.getInt("excedente"));
+            Log.d("DEBUG", "seteando cantidad en setFromJSON "+json.getInt("cantidad"));
             producto.setCantidad(json.getInt("cantidad"));
+            Log.d("DEBUG", "cantidad seteada en setFromJSON "+producto.getCantidad());
             producto.setPrecioComercial(json.getDouble("precioComercial"));
             producto.setDescuentoManual(json.getDouble("descuentoManual"));
             producto.setDescuentoAplicado(json.getDouble("descuentoAplicado"));
             producto.setIva(json.getDouble("IVA")*100.0);
 
             return producto;
+
         }catch(JSONException e){
             return null;
         }

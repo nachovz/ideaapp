@@ -175,7 +175,6 @@ public abstract class ParentActivity extends Activity {
                 ObjectInputStream is;
 
                 //Despues de corregido propagar a setCache
-                ////////---------------- PROBLEM ------------------------
                 File appDir = mContext.getExternalFilesDir(null);
                 File file2 = new File(appDir, fileName);
 
@@ -187,9 +186,10 @@ public abstract class ParentActivity extends Activity {
                 is.close();
                 fis.close();
 
-                ////////---------------- PROBLEM ------------------------
 
-                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+//                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+                Log.d("DEBUG", "loadFromCache cached result?  "+String.valueOf(query.hasCachedResult()));
+                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
                 query.findInBackground(new FindCallback() {
                     @Override
                     public void done(List<ParseObject> parseData, ParseException e) {
@@ -284,6 +284,8 @@ public abstract class ParentActivity extends Activity {
 	 *            desea realizar (para mas info revisar documentacion de Parse)
 	 */
 	private void loadFromParse(ParseQuery query) {
+        Log.d("DEBUG", "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
 		query.findInBackground(new FindCallback() {
 
 			@Override

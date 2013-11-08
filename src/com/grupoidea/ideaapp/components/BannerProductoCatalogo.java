@@ -225,12 +225,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
             // Boton de descuento manual
             TextView prodMenuText = (TextView) view.findViewById(R.id.banner_producto_menu_item_descuento_manual);
+            prodMenuText.setTag(producto);
             prodMenuText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    View view2 = (View) view.getParent();
-                    ((CatalogoActivity)menuActivity).setValorDescuentoManual((Producto)view2.getTag());
-                    Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
+                    ((CatalogoActivity)menuActivity).setValorDescuentoManual((Producto)view.getTag());
+                    Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", Toast.LENGTH_LONG).show();
                 }
             });
 

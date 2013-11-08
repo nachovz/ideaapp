@@ -6,10 +6,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Cliente;
-import com.parse.*;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,8 +149,8 @@ public abstract class ParentMenuActivity extends ParentActivity {
         refresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                startActivity(getIntent());
+                reloadApp();
+                refresh.setClickable(false);
             }
         });
 
@@ -154,7 +164,13 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		});
 	}
 
-	@Override
+    public void reloadApp() {
+        ParseQuery.clearAllCachedResults();
+        finish();
+        startActivity(getIntent());
+    }
+
+    @Override
 	public void setContentView(int layoutResId) {
 		RelativeLayout parentInflater;
 		View inflateView;

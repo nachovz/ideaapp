@@ -26,4 +26,4 @@ local.properties
 *.iws
 
 #IntelliJ Project Folder
-.idea/
+.idea/*

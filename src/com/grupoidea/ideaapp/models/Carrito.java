@@ -40,7 +40,7 @@ public class Carrito {
 		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			totalValue += productoActual.getPrecioComercialTotal();
+			totalValue += productoActual.getPrecioComercialTotalConIva();
 		}
 		return totalValue;
 	}

@@ -201,6 +201,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Obtener descuentos por categoria
         final SparseArray<Double> tablaDescuentosProducto= new SparseArray<Double>();
         descuentosQuery = productoParse.getRelation("descuentos").getQuery();
+        descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         descuentosQuery.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> descuentos, ParseException e) {
@@ -234,6 +235,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //Obtener descuentos por categoria
             final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
             descuentosQuery = categoriaParse.getRelation("descuentos").getQuery();
+            descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             descuentosQuery.findInBackground(new FindCallback() {
                 @Override
                 public void done(List<ParseObject> descuentos, ParseException e) {
@@ -269,6 +271,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //obtener descuentos por grupo de categoria
             final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
             descuentosQuery = productoParse.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
+            descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             descuentosQuery.findInBackground(new FindCallback() {
                 @Override
                 public void done(List<ParseObject> descuentos, ParseException e) {
@@ -280,6 +283,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                             if(descuento.equals(descuentos.get(descuentos.size()-1)) && lastprodName!=null && lastprodName.equalsIgnoreCase(producto.getCodigo())){
                                 Log.d("DEBUG", "Finalizada carga de productos");
                                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+                                refresh.setClickable(true);
                                 catalogoProgressDialog.dismiss();
                             }
                         }
@@ -296,7 +300,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         /**
          * -------------- FIN GRUPO CATEGORIAS --------------
          */
-
+//        descuentosProgressBar.incrementProgressBy(1);
         return producto;
 	}
 
@@ -309,16 +313,16 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     }
 
-    public Producto retrieveProductoAsync(ParseObject productoParse, Producto producto){
-        String codigo = productoParse.getString("codigo");
-        String nombre = productoParse.getString("nombre");
-        double precio = productoParse.getDouble("costo");
-        final String objectId = productoParse.getObjectId();
-        producto = new Producto(objectId,codigo, nombre, precio);
-        ProductRetrieverTask retriever = new ProductRetrieverTask(producto);
-        retriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, productoParse);
-        return producto;
-    }
+//    public Producto retrieveProductoAsync(ParseObject productoParse, Producto producto){
+//        String codigo = productoParse.getString("codigo");
+//        String nombre = productoParse.getString("nombre");
+//        double precio = productoParse.getDouble("costo");
+//        final String objectId = productoParse.getObjectId();
+//        producto = new Producto(objectId,codigo, nombre, precio);
+//        ProductRetrieverTask retriever = new ProductRetrieverTask(producto);
+//        retriever.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, productoParse);
+//        return producto;
+//    }
 	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
@@ -408,13 +412,14 @@ public class CatalogoActivity extends ParentMenuActivity {
             listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
             relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
             if(relativeLayout != null) {
+                //TODO Working here
                 //Agregar onClick Listener para cuando se haga tap sobre el total del carrito
                 relativeLayout.setOnClickListener(new OnClickListener(){
                     @Override
                     public void onClick(View arg0) {
                         //lanzar GestionPedidosActivity
                         String productos = productsToJSONString();
-                        if(productos != ""){
+                        if(!productos.equalsIgnoreCase("")){
                             Bundle bundle = new Bundle();
                             bundle.putString("Productos", productos);
                             Cliente clienteM;
@@ -600,7 +605,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	}
 
 	protected String productsToJSONString() {
-		String productos = "";
+		String productos;
 		JSONArray productosJSONArray = new JSONArray();
 		JSONObject productoJSONObj;
         ArrayList<Producto> prodsCarrito = carrito.getProductos();
@@ -608,6 +613,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         try {
             for (int i = 0, count = prodsCarrito.size(); i < count; i++) {
                 productoJSONObj = prodsCarrito.get(i).toJSON();
+                Log.d("DEBUG","prod: "+prodsCarrito.get(i).getCodigo()+"cant: "+prodsCarrito.get(i).getCantidad());
 //                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
                 productosJSONArray.put(productoJSONObj);
             }
@@ -657,30 +663,32 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // Valor de Descuento ingresado
-                if ((input.getText().toString() != null) && !input.getText().toString().isEmpty()) {
+                if (null != input.getText().toString() && !input.getText().toString().isEmpty()) {
                     Double valor = Double.parseDouble(input.getText().toString());
                     if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
                         Log.d("DEBUG", valor.toString());
                         if(valor == 0.0){
-                            producto.setDescuentoManual(0);
-                            adapterCatalogo.notifyDataSetChanged();
+                            producto.setDescuentoManual(0.0);
                             adapterCarrito.notifyDataSetChanged();
+                            adapterCarrito.getCarrito().recalcularMontos();
+                            setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                             Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
                         }else{
                             producto.setDescuentoManual(valor);
-                            adapterCatalogo.notifyDataSetChanged();
                             adapterCarrito.notifyDataSetChanged();
+                            adapterCarrito.getCarrito().recalcularMontos();
+                            setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                             Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();
                         }
-
                     } else {
                         Toast.makeText(oThis, "Porcentaje de descuento manual no valido", 3000).show();
                         Log.d("DEBUG", "porcentaje no valido");
                     }
                 } else {
-                    producto.setDescuentoManual(0);
-                    adapterCatalogo.notifyDataSetChanged();
+                    producto.setDescuentoManual(0.0);
                     adapterCarrito.notifyDataSetChanged();
+                    adapterCarrito.getCarrito().recalcularMontos();
+                    setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                     Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
                 }
             }
@@ -889,33 +897,33 @@ public class CatalogoActivity extends ParentMenuActivity {
         return grupoCategoriasFinal;
     }
 
-    /**
-     * Clase AsyncTask para instanciar productos desde Parse
-     */
-    public class ProductRetrieverTask extends AsyncTask<ParseObject,Void,Producto>{
-        private final WeakReference<Producto> productoWeakReference;
-
-        public ProductRetrieverTask(Producto producto) {
-            productoWeakReference = new WeakReference<Producto>(producto);
-        }
-
-        @Override
-        protected Producto doInBackground(ParseObject... parseObjects) {
-            try {
-                return null;
-            }catch (Exception e){
-                e.printStackTrace();
-                return null;
-            }
-        }
-
+//    /**
+//     * Clase AsyncTask para instanciar productos desde Parse
+//     */
+//    public class ProductRetrieverTask extends AsyncTask<ParseObject,Void,Producto>{
+//        private final WeakReference<Producto> productoWeakReference;
+//
+//        public ProductRetrieverTask(Producto producto) {
+//            productoWeakReference = new WeakReference<Producto>(producto);
+//        }
+//
+//        @Override
+//        protected Producto doInBackground(ParseObject... parseObjects) {
+//            try {
+//                return null;
+//            }catch (Exception e){
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//
 //        @Override
 //        protected void onPostExecute(Producto producto){
 //            catalogoProductos.add(producto);
 //            adapterCatalogo.notifyDataSetChanged();
 //        }
 
-    }
+//    }
 
     /**
      * Clase AsyncTask que se encarga de descargar las imagenes de los productos del catalogo
@@ -997,5 +1005,20 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
     }
 
+    public void setTotalCarrito(String total) {
+        TextView textView;
+        RelativeLayout layout;
+
+        layout = (RelativeLayout) this.getRightMenuLayout();
+        if(layout != null) {
+            layout = (RelativeLayout) layout.findViewById(R.id.carrito_total_layout);
+            if(layout != null) {
+                textView = (TextView) layout.findViewById(R.id.carrito_total_precio_text_view);
+                if(textView != null) {
+                    textView.setText(total);
+                }
+            }
+        }
+    }
 
 }

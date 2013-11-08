@@ -8,7 +8,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowClientePedido;
 import com.grupoidea.ideaapp.io.Request;
@@ -17,7 +25,11 @@ import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
-import com.parse.*;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -94,6 +106,7 @@ public class DashboardActivity extends ParentMenuActivity {
         //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
         ParseQuery queryPedidos = new ParseQuery("Pedido");
+        queryPedidos.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
         queryPedidos.orderByAscending("estado");
@@ -145,6 +158,7 @@ public class DashboardActivity extends ParentMenuActivity {
         int acumMetas, totalMetas, restaMetas;
 
         ParseQuery query = new ParseQuery("Metas");
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
         query.findInBackground(new FindCallback() {

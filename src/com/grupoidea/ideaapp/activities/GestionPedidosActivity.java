@@ -446,6 +446,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                             @Override
                                                             public void done(final ParseObject metaParse, ParseException e) {
                                                                 if(e==null){
+                                                                    //Almacenar meta disponible para producto
                                                                     int dispMeta=metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
                                                                     int cant=prod.getCantidad();
                                                                     int cantExced=cant-dispMeta;
@@ -566,7 +567,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             JSONObject jsonO;
             for(int i=0, size=json.length();i<size;i++){
                 jsonO = json.getJSONObject(i);
+                Log.d("DEBUG","en Gestion. JSON prod: "+jsonO.get("codigo")+"cant: "+jsonO.get("cantidad"));
                 prod = Producto.setFromJSON(jsonO);
+                Log.d("DEBUG","en Gestion. prod: "+prod.getCodigo()+"cant: "+prod.getCantidad());
                 productos.add(prod);
             }
         } catch (JSONException e) {
