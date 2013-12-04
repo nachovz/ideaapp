@@ -90,6 +90,7 @@
     <string name="botonPedido">Finalizar Pedido</string>
     <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
     <string name="pedidoCompletado">Pedido Completado exitosamente</string>
+    <string name="detalle_producto_header">Detalles del Producto</string>
     <!--Fin Gestion Pedidos-->
 
 </resources>

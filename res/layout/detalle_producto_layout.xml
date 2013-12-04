@@ -13,7 +13,7 @@
         <RelativeLayout
             android:id="@+id/detalle_producto_image_zone"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
+            android:layout_height="300dp"
             android:gravity="center_vertical|center_horizontal" >
 
         </RelativeLayout>
@@ -25,7 +25,7 @@
             android:layout_below="@id/detalle_producto_image_zone"
             android:background="#888888"
             android:gravity="center"
-            android:text="Detalles del Producto"
+            android:text="@string/detalle_producto_header"
             android:textColor="#FFFFFF"
             android:textSize="30sp"
             android:textStyle="bold|italic" />

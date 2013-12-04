@@ -101,10 +101,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		View view = null;
+		View view;
 		TextView textView;
 		ImageView imageView;
-		RelativeLayout relativeLayout;
 		LayoutInflater inflater;
 
 		producto = (Producto) getItem(position);
@@ -117,7 +116,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         	view = convertView;
         }
 
-        if(producto != null && producto.getIsInCatalogo()) {
+        if(producto != null && producto.getIsInCatalogo() && view!=null) {
             view.setVisibility(View.VISIBLE);
             //Nombre producto
 			if(producto.getCodigo() != null) {
@@ -138,13 +137,12 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 			}
 
             //Boton de agregar a carrito
+            imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 			if(producto.getIsInCarrito()) {
 				/* Mostrar el boton del carrito como seleccionado si el producto se encuentra dentro del mismo*/
-				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito_selected));
 			}else{
                 /* No mostrar el boton de carrito seleccionado*/
-				imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
 
@@ -196,7 +194,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
                 imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
             }
-			
+
+            //TODO Work here
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_tittle_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
@@ -240,20 +239,24 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 		return view;
 	}
 
+    /**
+     * Procedimiento que maneja los taps sobre el boton de menu en el Banner de Producto del Catalogo
+     * @param v vista sobre la cual se hizo tap
+     */
     public void showPopup(final View v) {
         PopupMenu popup = new PopupMenu(mContext, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.layout.banner_producto_catalogo_popup_layout, popup.getMenu());
-        final View parentPopUpView = v;
         Producto producto = (Producto)v.getTag();
 
-        //Actualizar Existencia
+        //Actualizar Existencia (Excedentes y Metas)
         popup.getMenu().add(mContext.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
         popup.getMenu().add(mContext.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
 
         //Descuento Producto
         SubMenu descProdSubmenu = popup.getMenu().getItem(1).getSubMenu();
         if(descProdSubmenu != null && producto.hasDescuentos()){
+            //Agregar Descuentos por Producto al menu
             descProdSubmenu.clear();
             ArrayList<String> menu_prod = producto.getDescuentosString();
             for(int i=0, size=menu_prod.size(); i<size; i++) {
@@ -267,7 +270,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
         //Descuento Categoria
         SubMenu descCatSubmenu = popup.getMenu().getItem(2).getSubMenu();
-        if(descCatSubmenu != null && producto.getCategoria()!= null){
+        if(descCatSubmenu != null && producto.hasDescuentos()){
+            //Agregar Descuentos por Categoria al menu
             descCatSubmenu.clear();
             ArrayList<String> menu_prod = producto.getCategoria().getDescuentosString();
             for(int i=0, size=menu_prod.size(); i<size; i++) {
@@ -281,9 +285,9 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         //Descuento Grupo Categoria
         SubMenu descGrupoSubmenu = popup.getMenu().getItem(3).getSubMenu();
         if(descGrupoSubmenu != null && producto.getGrupoCategorias()!= null){
+            //Agregar Descuentos por Grupo de Categoria al menu
             descGrupoSubmenu.clear();
             ArrayList<String> menu_prod = producto.getGrupoCategorias().getDescuentosString();
-//            Log.d("DEBUG", "size: "+menu_prod.size());
             for(int i=0, size=menu_prod.size(); i<size; i++) {
                 descGrupoSubmenu.add(menu_prod.get(i));
             }
@@ -298,7 +302,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 switch (item.getItemId()) {
                     case R.id.add_desc_popup_menu:
                         //agregar descuento
-                        ((CatalogoActivity) menuActivity).setValorDescuentoManual((Producto) parentPopUpView.getTag());
+                        ((CatalogoActivity) menuActivity).setValorDescuentoManual((Producto) v.getTag());
                         Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
                         break;
                     case R.id.add_desc_cat_popup_menu:
