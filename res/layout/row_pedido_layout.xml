@@ -3,7 +3,8 @@
     android:id="@+id/cliente_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:hapticFeedbackEnabled="true">
+    android:hapticFeedbackEnabled="true"
+    android:background="@drawable/selector_row_pedido">
 
     <TextView
         android:id="@+id/cliente_num_pedido_textview"
@@ -55,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="#C0C0C0"
-            android:id="@+id/textView"
+            android:id="@+id/row_pedido_divider_textView"
             android:layout_marginTop="8dp" android:layout_below="@+id/cliente_pedido_status_layout"
             android:layout_marginLeft="20dp" android:layout_marginRight="20dp"/>
 

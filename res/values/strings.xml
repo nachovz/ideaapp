@@ -3,56 +3,29 @@
     <string name="app_name">IDEA app</string>
     <string name="cargando">Cargando</string>
     <string name="end_cargando">Carga finalizada</string>
+
+    <!--Login-->
     <string name="nombre_usuario">Usuario</string>
     <string name="password">Contraseña</string>
 	<string name="ingresar">Ingresar</string>
 	<string name="fallo_login">Fallo al autentificarse en el servidor, verifique conexion y datos</string>
 	<string name="vacio_login">Nombre de usuario y/o contraseña vacios</string>
-    <string name="titulo_descuento_manual">Establecer Descuento Manual</string>
-    <string name="descuento_manual">%Descuento</string>
-    <string name="aceptar">Aceptar</string>
-    <string name="cancelar">Cancelar</string>
-    <string name="excedentes">Excedentes: </string>
+    <!--Fin Login-->
+
+    <!--Dashboard-->
+    <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
 
     <string name="codigo">Codigo</string>
     <string name="meta">Meta</string>
     <string name="metas">Metas</string>
-    <string name="pedidos">Pedidos</string>
-
-    <!--GestionPedido-->
-    <string name="fecha">Fecha</string>
-    <string name="idCliente">ID de Cliente</string>
-    <string name="nombreCliente">Nombre de Cliente</string>
-    <string name="numeroOrdenCompra">Orden de compra #</string>
-    <string name="direccionEnvio">Dirección de Envío</string>
-    <string name="producto">Producto</string>
-    <string name="cantidad">Cant.</string>
-    <string name="precioUnitario">P. Unitario</string>
-    <string name="precioTotal">Precio Total</string>
-    <string name="subtotal">Subtotal</string><string name="impuesto">Impuesto</string>
-    <string name="total">TOTAL</string>
-    <string name="botonPedido">Finalizar Pedido</string>
-    <string name="pedidoCompletado">Pedido Completado exitosamente</string>
-    <string name="descuentoVolumen">Desc.</string>
-    <string name="observaciones">Observaciones</string>
-    <string name="precioDescComercial">P. Comercial</string>
-    <string name="observaciones_hint">Agregue observaciones sobre el pedido aqui</string>
-    <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
-    <string name="nuevo_pedido_button_text">Nuevo Pedido +</string>
-    <string name="pedidos_banner_text">Pedido</string>
-    <string name="meta_restante">Meta Restante: </string>
-    <string name="agregar_descuento">Agregar Descuento</string>
-    <string name="descuentos_producto">Descuentos Producto</string>
-    <string name="descuentos_categoria">Descuentos Categoria</string>
-    <string name="descuentos_grupo">Descuentos Grupo</string>
-    <string name="nombre_producto">Nombre del Producto:</string>
-    <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
     <string name="facturado">Facturado</string>
-    <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
-    <string name="M">M</string>
-    <string name="hintObsPedido">Agregue observaciones sobre el pedido aqui</string>
     <string name="Bs">Monto (Bs.)</string>
 
+    <string name="pedidos">Pedidos</string>
+    <string name="pedidos_banner_text">Pedido</string>
+    <!--Fin Dashboard-->
+
+    <!--Row Pedido-->
     <string name="dialog_continuar_button">Continuar</string>
     <string name="dialog_cancelar_button">Cancelar</string>
     <string name="rechazado_dialog_title">Editar Pedido Rechazado</string>
@@ -62,8 +35,61 @@
     <string name="copiar_dialog_title">Crear Nuevo Pedido</string>
     <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado?</string>
     <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string>
-    <string name="categorias">Categorias</string><string name="marcas">Marcas</string>
+    <!--Fin Row Pedido-->
+
+    <!--Filtro Catalogo-->
+    <string name="categorias">Categorias</string>
+    <string name="marcas">Marcas</string>
     <string name="todas">Todas</string>
-    <string name="set_cantidad">Establecer Cantidad</string>
+    <!--Fin Filtro Catalogo-->
+
+    <!--Descuento Manual-->
+    <string name="titulo_descuento_manual">Establecer Descuento Manual</string>
+    <string name="descuento_manual">%Descuento</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="excedentes">Excedentes: </string>
+    <!--Fin Descuento Manual-->
+
+    <!--Banner Catalogo-->
+    <string name="nombre_producto">Nombre del Producto:</string>
+    <string name="meta_restante">Meta Restante: </string>
+    <string name="agregar_descuento">Agregar Descuento</string>
+    <string name="descuentos_producto">Descuentos Producto</string>
+    <string name="descuentos_categoria">Descuentos Categoria</string>
+    <string name="descuentos_grupo">Descuentos Grupo</string>
+    <!--Fin Banner Catalogo-->
+
+    <!--Banner Carrito-->
+    <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
+    <string name="M">M</string>
+    <!--Fin Banner Carrito-->
+
+    <!--GestionPedido-->
+    <string name="fecha">Fecha</string>
+    <string name="idCliente">ID de Cliente</string>
+    <string name="nombreCliente">Nombre de Cliente</string>
+    <string name="numeroOrdenCompra">Orden de compra #</string>
+    <string name="direccionEnvio">Dirección de Envío</string>
+    <string name="direccion_envio_hint">Ingrese direccion de envio aqui</string>
+
+    <string name="producto">Producto</string>
+    <string name="cantidad">Cant.</string>
+    <string name="precioUnitario">P. Unitario</string>
+    <string name="precioDescComercial">P. Comercial</string>
+    <string name="descuentoVolumen">Desc.</string>
+    <string name="precioTotal">Precio Total</string>
+
+    <string name="subtotal">Subtotal</string>
+    <string name="impuesto">Impuesto</string>
+    <string name="total">TOTAL</string>
+
+    <string name="observaciones">Observaciones</string>
+    <string name="observaciones_pedido_hint">Agregue observaciones sobre el pedido aqui</string>
+
+    <string name="botonPedido">Finalizar Pedido</string>
+    <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
+    <string name="pedidoCompletado">Pedido Completado exitosamente</string>
+    <!--Fin Gestion Pedidos-->
 
 </resources>

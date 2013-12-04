@@ -86,6 +86,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     public LinearLayout categoriasFiltro, marcasFiltro;
     protected static  Context mContext;
     protected ProgressBar descuentosProgressBar;
+    protected ArrayList<ParseQuery> queries;
 	public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
 	}
@@ -149,7 +150,23 @@ public class CatalogoActivity extends ParentMenuActivity {
         marcas = new ArrayList<String>();
         categoriaActual = getString(R.string.todas);
         marcaActual = getString(R.string.todas);
+        queries = new ArrayList<ParseQuery>();
 	}
+
+    @Override
+    public void onBackPressed(){
+        //Correr Thread para cancelar queries en proceso
+        new Thread(new Runnable() {
+            public void run(){
+                for(ParseQuery query: queries){
+                    if(null != query) query.cancel();
+                }
+            }
+        }).start();
+
+        this.dispatchActivity(DashboardActivity.class, null, false);
+        this.finish();
+    }
 
     /**
      * Instanciar nuevo producto en base a un ParseObject
@@ -170,6 +187,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         //Obtener existencia
         ParseQuery queryExistencia = new ParseQuery("Metas");
+        queries.add(queryExistencia);
         queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryExistencia.whereEqualTo("producto", productoParse);
         queryExistencia.getFirstInBackground(new GetCallback() {
@@ -201,6 +219,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Obtener descuentos por categoria
         final SparseArray<Double> tablaDescuentosProducto= new SparseArray<Double>();
         descuentosQuery = productoParse.getRelation("descuentos").getQuery();
+        queries.add(descuentosQuery);
         descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         descuentosQuery.findInBackground(new FindCallback() {
             @Override
@@ -235,6 +254,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //Obtener descuentos por categoria
             final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
             descuentosQuery = categoriaParse.getRelation("descuentos").getQuery();
+            queries.add(descuentosQuery);
             descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             descuentosQuery.findInBackground(new FindCallback() {
                 @Override
@@ -271,6 +291,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //obtener descuentos por grupo de categoria
             final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
             descuentosQuery = productoParse.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
+            queries.add(descuentosQuery);
             descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
             descuentosQuery.findInBackground(new FindCallback() {
                 @Override

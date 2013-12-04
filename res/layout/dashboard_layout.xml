@@ -103,6 +103,20 @@
                                   android:layout_weight="1"
                                   android:id="@+id/textView"/>
                     </TableRow>
+
+                    <TableRow
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center">
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/metas_progressBar"
+                            android:layout_margin="30dp" />
+                    </TableRow>
                 </TableLayout>
             </ScrollView>
 
@@ -204,8 +218,9 @@
 
         <TextView android:layout_width="match_parent" android:layout_height="3dp" android:background="#3A70B9"
                   android:id="@+id/textView4"
-                  android:layout_below="@+id/cliente_nuevo_pedido_boton" android:layout_marginTop="10dp"
-                  android:layout_marginLeft="8dp" android:layout_marginRight="8dp"/>
+                  android:layout_below="@+id/cliente_nuevo_pedido_boton" android:layout_marginTop="20dp"
+                  android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
+            android:layout_marginBottom="20dp" />
         <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
@@ -223,6 +238,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
+
+                <ProgressBar
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pedidos_progressBar"
+                    android:layout_gravity="center"
+                    android:indeterminate="false" />
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

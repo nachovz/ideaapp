@@ -199,7 +199,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	/** Metodo que puede ser reimplementado en los hijos, permite asignar un layout al menu lateral izquierdo. Por defecto
 	 *  se asigna el menu de categorias.*/
 	protected void createLeftMenu() {
-		setLeftMenuLayout(R.layout.menu_layout);
+		setLeftMenuLayout(R.layout.filtro_menu_layout);
 	}
 	
 	/** Permite setear el ViewGroup que se utlizara como menu lateral derecho*/

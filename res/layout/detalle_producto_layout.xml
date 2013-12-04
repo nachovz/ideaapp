@@ -3,7 +3,7 @@
     android:id="@+id/detalle_producto_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/detalle_menu_selector" >
+    android:background="@drawable/selector_detalle_menu" >
 
     <RelativeLayout
         android:id="@+id/detalle_producto_inflated"

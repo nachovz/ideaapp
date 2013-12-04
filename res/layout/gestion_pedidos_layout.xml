@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="20dp"
-            android:background="@drawable/detalle_menu_selector" android:minHeight="1280dp">
+            android:background="@drawable/selector_detalle_menu" android:minHeight="1280dp">
 
             <!--Titulo Activity-->
             <RelativeLayout
@@ -270,7 +270,7 @@
                     android:inputType="textMultiLine"
                     android:lines="6"
                     android:textAlignment="viewStart"
-                    android:maxLines="6" android:hint="@string/hintObsPedido"/>
+                    android:maxLines="6" android:hint="@string/observaciones_pedido_hint"/>
             </RelativeLayout>
 
             <!--Totales del pedido-->
