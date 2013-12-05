@@ -44,14 +44,14 @@
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="7dp"
 	            android:layout_marginTop="10dp"
-	            android:text="@string/nombre_producto"
+	            android:text="@string/nombre_producto_label"
 	            android:textColor="#ffffff"
 	            android:textSize="16sp"
 	            android:textStyle="bold|italic"/>
 
             <TextView android:id="@+id/banner_producto_marca_textView" android:layout_width="wrap_content"
                       android:layout_height="wrap_content" android:layout_marginLeft="7dp"
-                      android:layout_marginTop="50dp" android:text="@string/nombre_producto" android:textColor="#ffffff"
+                      android:layout_marginTop="50dp" android:text="@string/nombre_producto_label" android:textColor="#ffffff"
                       android:textSize="16sp" android:textStyle="bold|italic"/>
             <ImageView
 	            android:id="@+id/banner_producto_menu_image_view"
@@ -124,7 +124,7 @@
                     android:layout_height="40dp"
                     android:background="@drawable/menu_producto_selector"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="@string/meta_restante"
+                    android:text="@string/meta_restante_label"
                     android:textColor="#646464"
                     android:textStyle="bold|italic" />
 
@@ -134,7 +134,7 @@
                         android:layout_height="40dp"
                         android:background="@drawable/menu_producto_selector"
                         android:gravity="center_vertical|center_horizontal"
-                        android:text="@string/excedentes"
+                        android:text="@string/excedentes_label"
                         android:textColor="#646464"
                         android:textStyle="bold|italic" />
 

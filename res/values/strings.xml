@@ -48,12 +48,12 @@
     <string name="descuento_manual">%Descuento</string>
     <string name="aceptar">Aceptar</string>
     <string name="cancelar">Cancelar</string>
-    <string name="excedentes">Excedentes: </string>
+    <string name="excedentes_label">Excedentes: </string>
     <!--Fin Descuento Manual-->
 
     <!--Banner Catalogo-->
-    <string name="nombre_producto">Nombre del Producto:</string>
-    <string name="meta_restante">Meta Restante: </string>
+    <string name="nombre_producto_label">Nombre del Producto:</string>
+    <string name="meta_restante_label">Meta Restante: </string>
     <string name="agregar_descuento">Agregar Descuento</string>
     <string name="descuentos_producto">Descuentos Producto</string>
     <string name="descuentos_categoria">Descuentos Categoria</string>
@@ -64,6 +64,12 @@
     <string name="warning_agregar_elementos_carrito">Debe agregar elementos en el carrito</string>
     <string name="M">M</string>
     <!--Fin Banner Carrito-->
+
+    <!--Detalle Producto-->
+    <string name="categoria_label">Categoria:</string>
+    <string name="grupo_categorias_label">Grupo de Categorias:</string>
+    <string name="descripcion_label">Descripción:</string>
+    <!--Fin Detalle Producto-->
 
     <!--GestionPedido-->
     <string name="fecha">Fecha</string>

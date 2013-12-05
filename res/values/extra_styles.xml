@@ -48,4 +48,31 @@
         <item name="android:textStyle">normal</item>
         <item name="android:background">#ffffff</item>
     </style>
+
+    <style name="detalle_producto" parent="AppBaseTheme">
+        <item name="android:textColor">@color/gray_text</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="detalle_producto.label">
+        <item name="android:layout_marginLeft">@dimen/detalle_producto_row_margin</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="detalle_producto.desc">
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="detalle_producto.row">
+        <item name="android:paddingTop">@dimen/detalle_producto_row_padding</item>
+        <item name="android:paddingBottom">@dimen/detalle_producto_row_padding</item>
+    </style>
+
+    <style name="detalle_producto.row.light">
+        <item name="android:background">@color/light_background</item>
+    </style>
+
+    <style name="detalle_producto.row.dark">
+        <item name="android:background">@color/dark_background</item>
+    </style>
 </resources>

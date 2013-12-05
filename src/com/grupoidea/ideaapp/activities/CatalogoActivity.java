@@ -180,6 +180,9 @@ public class CatalogoActivity extends ParentMenuActivity {
 		final String objectId = productoParse.getObjectId();
 		final Producto producto = new Producto(objectId, nombre, codigo, precio);
 
+        //Obtener Descripcion
+        producto.setDescripcion(productoParse.getString("descripcion"));
+
         ParseQuery descuentosQuery;
 
         //Obtener Imagen

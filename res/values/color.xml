@@ -2,4 +2,7 @@
 <resources>
     <color name="gray_pressed">#D8D8D8</color>
     <color name="white">#FFFFFF</color>
+    <color name="gray_text">#6D6D6D</color>
+    <color name="light_background">#ECECEC</color>
+    <color name="dark_background">#D5D6D6</color>
 </resources>

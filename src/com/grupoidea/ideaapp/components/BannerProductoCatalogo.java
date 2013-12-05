@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -205,9 +204,15 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 					producto = catalogo.getProductosCatalogo().get(position);
 					
 					Bundle extras = new Bundle();
-					extras.putString("codigo",producto.getCodigo());
-					extras.putDouble("precio", producto.getPrecio());
+                    extras.putString("codigo",producto.getCodigo());
+                    extras.putString("marca",producto.getMarca());
+					extras.putString("precio", producto.getPrecioComercialSinIvaConIvaString());
 					extras.putParcelable("bitmap", producto.getImagen());
+                    extras.putString("categoria", producto.getNombreCategoria());
+                    extras.putString("grupo", producto.getNombreGrupoCategorias());
+                    extras.putString("meta", String.valueOf(producto.getExistencia()));
+                    extras.putString("excedente", String.valueOf(producto.getExcedente()));
+                    extras.putString("descripcion", producto.getDescripcion());
 					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
 				}
 			});
@@ -250,8 +255,8 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         Producto producto = (Producto)v.getTag();
 
         //Actualizar Existencia (Excedentes y Metas)
-        popup.getMenu().add(mContext.getText(R.string.meta_restante)+" "+String.valueOf(producto.getExistencia()));
-        popup.getMenu().add(mContext.getText(R.string.excedentes)+" "+String.valueOf(producto.getExcedente()));
+        popup.getMenu().add(mContext.getText(R.string.meta_restante_label)+" "+String.valueOf(producto.getExistencia()));
+        popup.getMenu().add(mContext.getText(R.string.excedentes_label)+" "+String.valueOf(producto.getExcedente()));
 
         //Descuento Producto
         SubMenu descProdSubmenu = popup.getMenu().getItem(1).getSubMenu();

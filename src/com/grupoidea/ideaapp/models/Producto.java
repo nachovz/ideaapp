@@ -40,6 +40,8 @@ public class Producto {
 	/** Nombre de la marca del producto */
 	private String marca;
 
+    private String descripcion;
+
 	private Categoria categoria;
     private GrupoCategorias grupoCategorias;
 
@@ -537,5 +539,14 @@ public class Producto {
     public String getNombreGrupoCategorias(){
         if(grupoCategorias!=null) return grupoCategorias.getNombre();
         return null;
+    }
+
+    /** Descripcion del producto */
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
