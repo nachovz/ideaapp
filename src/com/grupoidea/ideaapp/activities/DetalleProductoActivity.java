@@ -61,12 +61,11 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 
             //Imagen
             imageView = (ImageView) findViewById(R.id.producto_imageView);
-            if(null != bitmap){
+//            if(null != bitmap){
                 imageView.setImageBitmap(bitmap);
-            }else{
-                imageView.setImageResource(R.drawable.prod_background);
-            }
-
+//            }else{
+//                imageView.setImageResource(R.drawable.prod_background);
+//            }
 
             //Categoria
             textView = (TextView) findViewById(R.id.categoria_textView);

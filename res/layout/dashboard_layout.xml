@@ -45,23 +45,22 @@
                         android:layout_toRightOf="@+id/metasTextView" android:layout_marginLeft="120dp"/>
             </RelativeLayout>
 
-            <ScrollView
-                    android:id="@+id/metas_scroll_view"
-                    android:layout_width="600dp"
-                    android:layout_height="350dp"
-                    android:layout_below="@+id/header_metas"
-                    android:layout_alignRight="@+id/header_metas"
-                    android:layout_marginTop="25dp"
-                    android:layout_marginRight="25dp">
+            <RelativeLayout
+                android:layout_width="600dp"
+                android:layout_height="350dp"
+                android:id="@+id/metas_table"
+                android:layout_below="@+id/header_metas"
+                android:layout_marginTop="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_alignParentRight="true">
 
                 <TableLayout
-                        android:id="@+id/meta_list_elements"
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:focusableInTouchMode="true"
-                        android:focusable="false">
-                    <TableRow>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/meta_list_header">
+
+                    <TableRow android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
                         <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
@@ -118,17 +117,36 @@
                             android:layout_margin="30dp" />
                     </TableRow>
                 </TableLayout>
-            </ScrollView>
+
+                <ScrollView
+                        android:id="@+id/metas_scroll_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/meta_list_header">
+
+                    <TableLayout
+                            android:id="@+id/meta_list_elements"
+                            android:orientation="vertical"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:focusableInTouchMode="true"
+                            android:focusable="false"
+                        android:layout_below="@+id/meta_list_header">
+
+                    </TableLayout>
+                </ScrollView>
+
+            </RelativeLayout>
 
             <RelativeLayout
                     android:id="@+id/metas_gauge"
                     android:layout_height="wrap_content"
                     android:layout_width="350dp"
-                    android:layout_toLeftOf="@+id/metas_scroll_view"
-                    android:layout_below="@+id/header_metas"
+                android:layout_below="@+id/header_metas"
                     android:layout_margin="20dp"
                     style="@style/encabezado_blue"
-                    android:background="@drawable/metas_gauge_background">
+                    android:background="@drawable/metas_gauge_background"
+                android:layout_toLeftOf="@+id/metas_table">
                 <TextView
                     android:id="@+id/metas_actual_textView"
                     android:layout_width="fill_parent"

@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -121,23 +122,34 @@ public class DashboardActivity extends ParentMenuActivity {
                     pedidosSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            //Mostrar Loading
+                            ProgressBar loading = (ProgressBar) pedidosList.findViewById(R.id.pedidos_progressBar);
+                            loading.setVisibility(View.VISIBLE);
+
                             Log.d("DEBUG","Estado seleccionado en Spinner "+estados.get(position));
                             RowPedido row;
-//                            pedidosList.removeAllViews();
+
+                            //eliminar todos menos el primero
                             pedidosList.removeViews(1, pedidosList.getChildCount()-1);
+
+                            //Agregarlos al View
                             for (ParseObject parseObject : pedidos) {
-                                if(parseObject.getInt("estado") == position || position == 4){
+                                if(parseObject.getInt("estado") == position || position == Pedido.ESTADO_TODOS){
                                     ParseObject cliente = parseObject.getParseObject("cliente");
-                                    row = new RowPedido(mContext, cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getString("num_pedido"), parseObject.getCreatedAt(), parseObject.getUpdatedAt());
-                                    row.idPedido = parseObject.getObjectId();
-                                    row.numPedido = parseObject.getString("num_pedido");
-                                    if(position == Pedido.ESTADO_RECHAZADO || parseObject.getInt("estado") == Pedido.ESTADO_RECHAZADO){
-                                        row.observacionesRechazoPedido = parseObject.getString("comentario_cambio_status");
+                                    row = new RowPedido(mContext, parseObject.getObjectId(), cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getString("num_pedido"), parseObject.getCreatedAt(), parseObject.getUpdatedAt());
+
+                                    if(position == Pedido.ESTADO_RECHAZADO){
+                                        if(null != parseObject.getString("comentario_cambio_status")){
+                                            row.observacionesRechazoPedido = parseObject.getString("comentario_cambio_status");
+                                        }else{
+                                            row.observacionesRechazoPedido = "";
+                                        }
                                     }
                                     pedidosList.addView(row);
                                 }
                             }
-                            ProgressBar loading = (ProgressBar) pedidosList.findViewById(R.id.pedidos_progressBar);
+
+                            //Ocultar Loading
                             loading.setVisibility(View.GONE);
                         }
 
@@ -157,9 +169,10 @@ public class DashboardActivity extends ParentMenuActivity {
 
         //Carga de metas
         ParseQuery query = new ParseQuery("Metas");
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
+//        ObtenerMetasTask obtenerMetas =  new ObtenerMetasTask();
+//        obtenerMetas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
         query.findInBackground(new FindCallback() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
@@ -233,11 +246,12 @@ public class DashboardActivity extends ParentMenuActivity {
                             Boolean darkBackground = true;
 
                             tl = (TableLayout) findViewById(R.id.meta_list_elements);
+                            tl.removeAllViews();
+                            tl.setVisibility(View.GONE);
 
-                            //limpiar TableLayout de metas
-                            if(tl.getChildCount()>2){
-                                tl.removeViews(2,tl.getChildCount()-1);
-                            }
+                            //Mostrar Loading
+                            ProgressBar loading = (ProgressBar) findViewById(R.id.metas_progressBar);
+                            loading.setVisibility(View.VISIBLE);
 
                             for (Meta meta:metas){
                                 if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
@@ -307,10 +321,11 @@ public class DashboardActivity extends ParentMenuActivity {
                                 }
                             }
 
-                            ProgressBar loading = (ProgressBar) findViewById(R.id.metas_progressBar);
                             loading.setVisibility(View.GONE);
+                            tl.setVisibility(View.VISIBLE);
 
                         }
+
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {
 
@@ -350,173 +365,162 @@ public class DashboardActivity extends ParentMenuActivity {
 
 	}
 
-    private class ObtenerMetasTask extends AsyncTask<ParseQuery, Void, TableRow[]> {
+    private class ObtenerMetasTask extends AsyncTask<ParseQuery, Void, ArrayList<TableRow>> {
         @Override
-        protected TableRow[] doInBackground(ParseQuery... queries) {
+        protected ArrayList<TableRow> doInBackground(ParseQuery... queries) {
                 try {
+                    Meta meta;
+                    Producto producto;
+                    final ArrayList<TableRow> rows = new ArrayList<TableRow>();
+                    int facturadoMetas = 0, totalMetas = 0, pedidoMetas = 0;
+
+                    //Hacer find
                     ParseQuery query = queries[0];
-                    query.findInBackground(new FindCallback() {
+                    List<ParseObject> parseObjects = query.find();
+
+                    //Extraer Metas
+                    for (ParseObject parseObject: parseObjects){
+                        meta = new Meta();
+                        meta.setCantMeta(parseObject.getInt("meta"));
+                        meta.setCantFacturado(parseObject.getInt("facturado"));
+                        meta.setCantPedido(parseObject.getInt("pedido"));
+                        meta.setValorBs(parseObject.getDouble("meta_bs"));
+                        String producto1 = parseObject.getParseObject("producto").getObjectId();
+                        String codigo = parseObject.getParseObject("producto").getString("codigo");
+
+                        producto = new Producto(producto1, null, codigo, 0.0);
+                        String marca = parseObject.getParseObject("producto").getString("marca");
+                        producto.setMarca(marca);
+                        marcas.add(marca);
+
+                        meta.setProducto(producto);
+                        metas.add(meta);
+
+                        //Acumular metas y cosas
+                        facturadoMetas += meta.getCantFacturado();
+                        pedidoMetas +=meta.getCantPedido();
+                        totalMetas += meta.getCantMeta();
+                    }
+
+                    /*
+                    Actualizar Gauge de Metas
+                     */
+
+                    TextView metasTextView=(TextView) findViewById(R.id.metas_actual_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Actual: " + facturadoMetas);
+
+                    metasTextView=(TextView)findViewById(R.id.metas_total_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Meta: " + totalMetas);
+
+                    metasTextView = (TextView)findViewById(R.id.metas_restante_textView);
+                    metasTextView.setTextSize(18);
+                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
+                    metasTextView.setTextColor(Color.WHITE);
+                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
+                    metasTextView.setText("Resta: " + (totalMetas-facturadoMetas));
+
+                    ProgressBar metasProgress = (ProgressBar) findViewById(R.id.metas_gauge_progressbar);
+                    metasProgress.setMax(totalMetas);
+                    metasProgress.setProgress(facturadoMetas);
+
+                    /*
+                    Fin Actualizar Gauge de Metas
+                     */
+
+                    //Spinner de marcas con metas
+                    final ArrayList<String> lista = new ArrayList<String>(marcas);
+                    marcasAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, lista);
+                    marcasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    marcasSpinner = (Spinner)findViewById(R.id.metas_spinner);
+                    marcasSpinner.setAdapter(marcasAdapter);
+                    marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
-                        public void done(List<ParseObject> parseObjects, ParseException e) {
-                            if(e == null){
-                                Meta meta;
-                                Producto producto;
-                                int facturadoMetas = 0, totalMetas = 0, pedidoMetas = 0;
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            TextView tcod, tmeta, tpedido, tfacturado, tbs;
+                            Boolean darkBackground = true;
 
-                                for (ParseObject parseObject: parseObjects){
-                                    meta = new Meta();
-                                    meta.setCantMeta(parseObject.getInt("meta"));
-                                    meta.setCantFacturado(parseObject.getInt("facturado"));
-                                    meta.setCantPedido(parseObject.getInt("pedido"));
-                                    meta.setValorBs(parseObject.getDouble("meta_bs"));
-                                    String producto1 = parseObject.getParseObject("producto").getObjectId();
-                                    String codigo = parseObject.getParseObject("producto").getString("codigo");
+                            for (Meta meta:metas){
+                                if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
+                                    //Crear TableRow nuevo
+                                    TableRow.LayoutParams params;
+                                    tr = new TableRow(mContext);
+                                    tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+                                    if(!darkBackground){
+                                        tr.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                                    }else{
+                                        tr.setBackgroundColor(Color.parseColor("#D9D9D9"));
+                                    }
 
-                                    producto = new Producto(producto1, null, codigo, 0.0);
-                                    String marca = parseObject.getParseObject("producto").getString("marca");
-                                    producto.setMarca(marca);
-                                    marcas.add(marca);
+                                    //Crear y agregar TextView de Codigo a TableRow
+                                    tcod = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
+                                    tcod.setLayoutParams(params);
+                                    tcod.setTextColor(Color.parseColor("#262626"));
+                                    tcod.setPadding(18, 18, 18, 18);
+                                    tcod.setText(meta.getProducto().getCodigo());
+                                    tcod.setTypeface(null, Typeface.BOLD);
+                                    tr.addView(tcod);
 
-                                    meta.setProducto(producto);
-                                    metas.add(meta);
+                                    //Crear y agregar TextView de Meta a TableRow
+                                    tmeta = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
+                                    tmeta.setLayoutParams(params);
+                                    tmeta.setTextColor(Color.parseColor("#262626"));
+                                    tmeta.setPadding(18, 18, 18, 18);
+                                    tmeta.setText(String.valueOf(meta.getCantMeta()));
+                                    tmeta.setGravity(Gravity.CENTER);
+                                    tr.addView(tmeta);
 
-                                    //Acumular metas y cosas
-                                    facturadoMetas += meta.getCantFacturado();
-                                    pedidoMetas +=meta.getCantPedido();
-                                    totalMetas += meta.getCantMeta();
+                                    //Crear y agregar TextView de Pedidos a TableRow
+                                    tpedido = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
+                                    tpedido.setLayoutParams(params);
+                                    tpedido.setTextColor(Color.parseColor("#262626"));
+                                    tpedido.setPadding(18, 18, 18, 18);
+                                    tpedido.setText(String.valueOf(meta.getCantPedido()));
+                                    tpedido.setGravity(Gravity.CENTER);
+                                    tr.addView(tpedido);
+
+                                    //Crear y agregar TextView de Facturado a TableRow
+                                    tfacturado = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
+                                    tfacturado.setLayoutParams(params);
+                                    tfacturado.setTextColor(Color.parseColor("#262626"));
+                                    tfacturado.setPadding(18, 18, 18, 18);
+                                    tfacturado.setText(String.valueOf(meta.getCantFacturado()));
+                                    tfacturado.setGravity(Gravity.CENTER);
+                                    tr.addView(tfacturado);
+
+                                    //Crear y agregar TextView de Bolivares a TableRow
+                                    tbs = new TextView(mContext);
+                                    params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
+                                    tbs.setLayoutParams(params);
+                                    tbs.setTextColor(Color.parseColor("#262626"));
+                                    tbs.setPadding(18, 18, 18, 18);
+                                    tbs.setText(String.valueOf(meta.getValorBs()));
+                                    tbs.setGravity(Gravity.CENTER);
+                                    tr.addView(tbs);
+
+                                    //Agregar row a arreglo
+                                    rows.add(tr);
+                                    darkBackground=!darkBackground;
                                 }
-
-                                TextView metasTextView=(TextView)findViewById(R.id.metas_actual_textView);
-                                metasTextView.setTextSize(18);
-                                metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                                metasTextView.setTextColor(Color.WHITE);
-                                metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                                metasTextView.setText("Actual: " + facturadoMetas);
-
-                                metasTextView=(TextView)findViewById(R.id.metas_total_textView);
-                                metasTextView.setTextSize(18);
-                                metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                                metasTextView.setTextColor(Color.WHITE);
-                                metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                                metasTextView.setText("Meta: " + totalMetas);
-
-                                metasTextView=(TextView)findViewById(R.id.metas_restante_textView);
-                                metasTextView.setTextSize(18);
-                                metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                                metasTextView.setTextColor(Color.WHITE);
-                                metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-                                metasTextView.setText("Resta: " + (totalMetas-facturadoMetas));
-
-                                ProgressBar metasProgress = (ProgressBar) findViewById(R.id.metas_gauge_progressbar);
-                                metasProgress.setMax(totalMetas);
-                                metasProgress.setProgress(facturadoMetas);
-
-                                //Spinner de marcas con metas
-                                final ArrayList<String> lista = new ArrayList<String>(marcas);
-
-                                marcasAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, lista);
-
-                                marcasAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                                marcasSpinner = (Spinner)findViewById(R.id.metas_spinner);
-
-                                marcasSpinner.setAdapter(marcasAdapter);
-                                marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        TextView tcod, tmeta, tpedido, tfacturado, tbs;
-                                        Boolean darkBackground = true;
-
-                                        tl = (TableLayout) findViewById(R.id.meta_list_elements);
-
-                                        //limpiar TableLayout de metas
-                                        if(tl.getChildCount()>2){
-                                            tl.removeViews(2,tl.getChildCount()-1);
-                                        }
-
-                                        for (Meta meta:metas){
-                                            if (meta.getProducto().getMarca().equalsIgnoreCase(lista.get(position))){
-                                                //Crear TableRow nuevo
-                                                TableRow.LayoutParams params;
-                                                tr = new TableRow(mContext);
-                                                tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-                                                if(!darkBackground){
-                                                    tr.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                                                }else{
-                                                    tr.setBackgroundColor(Color.parseColor("#D9D9D9"));
-                                                }
-
-                                                //Crear y agregar TextView de Codigo a TableRow
-                                                tcod = new TextView(mContext);
-                                                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
-                                                tcod.setLayoutParams(params);
-                                                tcod.setTextColor(Color.parseColor("#262626"));
-                                                tcod.setPadding(18, 18, 18, 18);
-                                                tcod.setText(meta.getProducto().getCodigo());
-                                                tcod.setTypeface(null, Typeface.BOLD);
-                                                tr.addView(tcod);
-
-                                                //Crear y agregar TextView de Meta a TableRow
-                                                tmeta = new TextView(mContext);
-                                                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                                tmeta.setLayoutParams(params);
-                                                tmeta.setTextColor(Color.parseColor("#262626"));
-                                                tmeta.setPadding(18, 18, 18, 18);
-                                                tmeta.setText(String.valueOf(meta.getCantMeta()));
-                                                tmeta.setGravity(Gravity.CENTER);
-                                                tr.addView(tmeta);
-
-                                                //Crear y agregar TextView de Pedidos a TableRow
-                                                tpedido = new TextView(mContext);
-                                                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                                tpedido.setLayoutParams(params);
-                                                tpedido.setTextColor(Color.parseColor("#262626"));
-                                                tpedido.setPadding(18, 18, 18, 18);
-                                                tpedido.setText(String.valueOf(meta.getCantPedido()));
-                                                tpedido.setGravity(Gravity.CENTER);
-                                                tr.addView(tpedido);
-
-                                                //Crear y agregar TextView de Facturado a TableRow
-                                                tfacturado = new TextView(mContext);
-                                                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                                tfacturado.setLayoutParams(params);
-                                                tfacturado.setTextColor(Color.parseColor("#262626"));
-                                                tfacturado.setPadding(18, 18, 18, 18);
-                                                tfacturado.setText(String.valueOf(meta.getCantFacturado()));
-                                                tfacturado.setGravity(Gravity.CENTER);
-                                                tr.addView(tfacturado);
-
-                                                //Crear y agregar TextView de Bolivares a TableRow
-                                                tbs = new TextView(mContext);
-                                                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
-                                                tbs.setLayoutParams(params);
-                                                tbs.setTextColor(Color.parseColor("#262626"));
-                                                tbs.setPadding(18, 18, 18, 18);
-                                                tbs.setText(String.valueOf(meta.getValorBs()));
-                                                tbs.setGravity(Gravity.CENTER);
-                                                tr.addView(tbs);
-
-                                                //Añadir a TableLayout de metas
-                                                tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                                                darkBackground=!darkBackground;
-                                            }
-                                        }
-
-                                        ProgressBar loading = (ProgressBar) findViewById(R.id.metas_progressBar);
-                                        loading.setVisibility(View.GONE);
-
-                                    }
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                    }
-                                });
-
-                                Log.d("DEBUG","Metas cargadas");
-                            }else{
-                                Log.d("DEBUG",e.toString());
                             }
+
+                            ProgressBar loading = (ProgressBar) findViewById(R.id.metas_progressBar);
+                            loading.setVisibility(View.GONE);
+
                         }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -525,7 +529,19 @@ public class DashboardActivity extends ParentMenuActivity {
         }
 
         @Override
-        protected void onPostExecute(TableRow[] rows) {
+        protected void onPostExecute(ArrayList<TableRow> rows) {
+
+            tl = (TableLayout) findViewById(R.id.meta_list_elements);
+            //limpiar TableLayout de metas
+            if(tl.getChildCount()>2){
+                tl.removeViews(2,tl.getChildCount()-1);
+            }
+
+            for(TableRow tr: rows){
+                //Añadir a TableLayout de metas
+                tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            }
+
         }
     }
 
@@ -543,5 +559,13 @@ public class DashboardActivity extends ParentMenuActivity {
 
     public double getIva(){
         return iva;
+    }
+
+    @Override
+    public void reloadApp() {
+        ParseQuery.clearAllCachedResults();
+        finish();
+        getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(getIntent());
     }
 }

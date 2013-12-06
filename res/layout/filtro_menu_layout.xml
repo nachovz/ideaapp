@@ -5,48 +5,55 @@
     android:layout_height="fill_parent"
     android:background="@drawable/menu_carrito_selector" >
 
-    <RelativeLayout
-        android:id="@+id/menu_inflated_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" android:background="@drawable/filtro_background_gradient">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:background="@drawable/filtro_background_gradient">
 
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:id="@+id/categorias_filtro_layout"
-                android:focusableInTouchMode="false" android:layout_margin="16dp">
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/categorias"
-                    android:id="@+id/categorias_filtro_textView" android:textColor="#FFFFFF" android:textStyle="bold|italic"
-                    android:textSize="22sp" android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
-                    android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:text="@string/todas" android:id="@+id/textView"
-                      android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
-                      android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
-                      android:background="@drawable/pastilla_items_filtro"
-                      android:layout_marginTop="5dp" android:layout_marginBottom="5dp"/>
-        </LinearLayout>
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" android:id="@+id/marcas_filtro_layout"
-                android:layout_below="@+id/categorias_filtro_layout" android:layout_margin="16dp">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:text="@string/marcas" android:id="@+id/marcas_filtro_textView"
-                      android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
-                      android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
-                      android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:text="@string/todas" android:id="@+id/textView2" android:textColor="#FFFFFF"
-                      android:textStyle="bold|italic" android:textSize="22sp" android:textAlignment="gravity"
-                      android:gravity="center" android:padding="10dp"
-                      android:background="@drawable/pastilla_items_filtro" android:layout_marginBottom="5dp"
-                      android:layout_marginTop="5dp"/>
-        </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/menu_inflated_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" android:id="@+id/categorias_filtro_layout"
+                    android:focusableInTouchMode="false" android:layout_margin="16dp">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/categorias"
+                        android:id="@+id/categorias_filtro_textView" android:textColor="#FFFFFF" android:textStyle="bold|italic"
+                        android:textSize="22sp" android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
+                        android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="@string/todas" android:id="@+id/textView"
+                          android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
+                          android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
+                          android:background="@drawable/pastilla_items_filtro"
+                          android:layout_marginTop="5dp" android:layout_marginBottom="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" android:id="@+id/marcas_filtro_layout"
+                    android:layout_below="@+id/categorias_filtro_layout" android:layout_margin="16dp">
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="@string/marcas" android:id="@+id/marcas_filtro_textView"
+                          android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
+                          android:textAlignment="gravity" android:gravity="center" android:padding="10dp"
+                          android:background="@drawable/pastilla_title_items_filtro" android:layout_marginBottom="5dp"/>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:text="@string/todas" android:id="@+id/textView2" android:textColor="#FFFFFF"
+                          android:textStyle="bold|italic" android:textSize="22sp" android:textAlignment="gravity"
+                          android:gravity="center" android:padding="10dp"
+                          android:background="@drawable/pastilla_items_filtro" android:layout_marginBottom="5dp"
+                          android:layout_marginTop="5dp"/>
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

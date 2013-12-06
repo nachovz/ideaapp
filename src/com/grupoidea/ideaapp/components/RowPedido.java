@@ -65,19 +65,21 @@ public class RowPedido extends RelativeLayout {
 	 *            Cadena de texto con el nombre (Razon Social) del cliente
      * @param estadoParam
      *            estado del pedido
-     * @param codPedido
-     *            Codigo del Pedido, se muestra en la vista con el formato "#codPedido"
+     * @param numPedidoParam
+     *            Codigo del Pedido, se muestra en la vista con el formato "#numPedidoParam"
      * @param createdAt
      *            Fecha en que fue creado el pedido
      * @param updatedAt
      *            Fecha en que fue actualizado el pedido
 	 */
-	public RowPedido(Context contextParam, String nombreCliente, int estadoParam, final String codPedido, Date createdAt, Date updatedAt) {
+	public RowPedido(Context contextParam, String idPedidoParam, String nombreCliente, int estadoParam, final String numPedidoParam, Date createdAt, Date updatedAt) {
 		super(contextParam);
 
         this.context = contextParam;
 		LayoutInflater inflater;
         previewExists = false;
+        numPedido = numPedidoParam;
+        idPedido = idPedidoParam;
 
 		parent = (ParentActivity) context;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -88,7 +90,7 @@ public class RowPedido extends RelativeLayout {
 		rowClienteTextView.setText(nombreCliente);
 
         rowCodPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_num_pedido_textview);
-        rowCodPedidoTextView.setText("   #" + codPedido);
+        rowCodPedidoTextView.setText("   #" + numPedidoParam);
 
         //Mostrar fechas de creacion y de actualizacion del pedido
         rowFechaPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_pedido_date_textview);
@@ -279,7 +281,7 @@ public class RowPedido extends RelativeLayout {
                                     productosPedidoView = inflater.inflate(R.layout.pedido_aprobado_preview_layout, null, false);
                                     builder.setView(productosPedidoView);
                                     final AlertDialog alert = builder.create();
-                                    setPreview(productosPedido, codPedido);
+                                    setPreview(productosPedido, numPedidoParam);
                                     alertProgress.dismiss();
                                     alert.show();
                                 }

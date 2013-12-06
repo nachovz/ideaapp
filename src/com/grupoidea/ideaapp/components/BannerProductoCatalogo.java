@@ -194,7 +194,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
             }
 
-            //TODO Work here
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			imageView = (ImageView) view.findViewById(R.id.banner_producto_tittle_image_view);
 			imageView.setOnClickListener(new OnClickListener() {
@@ -275,7 +274,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
         //Descuento Categoria
         SubMenu descCatSubmenu = popup.getMenu().getItem(2).getSubMenu();
-        if(descCatSubmenu != null && producto.hasDescuentos()){
+        if(descCatSubmenu != null && producto.getCategoria()!=null && producto.getCategoria().hasDescuentos()){
             //Agregar Descuentos por Categoria al menu
             descCatSubmenu.clear();
             ArrayList<String> menu_prod = producto.getCategoria().getDescuentosString();
@@ -289,7 +288,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
         //Descuento Grupo Categoria
         SubMenu descGrupoSubmenu = popup.getMenu().getItem(3).getSubMenu();
-        if(descGrupoSubmenu != null && producto.getGrupoCategorias()!= null){
+        if(descGrupoSubmenu != null && producto.getGrupoCategorias()!= null && producto.getGrupoCategorias().hasDescuentos()){
             //Agregar Descuentos por Grupo de Categoria al menu
             descGrupoSubmenu.clear();
             ArrayList<String> menu_prod = producto.getGrupoCategorias().getDescuentosString();
