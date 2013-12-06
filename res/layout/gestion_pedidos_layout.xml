@@ -185,7 +185,7 @@
                                 android:text="@string/producto"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.4"
+                                android:layout_weight="3"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="match_parent"
@@ -193,7 +193,7 @@
                                 android:text="@string/cantidad"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.05"
+                                android:layout_weight="2"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="match_parent"
@@ -201,7 +201,7 @@
                                 android:text="@string/precioUnitario"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.15"
+                                android:layout_weight="3"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="match_parent"
@@ -209,7 +209,7 @@
                                 android:text="@string/precioDescComercial"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.15"
+                                android:layout_weight="3"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="match_parent"
@@ -217,7 +217,7 @@
                                 android:text="@string/descuentoVolumen"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.1"
+                                android:layout_weight="2"
                                 style="@style/encabezado"/>
                         <TextView
                                 android:layout_width="match_parent"
@@ -225,7 +225,7 @@
                                 android:text="@string/precioTotal"
                                 android:layout_span="1"
                                 android:padding="18dip"
-                                android:layout_weight="0.15"
+                                android:layout_weight="4"
                                 style="@style/encabezado"/>
                     </TableRow>
                 </TableLayout>

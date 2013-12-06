@@ -306,6 +306,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         /**
          * -------------- GRUPO CATEGORIAS --------------
          */
+
         //Obtener nombre y descuentos de grupo de categorias
         if(null != productoParse.getParseObject("grupo_categorias") && null != productoParse.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
             //Revisar si grupo categorias ya existe y agregarlo al producto
@@ -469,6 +470,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 		carrito = new Carrito(categorias, gruposCategorias);
         adapterCarrito = new BannerProductoCarrito(this, carrito);
         menuRight = (RelativeLayout) getMenuRight();
+
+
         if(menuRight != null) {
             listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
             relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
@@ -481,7 +484,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         String productos = productsToJSONString();
                         if(!productos.equalsIgnoreCase("")){
                             Bundle bundle = new Bundle();
-                            bundle.putString("Productos", productos);
+                            bundle.putString("productos", productos);
                             Cliente clienteM;
                             if(modificarPedidoId != null){
                                 //Obtener indice de cliente

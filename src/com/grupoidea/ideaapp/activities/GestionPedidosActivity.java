@@ -75,7 +75,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             Intent intent = getIntent();
             idPedido = intent.getStringExtra("idPedido");
             numPedido = intent.getStringExtra("numPedido");
-            String jsonStr = intent.getStringExtra("Productos");
+            String jsonStr = intent.getStringExtra("productos");
             cliente = new Cliente(intent.getStringExtra("Cliente"));
             cliente.setId(intent.getStringExtra("ClienteId"));
             cliente.setDescuento(intent.getDoubleExtra("Descuento", 0.0));
@@ -136,7 +136,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 tr.setLayoutParams( new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
                 nombreTextView= new TextView(this);
                 //Nombre
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.25"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
                 nombreTextView.setLayoutParams(params);
                 nombreTextView.setTextColor(Color.parseColor("#262626"));
                 nombreTextView.setPadding(18, 18, 18, 18);
@@ -147,7 +147,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Cantidad
                 cantidadTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.1"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
                 cantidadTextView.setLayoutParams(params);
                 cantidadTextView.setTextColor(Color.parseColor("#262626"));
                 cantidadTextView.setPadding(18, 18, 18, 18);
@@ -158,7 +158,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio Lista
                 precioTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
                 precioTextView.setLayoutParams(params);
                 precioTextView.setTextColor(Color.parseColor("#262626"));
                 precioTextView.setPadding(18, 18, 18, 18);
@@ -169,7 +169,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio con Desc Comercial
                 precioComercialTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
                 precioComercialTextView.setLayoutParams(params);
                 precioComercialTextView.setTextColor(Color.parseColor("#262626"));
                 precioComercialTextView.setPadding(18, 18, 18, 18);
@@ -180,7 +180,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Descuento por Volumen
                 descuentoTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
                 descuentoTextView.setLayoutParams(params);
                 descuentoTextView.setTextColor(Color.parseColor("#262626"));
                 descuentoTextView.setPadding(18, 18, 18, 18);
@@ -192,7 +192,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
                 //Precio Final
                 precioFinalTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("0.2"));
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("4"));
                 precioFinalTextView.setLayoutParams(params);
                 precioFinalTextView.setTextColor(Color.parseColor("#262626"));
                 precioFinalTextView.setPadding(18, 18, 18, 18);
@@ -291,7 +291,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                                             pedidoHasProductos.put("excedente", 0);
                                                             metaParse.put("pedido", metaParse.getInt("pedido")+cant);
                                                         }
-                                                        pedidoHasProductos.put("descuento", round(prod.getDescuentoAplicado() * 100.0));
+                                                        pedidoHasProductos.put("descuento", prod.getDescuentoAplicado());
                                                         pedidoHasProductos.put("precio_unitario", round(prod.getPrecioComercial()));
                                                         pedidoHasProductos.put("monto", round(prod.getPrecioComercialTotal()));
                                                         pedidoHasProductos.put("pedido", pedidoParse[0]);
@@ -561,19 +561,21 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         return sub;
     }
 
-    public void llenarProductosfromJSON(JSONArray json){
+    public void llenarProductosfromJSON(JSONArray jsonArray){
         try {
             Producto prod;
-            JSONObject jsonO;
-            for(int i=0, size=json.length();i<size;i++){
-                jsonO = json.getJSONObject(i);
-                Log.d("DEBUG","en Gestion. JSON prod: "+jsonO.get("codigo")+"cant: "+jsonO.get("cantidad"));
-                prod = Producto.setFromJSON(jsonO);
-                Log.d("DEBUG","en Gestion. prod: "+prod.getCodigo()+"cant: "+prod.getCantidad());
+            JSONObject jsonObject;
+            for(int i=0, size=jsonArray.length();i<size;i++){
+                jsonObject = jsonArray.getJSONObject(i);
+                Log.d("DEBUG","en Gestion. JSON Producto: "+jsonObject.get("codigo")+" Cant: "+jsonObject.get("cantidad"));
+                prod = Producto.setFromJSON(jsonObject);
+                Log.d("DEBUG","en Gestion. Producto: "+prod.getCodigo()+" Cant: "+prod.getCantidad());
                 productos.add(prod);
             }
         } catch (JSONException e) {
-            Log.d("DEBUG", "llenarProductosfromJSON: "+e.getMessage());
+            Log.d("DEBUG", "llenarProductosfromJSON JSONException: "+e.getMessage());
+        } catch (Exception e){
+            Log.d("DEBUG", "llenarProductosFromJSON Exception: "+e.getMessage());
         }
     }
 

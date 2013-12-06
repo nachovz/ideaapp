@@ -325,6 +325,11 @@ public abstract class ParentActivity extends Activity {
 		if (bundle != null) {
 			intent.putExtras(bundle);
 		}
+
+        if(disposeCurrentActivity){
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+
 		this.startActivity(intent);
 
 		if (disposeCurrentActivity) {

@@ -300,8 +300,11 @@ public class Producto {
 	 * @throws JSONException */
 	public JSONObject toJSON() throws JSONException{
 		JSONObject productoJSON = new JSONObject();
-		
-		productoJSON.put("nombre", getNombre());
+		if(null != getNombre()){
+            productoJSON.put("nombre", getNombre());
+        }else{
+            productoJSON.put("nombre", "");
+        }
 		productoJSON.put("id", getId());
 		productoJSON.put("codigo", getCodigo());
         productoJSON.put("precio", getPrecio());
@@ -336,6 +339,7 @@ public class Producto {
             return producto;
 
         }catch(JSONException e){
+            Log.d("DEBUG","Producto.setFromJSON JSONException: "+e.getMessage());
             return null;
         }
     }
