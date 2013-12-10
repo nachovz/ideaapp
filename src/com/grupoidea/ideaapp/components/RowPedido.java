@@ -131,7 +131,7 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //Relanzar pedido como "nuevo" pedido
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("rowClienteTextView", "" + rowClienteTextView.getText());
+                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
                                     bundle.putString("idPedido", idPedido);
                                     bundle.putString("numPedido", numPedido);
                                     bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
@@ -184,7 +184,7 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    bundle.putString("rowClienteTextView", "" + rowClienteTextView.getText());
+                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
                                     bundle.putString("idPedido", idPedido);
                                     bundle.putString("numPedido", numPedido);
                                     bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);

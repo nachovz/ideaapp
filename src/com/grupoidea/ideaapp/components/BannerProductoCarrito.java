@@ -73,11 +73,12 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		if(producto != null) {
             view.setTag(producto);
             NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker);
-            np.setValue(producto.getCantidad());
-            np.setTag(producto);
-
             np.setMinValue(1);
             np.setMaxValue(producto.getExcedente()+producto.getExistencia());
+
+            Log.d("DEBUG", "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
+            np.setValue(producto.getCantidad());
+            np.setTag(producto);
 
             np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override

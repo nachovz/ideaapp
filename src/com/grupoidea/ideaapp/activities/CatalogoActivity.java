@@ -551,11 +551,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getCodigo())) {
                                         prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
                                         Log.d("DEBUG", "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia()));
+                                        //Agregar cantidad a existencia temporalmente
                                         prodsModPedido.get(i).setExistencia(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia());
                                         prodsModPedido.get(i).setIsInCarrito(true);
                                         adapterCarrito.notifyDataSetChanged();
-//                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
+                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
                                         adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
+                                        adapterCarrito.notifyDataSetChanged();
                                         adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                     }
                                 }
