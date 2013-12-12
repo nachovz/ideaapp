@@ -4,7 +4,6 @@ public class Meta {
 	/** Valor entero o decimal con el valor final de la meta*/
 	private int cantMeta;
 	private int cantFacturado;
-	private int valorRestante;
     private int cantPedido;
     private double valorBs;
     private Producto producto;
@@ -20,12 +19,6 @@ public class Meta {
 	}
 	public void setCantFacturado(int cantFacturado) {
 		this.cantFacturado = cantFacturado;
-	}
-	public int getValorRestante() {
-		return valorRestante;
-	}
-	public void setValorRestante(int valorRestante) {
-		this.valorRestante = valorRestante;
 	}
     public Producto getProducto() {
         return producto;

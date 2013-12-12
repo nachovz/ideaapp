@@ -86,7 +86,8 @@ public class CatalogoActivity extends ParentMenuActivity {
     public LinearLayout categoriasFiltro, marcasFiltro;
     protected static  Context mContext;
     protected ProgressBar descuentosProgressBar;
-    protected ArrayList<ParseQuery> queries;
+    public List<ParseObject> descuentosParse;
+
 	public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
 	}
@@ -150,7 +151,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         marcas = new ArrayList<String>();
         categoriaActual = getString(R.string.todas);
         marcaActual = getString(R.string.todas);
-        queries = new ArrayList<ParseQuery>();
 	}
 
     @Override
@@ -221,37 +221,62 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         //Descuentos Producto
         //Obtener descuentos por producto
-        final SparseArray<Double> tablaDescuentosProducto = new SparseArray<Double>();
-        descuentosQuery = productoParse.getRelation("descuentos").getQuery();
-        queries.add(descuentosQuery);
-        descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        descuentosQuery.findInBackground(new FindCallback() {
-            @Override
-            public void done(List<ParseObject> descuentos, ParseException e) {
-                if (e == null && descuentos != null && descuentos.size()>0) {
-                    for (ParseObject descuento : descuentos) {
-                        tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
-                    }
-                }else if(null == descuentos || descuentos.size() == 0){
-                    Log.d("DEBUG", "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
-                }
-                prodDone[0] =true;
-                descuentosProgressBar.incrementProgressBy(1);
+//        final SparseArray<Double> tablaDescuentosProducto = new SparseArray<Double>();
+//        descuentosQuery = productoParse.getRelation("descuentos").getQuery();
+//        queries.add(descuentosQuery);
+//        descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+//        descuentosQuery.findInBackground(new FindCallback() {
+//            @Override
+//            public void done(List<ParseObject> descuentos, ParseException e) {
+//                if (e == null && descuentos != null && descuentos.size()>0) {
+//                    for (ParseObject descuento : descuentos) {
+//                        tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+//                    }
+//                }else if(null == descuentos || descuentos.size() == 0){
+//                    Log.d("DEBUG", "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
+//                }
+//                prodDone[0] =true;
+//                descuentosProgressBar.incrementProgressBy(1);
+//
+//                if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+//                    descuentosProgressBar.setVisibility(View.GONE);
+//                    Log.d("DEBUG", "Finalizada carga de productos");
+//                    Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+//                    refresh.setClickable(true);
+//                }
+//            }
+//
+//        });
+//        producto.setTablaDescuentos(tablaDescuentosProducto);
 
-                if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                    descuentosProgressBar.setVisibility(View.GONE);
-                    Log.d("DEBUG", "Finalizada carga de productos");
-                    Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
-                    refresh.setClickable(true);
-                }
+        /*-------------- PRODUCTOS -------------- */
+        //Obtener descuentos por producto
+        SparseArray<Double> tablaDescuentosProducto = new SparseArray<Double>();
+        ArrayList<ParseObject> descuentos = findDescuentosByRelatedObjectId(productoParse.getObjectId());
+        if(descuentos!= null){
+            for (ParseObject descuento : descuentos) {
+                tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
+        }else{
+            Log.d("DEBUG", "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
+        }
 
-        });
+        //Encender flags y actualizar progressBar
+        prodDone[0] =true;
+        descuentosProgressBar.incrementProgressBy(1);
+
+        //Verificar y Notificar Carga Completa de Productos
+        if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+            descuentosProgressBar.setVisibility(View.GONE);
+            Log.d("DEBUG", "Finalizada carga de productos");
+            Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+            refresh.setClickable(true);
+        }
+
         producto.setTablaDescuentos(tablaDescuentosProducto);
+        /* -------------- FIN PRODUCTOS -------------- */
 
-        /**
-         * -------------- CATEGORIA --------------
-         */
+        /* -------------- CATEGORIA -------------- */
         //Obtener categoria
         ParseObject categoriaParse = productoParse.getParseObject("categoria");
 
@@ -259,54 +284,77 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(null != categoriaParse){
             //Revisar si categoria ya existe y agregarla al producto
             Categoria categoria = findCategoriaByName(categoriaParse.getString("nombre"));
+
             //Si no existe crear una nueva y agregarla a categorias y al producto
             if( categoria == null){
                 categoria = new Categoria(categoriaParse.getString("nombre"));
             }
-            final Categoria finalCategoria = categoria;
+
             addCategoriaTextView(categoria);
+
+//            //Obtener descuentos por categoria
+//            final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
+//            descuentosQuery = categoriaParse.getRelation("descuentos").getQuery();
+//            queries.add(descuentosQuery);
+//            descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+//            descuentosQuery.findInBackground(new FindCallback() {
+//                @Override
+//                public void done(List<ParseObject> descuentos, ParseException e) {
+//                    if (e == null && descuentos != null && descuentos.size()>0) {
+//                        for (ParseObject descuento : descuentos) {
+//                            tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
+//                        }
+//                    }else if(null == descuentos || descuentos.size() == 0){
+//                        Log.d("DEBUG", "La Categoria " + finalCategoria.getNombre() + " no posee descuentos");
+//                    }
+//                    catDone[0]=true;
+//                    descuentosProgressBar.incrementProgressBy(1);
+//
+//                    if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+//                        descuentosProgressBar.setVisibility(View.GONE);
+//                        Log.d("DEBUG", "Finalizada carga de productos");
+//                        Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+//                        refresh.setClickable(true);
+//                    }
+//                }
+//            });
 
             //Obtener descuentos por categoria
             final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
-            descuentosQuery = categoriaParse.getRelation("descuentos").getQuery();
-            queries.add(descuentosQuery);
-            descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-            descuentosQuery.findInBackground(new FindCallback() {
-                @Override
-                public void done(List<ParseObject> descuentos, ParseException e) {
-                    if (e == null && descuentos != null && descuentos.size()>0) {
-                        for (ParseObject descuento : descuentos) {
-                            tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
-                        }
-                    }else if(null == descuentos || descuentos.size() == 0){
-                        Log.d("DEBUG", "La Categoria " + finalCategoria.getNombre() + " no posee descuentos");
-                    }
-                    catDone[0]=true;
-                    descuentosProgressBar.incrementProgressBy(1);
-
-                    if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                        descuentosProgressBar.setVisibility(View.GONE);
-                        Log.d("DEBUG", "Finalizada carga de productos");
-                        Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
-                        refresh.setClickable(true);
-                    }
+            descuentos = findDescuentosByRelatedObjectId(categoriaParse.getObjectId());
+            if (descuentos != null) {
+                for (ParseObject descuento : descuentos) {
+                    tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                 }
-            });
+            }else{
+                Log.d("DEBUG", "La Categoria " + categoria.getNombre() + " no posee descuentos");
+            }
+
+            //Encender flags y actualizar progressBar
+            catDone[0]=true;
+            descuentosProgressBar.incrementProgressBy(1);
+
+            //Verificar y Notificar Carga Completa de Productos
+            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+                descuentosProgressBar.setVisibility(View.GONE);
+                Log.d("DEBUG", "Finalizada carga de productos");
+                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+                refresh.setClickable(true);
+            }
+
+            //Establecer descuentos en Categoria
             categoria.setTablaDescuentos(tablaDescuentosCategoria);
+            //Agregar Categoria a Producto
             producto.setCategoria(categoria);
+
         }else{
+            //Encender flags y actualizar progressBar
             catDone[0]=true;
             descuentosProgressBar.incrementProgressBy(1);
         }
+        /* -------------- FIN CATEGORIA -------------- */
 
-        /**
-         * -------------- FIN CATEGORIA --------------
-         */
-
-        /**
-         * -------------- GRUPO CATEGORIAS --------------
-         */
-
+        /* -------------- GRUPO CATEGORIAS -------------- */
         //Obtener nombre y descuentos de grupo de categorias
         if(null != productoParse.getParseObject("grupo_categorias") && null != productoParse.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
             //Revisar si grupo categorias ya existe y agregarlo al producto
@@ -317,53 +365,56 @@ public class CatalogoActivity extends ParentMenuActivity {
                 gruposCategorias.add(grupo);
             }
 
-            final GrupoCategorias finalGrupo = grupo;
-
             //obtener descuentos por grupo de categoria
             final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
-            descuentosQuery = productoParse.getParseObject("grupo_categorias").getRelation("descuentos").getQuery();
-            queries.add(descuentosQuery);
-            descuentosQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-            descuentosQuery.findInBackground(new FindCallback() {
-                @Override
-                public void done(List<ParseObject> descuentos, ParseException e) {
-                    if (e == null && descuentos != null && descuentos.size()>0) {
-                        for (int i = 0, sizeDesc = descuentos.size(); i<sizeDesc; i++) {
-                            ParseObject descuento = descuentos.get(i);
-                            tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
 
-                            //Quitar el dialogo con el ultimo descuento del ultimo producto
-                            if(i == sizeDesc-1 && pos == size -1){
-                                Log.d("DEBUG", "Finalizada carga de productos");
-                                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
-                                refresh.setClickable(true);
-                            }
-                        }
-                    }else if(null == descuentos || descuentos.size() == 0){
-                        Log.d("DEBUG", "El Grupo " + finalGrupo.getNombre() + " no posee descuentos");
-                    }
-                    groupDone[0]=true;
-                    descuentosProgressBar.incrementProgressBy(1);
+            descuentos = findDescuentosByRelatedObjectId(categoriaParse.getObjectId());
+            if (descuentos != null) {
+                for (int i = 0, sizeDesc = descuentos.size(); i<sizeDesc; i++) {
+                    ParseObject descuento = descuentos.get(i);
+                    tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
 
-                    if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                        descuentosProgressBar.setVisibility(View.GONE);
+                    //Verificar y Notificar Carga Completa de Productos
+                    if(i == sizeDesc-1 && pos == size -1){
                         Log.d("DEBUG", "Finalizada carga de productos");
                         Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                         refresh.setClickable(true);
                     }
-
-                    if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                        descuentosProgressBar.setVisibility(View.GONE);
-                    }else{
-                        Log.d("DEBUG","pasando por producto "+producto.getCodigo());
-                    }
                 }
-            });
-            grupo.setTablaDescuentos(tablaDescuentosGrupo);
-            producto.setGrupoCategorias(grupo);
-        }else{
+            }else{
+                Log.d("DEBUG", "El Grupo " + grupo.getNombre() + " no posee descuentos");
+            }
+
+            //Encender flags y actualizar progressBar
             groupDone[0]=true;
             descuentosProgressBar.incrementProgressBy(1);
+
+            //Verificar y Notificar Carga Completa de Productos
+            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+                descuentosProgressBar.setVisibility(View.GONE);
+                Log.d("DEBUG", "Finalizada carga de productos");
+                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+                refresh.setClickable(true);
+            }
+
+            //Verificar y Notificar Carga Completa de Productos
+            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
+                descuentosProgressBar.setVisibility(View.GONE);
+            }else{
+                Log.d("DEBUG","pasando por producto "+producto.getCodigo());
+            }
+
+            //Establecer descuentos de Grupo
+            grupo.setTablaDescuentos(tablaDescuentosGrupo);
+            //Agregar Grupo a Producto
+            producto.setGrupoCategorias(grupo);
+
+        }else{
+            //Encender flags y actualizar progressBar
+            groupDone[0]=true;
+            descuentosProgressBar.incrementProgressBy(1);
+
+            //Verificar y Notificar Carga Completa de Productos
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
                 Log.d("DEBUG", "Finalizada carga de productos");
@@ -373,9 +424,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 Log.d("DEBUG","pasando por producto "+producto.getCodigo());
             }
         }
-        /**
-         * -------------- FIN GRUPO CATEGORIAS --------------
-         */
+        /* -------------- FIN GRUPO CATEGORIAS -------------- */
 
         return producto;
 	}
@@ -391,6 +440,10 @@ public class CatalogoActivity extends ParentMenuActivity {
 	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
+
+        //Hacer query de Descuentos
+//        getDescuentosFromParse();
+
 		@SuppressWarnings("unchecked")
 		List<ParseObject> productosParse = (List<ParseObject>) response.getResponse();
         ArrayList<Producto> productos = new ArrayList<Producto>();
@@ -768,19 +821,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.show();
     }
 
-	@Override
-	protected Request getRequestAction() {
-		Request req = new Request(Request.PARSE_REQUEST);
-		ParseQuery query = new ParseQuery("Producto");
-        query.include("categoria");
-        query.include("iva");
-        query.include("grupo_categorias");
-        query.orderByAscending("marca");
-		req.setRequest(query);
-		
-		return req;
-	}
-
     public void onClickTextView(TextView selected){
         LinearLayout parent = (LinearLayout) selected.getParent();
         if (((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.categorias))){
@@ -1056,6 +1096,53 @@ public class CatalogoActivity extends ParentMenuActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected Request getRequestAction() {
+        getDescuentosFromParse();
+        Request req = new Request(Request.PARSE_REQUEST);
+        ParseQuery query = new ParseQuery("Producto");
+        query.include("categoria");
+        query.include("iva");
+        query.include("grupo_categorias");
+        query.orderByAscending("marca");
+        req.setRequest(query);
+
+        return req;
+    }
+
+    private void getDescuentosFromParse(){
+        ParseQuery query = new ParseQuery("Descuento");
+        //TODO
+//        queries.add(query);
+        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.findInBackground(new FindCallback() {
+            @Override
+            public void done(List<ParseObject> descuentos, ParseException e) {
+                if(e == null){
+                    Log.d("DEBUG", "Descuentos obtenidos");
+                    descuentosParse = descuentos;
+                }
+            }
+        });
+    }
+
+    /**
+     * Funcion que busca los descuentos pertenecientes al <code>objectId</code> especificado
+     * @return Descuentos buscado en forma de {@link java.util.ArrayList} de {@link com.parse.ParseObject}, <code>null</code> otherwise
+     */
+    private ArrayList<ParseObject> findDescuentosByRelatedObjectId(String relatedObjectId){
+        ArrayList<ParseObject> descuentos = new ArrayList<ParseObject>();
+        if(descuentosParse != null){
+            for(ParseObject descuento:descuentosParse){
+                if(descuento.getString("perteneceAObjectId").equals(relatedObjectId)){
+                    descuentos.add(descuento);
+                }
+            }
+            if(descuentos.size() != 0) return descuentos;
+        }
+        return null;
     }
 
 }

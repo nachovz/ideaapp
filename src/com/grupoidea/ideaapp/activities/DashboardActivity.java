@@ -33,6 +33,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -48,6 +49,7 @@ public class DashboardActivity extends ParentMenuActivity {
     private Spinner pedidosSpinner;
     private ArrayAdapter<String> pedidosSpinnerAdapter;
     private double iva;
+    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     /** Lista de metas del usuario logueado */
     private ArrayList<Meta> metas;
@@ -242,7 +244,7 @@ public class DashboardActivity extends ParentMenuActivity {
                     marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            TextView tcod, tmeta, tpedido, tfacturado, tbs;
+                            TextView codigoMetaTextView, metaMetaTextView, pedidoMetaTextView, facturadoMetaTextView, montoMetaTextView;
                             Boolean darkBackground = true;
 
                             tl = (TableLayout) findViewById(R.id.meta_list_elements);
@@ -266,54 +268,54 @@ public class DashboardActivity extends ParentMenuActivity {
                                     }
 
                                     //Crear y agregar TextView de Codigo a TableRow
-                                    tcod = new TextView(mContext);
+                                    codigoMetaTextView = new TextView(mContext);
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
-                                    tcod.setLayoutParams(params);
-                                    tcod.setTextColor(Color.parseColor("#262626"));
-                                    tcod.setPadding(18, 18, 18, 18);
-                                    tcod.setText(meta.getProducto().getCodigo());
-                                    tcod.setTypeface(null, Typeface.BOLD);
-                                    tr.addView(tcod);
+                                    codigoMetaTextView.setLayoutParams(params);
+                                    codigoMetaTextView.setTextColor(Color.parseColor("#262626"));
+                                    codigoMetaTextView.setPadding(18, 18, 18, 18);
+                                    codigoMetaTextView.setText(meta.getProducto().getCodigo());
+                                    codigoMetaTextView.setTypeface(null, Typeface.BOLD);
+                                    tr.addView(codigoMetaTextView);
 
                                     //Crear y agregar TextView de Meta a TableRow
-                                    tmeta = new TextView(mContext);
+                                    metaMetaTextView = new TextView(mContext);
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                    tmeta.setLayoutParams(params);
-                                    tmeta.setTextColor(Color.parseColor("#262626"));
-                                    tmeta.setPadding(18, 18, 18, 18);
-                                    tmeta.setText(String.valueOf(meta.getCantMeta()));
-                                    tmeta.setGravity(Gravity.CENTER);
-                                    tr.addView(tmeta);
+                                    metaMetaTextView.setLayoutParams(params);
+                                    metaMetaTextView.setTextColor(Color.parseColor("#262626"));
+                                    metaMetaTextView.setPadding(18, 18, 18, 18);
+                                    metaMetaTextView.setText(String.valueOf(meta.getCantMeta()));
+                                    metaMetaTextView.setGravity(Gravity.CENTER);
+                                    tr.addView(metaMetaTextView);
 
                                     //Crear y agregar TextView de Pedidos a TableRow
-                                    tpedido = new TextView(mContext);
+                                    pedidoMetaTextView = new TextView(mContext);
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                    tpedido.setLayoutParams(params);
-                                    tpedido.setTextColor(Color.parseColor("#262626"));
-                                    tpedido.setPadding(18, 18, 18, 18);
-                                    tpedido.setText(String.valueOf(meta.getCantPedido()));
-                                    tpedido.setGravity(Gravity.CENTER);
-                                    tr.addView(tpedido);
+                                    pedidoMetaTextView.setLayoutParams(params);
+                                    pedidoMetaTextView.setTextColor(Color.parseColor("#262626"));
+                                    pedidoMetaTextView.setPadding(18, 18, 18, 18);
+                                    pedidoMetaTextView.setText(String.valueOf(meta.getCantPedido()));
+                                    pedidoMetaTextView.setGravity(Gravity.CENTER);
+                                    tr.addView(pedidoMetaTextView);
 
                                     //Crear y agregar TextView de Facturado a TableRow
-                                    tfacturado = new TextView(mContext);
+                                    facturadoMetaTextView = new TextView(mContext);
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
-                                    tfacturado.setLayoutParams(params);
-                                    tfacturado.setTextColor(Color.parseColor("#262626"));
-                                    tfacturado.setPadding(18, 18, 18, 18);
-                                    tfacturado.setText(String.valueOf(meta.getCantFacturado()));
-                                    tfacturado.setGravity(Gravity.CENTER);
-                                    tr.addView(tfacturado);
+                                    facturadoMetaTextView.setLayoutParams(params);
+                                    facturadoMetaTextView.setTextColor(Color.parseColor("#262626"));
+                                    facturadoMetaTextView.setPadding(18, 18, 18, 18);
+                                    facturadoMetaTextView.setText(String.valueOf(meta.getCantFacturado()));
+                                    facturadoMetaTextView.setGravity(Gravity.CENTER);
+                                    tr.addView(facturadoMetaTextView);
 
                                     //Crear y agregar TextView de Bolivares a TableRow
-                                    tbs = new TextView(mContext);
+                                    montoMetaTextView = new TextView(mContext);
                                     params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
-                                    tbs.setLayoutParams(params);
-                                    tbs.setTextColor(Color.parseColor("#262626"));
-                                    tbs.setPadding(18, 18, 18, 18);
-                                    tbs.setText(String.valueOf(meta.getValorBs()));
-                                    tbs.setGravity(Gravity.CENTER);
-                                    tr.addView(tbs);
+                                    montoMetaTextView.setLayoutParams(params);
+                                    montoMetaTextView.setTextColor(Color.parseColor("#262626"));
+                                    montoMetaTextView.setPadding(18, 18, 18, 18);
+                                    montoMetaTextView.setText(df.format(meta.getValorBs()));
+                                    montoMetaTextView.setGravity(Gravity.CENTER);
+                                    tr.addView(montoMetaTextView);
 
                                     //Añadir a TableLayout de metas
                                     tl.addView(tr, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));

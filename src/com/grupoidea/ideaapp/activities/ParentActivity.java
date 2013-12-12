@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,7 +53,10 @@ public abstract class ParentActivity extends Activity {
 	private boolean useCache;
 	/** Objecto que contiene la data consultada desde el proveedor de servicios. */
 	private Response response;
-	/**
+
+    private ParseQuery.CachePolicy parseCachePolicy;
+
+    /**
 	 * View que permite observar un mensaje mientras existe un proceso de
 	 * consulta en background.
 	 */
@@ -61,6 +65,8 @@ public abstract class ParentActivity extends Activity {
 	private RelativeLayout parentAvailableLayout;
 
     public Context instanceContext;
+
+    protected ArrayList<ParseQuery> queries;
 
 	/**
 	 * Constructor que define los atributos de carga automatica y almacenamiento
@@ -93,11 +99,15 @@ public abstract class ParentActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.parent_layout);
 
+        setParseCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+
 		loadingTextView = (TextView) findViewById(R.id.loading_text_view);
 		parentAvailableLayout = (RelativeLayout) findViewById(R.id.parent_available_layout);
 		if (autoLoad) {
 			loadData();
 		}
+
+        queries = new ArrayList<ParseQuery>();
 	}
 
 	@Override
@@ -285,7 +295,7 @@ public abstract class ParentActivity extends Activity {
 	 */
 	private void loadFromParse(ParseQuery query) {
         Log.d("DEBUG", "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
-        query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        query.setCachePolicy(getParseCachePolicy());
 		query.findInBackground(new FindCallback() {
 
 			@Override
@@ -376,4 +386,13 @@ public abstract class ParentActivity extends Activity {
 		dp = (int) ((px / displayMetrics.density) + 0.5);
 		return dp;
 	}
+
+    /** CachePolicy especificado para la aplicación */
+    public ParseQuery.CachePolicy getParseCachePolicy() {
+        return parseCachePolicy;
+    }
+
+    protected void setParseCachePolicy(ParseQuery.CachePolicy parseCachePolicy) {
+        this.parseCachePolicy = parseCachePolicy;
+    }
 }
