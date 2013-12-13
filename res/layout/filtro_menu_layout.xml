@@ -20,7 +20,8 @@
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" android:id="@+id/categorias_filtro_layout"
-                    android:focusableInTouchMode="false" android:layout_margin="16dp">
+                    android:focusableInTouchMode="false" android:layout_margin="16dp"
+                android:layout_below="@+id/marcas_filtro_layout">
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -39,7 +40,7 @@
                     android:orientation="vertical"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content" android:id="@+id/marcas_filtro_layout"
-                    android:layout_below="@+id/categorias_filtro_layout" android:layout_margin="16dp">
+                android:layout_margin="16dp">
                 <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                           android:text="@string/marcas" android:id="@+id/marcas_filtro_textView"
                           android:textColor="#FFFFFF" android:textStyle="bold|italic" android:textSize="22sp"
