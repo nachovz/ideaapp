@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
@@ -66,6 +67,8 @@ public abstract class ParentActivity extends Activity {
 
     public Context instanceContext;
 
+    public GrupoIdea app;
+
     protected ArrayList<ParseQuery> queries;
 
 	/**
@@ -84,6 +87,7 @@ public abstract class ParentActivity extends Activity {
 	public ParentActivity(boolean autoLoad, boolean useCache) {
 		this.autoLoad = autoLoad;
 		this.useCache = useCache;
+        this.app = (GrupoIdea) getApplication();
 	}
 
 	/**

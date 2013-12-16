@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
@@ -37,7 +38,6 @@ import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Categoria;
-import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.GrupoCategorias;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
@@ -60,9 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoActivity extends ParentMenuActivity {
-	/** Elemento que permite mostrar Views en forma de grid.*/
-	private GridView grid;
-	/** Cadena de texto que contiene el nombre del cliente*/
+    /** Cadena de texto que contiene el nombre del cliente*/
 	private String clienteNombre;
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
 	private static ArrayList<Producto> catalogoProductos;
@@ -78,7 +76,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     public String modificarPedidoId, modificarPedidoNum;
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
-    private String lastProdCode;
     protected ArrayList<GrupoCategorias> gruposCategorias;
     protected ArrayList<Categoria> categorias;
     protected String categoriaActual="Todas", marcaActual="Todas";
@@ -88,7 +85,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected static  Context mContext;
     protected ProgressBar descuentosProgressBar;
     public List<ParseObject> descuentosParse;
-    protected OnTouchListener gestureHandlerListener;
 
 	public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
@@ -104,14 +100,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
-        //Dialogo de carga catalogo
-        catalogoProgressDialog = new ProgressDialog(this);
-        catalogoProgressDialog.setTitle("Cargando...");
-        catalogoProgressDialog.setMessage("Cargando Catalogo, por favor espere...");
-        catalogoProgressDialog.setIndeterminate(true);
-        catalogoProgressDialog.setCancelable(true);
-//        catalogoProgressDialog.show();
-
         //Dialogo de carga carrito
         carritoProgressDialog = new ProgressDialog(this);
         carritoProgressDialog.setTitle("Cargando...");
@@ -120,11 +108,15 @@ public class CatalogoActivity extends ParentMenuActivity {
         carritoProgressDialog.setCancelable(false);
 
         //ProgressBar Descuentos
-//        descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
+        //descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
 
-        modificarPedidoId= getIntent().getExtras().getString("idPedido");
-        modificarPedidoNum= getIntent().getExtras().getString("numPedido");
-        clienteNombre= getIntent().getExtras().getString("clienteNombre");
+        modificarPedidoId = app.pedido.getObjectId();
+        modificarPedidoNum = app.pedido.getNumPedido();
+        clienteNombre = app.clienteActual.getNombre();
+
+//        modificarPedidoId= getIntent().getStringExtra("idPedido");
+//        modificarPedidoNum= getIntent().getStringExtra("numPedido");
+//        clienteNombre= getIntent().getStringExtra("clienteNombre");
 
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
@@ -199,18 +191,19 @@ public class CatalogoActivity extends ParentMenuActivity {
         descuentosProgressBar.setProgress(1);
         Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_LONG).show();
 
-        Producto producto = null;
+        GrupoIdea app = (GrupoIdea) getApplication();
+        app.productos = productos;
+        app.productosParse = productosParse;
+
+        Producto producto;
         RelativeLayout menuRight, menuLeft;
-        listCarrito = null; lastProdCode =null;
+        listCarrito = null;
 
         //Cargar productos desde Parse
         for (int i=0, size=productosParse.size(); i<size; i++) {
             ParseObject parseObject = productosParse.get(i);
             producto = retrieveProducto(parseObject, i, size);
             productos.add(producto);
-            if(i == size-1){
-                lastProdCode = producto.getCodigo();
-            }
         }
 
         //Inicializar menu izquierdo (Filtro de Marcas y Categorias)
@@ -267,7 +260,6 @@ public class CatalogoActivity extends ParentMenuActivity {
 		double precio = productoParse.getDouble("costo");
 		final String objectId = productoParse.getObjectId();
 		final Producto producto = new Producto(objectId, nombre, codigo, precio);
-        ParseQuery descuentosQuery;
 
         //Obtener Descripcion
         producto.setDescripcion(productoParse.getString("descripcion"));
@@ -385,19 +377,21 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         /* -------------- GRUPO CATEGORIAS -------------- */
         //Obtener nombre y descuentos de grupo de categorias
+        //Obtener categoria
+        ParseObject grupoParse = productoParse.getParseObject("grupo_categorias");
         if(null != productoParse.getParseObject("grupo_categorias") && null != productoParse.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
             //Revisar si grupo categorias ya existe y agregarlo al producto
-            GrupoCategorias grupo = findGrupoCategoriasByName(productoParse.getParseObject("grupo_categorias").getString("nombre"));
+            GrupoCategorias grupo = findGrupoCategoriasByName(grupoParse.getString("nombre"));
             //Si no existe crear uno nuevo y agregarlo a gruposCategorias y al producto
             if( grupo == null){
-                grupo = new GrupoCategorias(productoParse.getParseObject("grupo_categorias").getString("nombre"), productoParse.getParseObject("grupo_categorias").getJSONArray("relacionadas"));
+                grupo = new GrupoCategorias(grupoParse.getString("nombre"), grupoParse.getJSONArray("relacionadas"));
                 gruposCategorias.add(grupo);
             }
 
             //obtener descuentos por grupo de categoria
             final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
 
-            descuentos = findDescuentosByRelatedObjectId(categoriaParse.getObjectId());
+            descuentos = findDescuentosByRelatedObjectId(grupoParse.getObjectId());
             if (descuentos != null) {
                 for (int i = 0, sizeDesc = descuentos.size(); i<sizeDesc; i++) {
                     ParseObject descuento = descuentos.get(i);
@@ -501,16 +495,18 @@ public class CatalogoActivity extends ParentMenuActivity {
                         if(isExternalStorageWritable()){
                             appDir = mContext.getExternalFilesDir("img/");
                             File fileSave = new File(appDir,fileName);
-                            if(!fileSave.exists()) fileSave.createNewFile();
-                            Log.d("DEBUG", "Guardando imagen en "+ fileSave.getAbsolutePath());
-                            FileOutputStream out = new FileOutputStream(fileSave);
-                            Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
-                            bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                            out.flush();
-                            out.close();
+                            if(!fileSave.exists())
+                                if(fileSave.createNewFile()){
+                                    Log.d("DEBUG", "Guardando imagen en "+ fileSave.getAbsolutePath());
+                                    FileOutputStream out = new FileOutputStream(fileSave);
+                                    Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
+                                    bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                                    out.flush();
+                                    out.close();
+                                }
                         }else{
                             Log.d("DEBUG", "No se pudo salvar la imagen "+fileName);
-                            Toast.makeText(mContext, "No se pudo salvar la imagen "+fileName, 1000).show();
+                            Toast.makeText(mContext, "No se pudo salvar la imagen "+fileName, Toast.LENGTH_SHORT).show();
                         }
 
                         return bitmap;
@@ -520,7 +516,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     }
                 }else{
                     Log.d("DEBUG", "Tarjeta SD no disponible ");
-                    Toast.makeText(mContext, "Tarjeta SD no disponible ", 1000).show();
+                    Toast.makeText(mContext, "Tarjeta SD no disponible ", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
                 Log.e("ImageDownload Exception: ", e.getMessage());
@@ -580,16 +576,16 @@ public class CatalogoActivity extends ParentMenuActivity {
                         for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
                             //Agregar los relacionados al pedido en el carrito
                             ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
-                            for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
-                                if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getCodigo())) {
-                                    prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
-                                    Log.d("DEBUG", "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia()));
+                            for (Producto aProdsModPedido : prodsModPedido) {
+                                if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
+                                    aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
+                                    Log.d("DEBUG", "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
                                     //Agregar cantidad a existencia temporalmente
-                                    prodsModPedido.get(i).setExistencia(pedidoConProductoObj.getInt("cantidad") + prodsModPedido.get(i).getExistencia());
-                                    prodsModPedido.get(i).setIsInCarrito(true);
+                                    aProdsModPedido.setExistencia(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia());
+                                    aProdsModPedido.setIsInCarrito(true);
                                     adapterCarrito.notifyDataSetChanged();
-                                    Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
-                                    adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
+                                    Log.d("DEBUG", "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
+                                    adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                                     adapterCarrito.notifyDataSetChanged();
                                     adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                 }
@@ -627,13 +623,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                         for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
                             //Agrego los relacionados al pedido en el carrito
                             ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
-                            for (int i = 0, size = prodsModPedido.size(); i < size; i++) {
-                                if (prodAdd.get("codigo").equals(prodsModPedido.get(i).getCodigo())) {
-                                    prodsModPedido.get(i).setCantidad(pedidoConProductoObj.getInt("cantidad")+pedidoConProductoObj.getInt("excedente"));
-                                    prodsModPedido.get(i).setIsInCarrito(true);
+                            for (Producto aProdsModPedido : prodsModPedido) {
+                                if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
+                                    aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
+                                    aProdsModPedido.setIsInCarrito(true);
                                     adapterCarrito.notifyDataSetChanged();
 //                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
-                                    adapterCarrito.getCarrito().addProducto(prodsModPedido.get(i));
+                                    adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                                     adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                 }
                             }
@@ -654,36 +650,45 @@ public class CatalogoActivity extends ParentMenuActivity {
      * Accion que es llamada al hacer tap sobre el boton de siguiente en el Carrito
      */
     protected void generarFactura() {
-        //lanzar GestionPedidosActivity
-        //TODO
-        String productos = productsToJSONString();
-        if(!productos.equalsIgnoreCase("")){
+        GrupoIdea app = (GrupoIdea) getApplication();
+        app.pedido = new Pedido();
+        app.pedido.setProductos(carrito.getProductos());
+        app.pedido.setObjectId(modificarPedidoId);
+        app.pedido.setNumPedido(modificarPedidoNum);
+
+//        String productos = productsToJSONString();
+//        if(!productos.equalsIgnoreCase("")){
+        if(carrito.getProductos().size()>0){
             Bundle bundle = new Bundle();
-            bundle.putString("productos", productos);
-            Cliente clienteM;
+//            bundle.putString("productos", productos);
+//            Cliente clienteM;
             if(modificarPedidoId != null){
                 //Obtener indice de cliente
-                //Log.d("DEBUG", ""+clientes.size());
                 for(int j=0, size= clientes.size(); j<size; j++){
                     if (clientes.get(j).getNombre().equalsIgnoreCase(clienteNombre)){
                         clienteSpinner.setSelection(j);
                         clienteSelected = j;
                         clienteSpinner.setEnabled(false);
-                        Log.d("DEBUG", "cliente mod pedido: " + clienteNombre + " " + j);
+                        app.clienteActual = clientes.get(j);
                     }
                 }
-                clienteM = clientes.get(clienteSelected);
+//                clienteM = clientes.get(clienteSelected);
+                Log.d("DEBUG", "id de Pedido a modificar: " + modificarPedidoId + " #" + modificarPedidoNum + " del Cliente: " + app.clienteActual.getNombre());
             }else{
-                clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
+                app.clienteActual = clientes.get(clienteSpinner.getSelectedItemPosition());
+//                clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
+                Log.d("DEBUG", "Nuevo pedido de Cliente: " + app.clienteActual.getNombre());
             }
 
-            bundle.putString("Cliente", clienteM.getNombre());
-            bundle.putString("ClienteId", clienteM.getId());
-            bundle.putDouble("Descuento", clienteM.getDescuento());
-            bundle.putString("parseId", clienteM.getParseId());
-            bundle.putString("idPedido", modificarPedidoId);
-            bundle.putString("numPedido", modificarPedidoNum);
+//            bundle.putString("Cliente", clienteM.getNombre());
+//            bundle.putString("ClienteId", clienteM.getId());
+//            bundle.putDouble("Descuento", clienteM.getDescuento());
+//            bundle.putString("parseId", clienteM.getParseId());
+//            bundle.putString("idPedido", modificarPedidoId);
+//            bundle.putString("numPedido", modificarPedidoNum);
+
             dispatchActivity(GestionPedidosActivity.class, bundle, false);
+
         }else{
             Toast.makeText(getBaseContext(), getString(R.string.warning_agregar_elementos_carrito), Toast.LENGTH_LONG).show();
         }
@@ -707,47 +712,50 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     private void initCatalogoLayout(){
         adapterCatalogo = new BannerProductoCatalogo(this, catalogo, listCarrito);
-        grid = (GridView) this.findViewById(R.id.catalogo_grid);
+        /* Elemento que permite mostrar Views en forma de grid.*/
+        GridView grid = (GridView) this.findViewById(R.id.catalogo_grid);
 
-        if(grid != null) grid.setAdapter(adapterCatalogo);
+        if(grid != null) {
+            grid.setAdapter(adapterCatalogo);
+            grid.setOnTouchListener(new OnTouchListener() {
+                private int xDown, xUp, xDiff, yDiff, yDown, yUp;
 
-        grid.setOnTouchListener(new OnTouchListener() {
-            private int xDown, xUp, xDiff, yDiff, yDown, yUp;
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return handleGestures(event);
-            }
-
-            protected boolean handleGestures(MotionEvent event) {
-                if(event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                    xDown = (int) event.getX();
-                    yDown = (int) event.getY();
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return handleGestures(event);
                 }
-                if(event.getActionMasked() == MotionEvent.ACTION_UP) {
-                    xUp = (int) event.getX();
-                    yUp = (int) event.getY();
 
-                    xDiff = xDown - xUp;
-                    yDiff = yDown - yUp;
-                    if(Math.abs(yDiff) < 200 && Math.abs(xDiff) > 200) {
-                        if(xDiff > 0) {
-                            if(!isMenuRightShowed() && !isMenuLeftShowed()) {
-                                showRightMenu();
-                            } else if(isMenuLeftShowed()) {
-                                hideMenuLeft();
-                            }
-                        } else {
-                            if(!isMenuRightShowed() && !isMenuLeftShowed()) {
-                                showLeftMenu();
-                            } else if(isMenuRightShowed()) {
-                                hideMenuRight();
+                protected boolean handleGestures(MotionEvent event) {
+                    if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        xDown = (int) event.getX();
+                        yDown = (int) event.getY();
+                    }
+                    if (event.getActionMasked() == MotionEvent.ACTION_UP) {
+                        xUp = (int) event.getX();
+                        yUp = (int) event.getY();
+
+                        xDiff = xDown - xUp;
+                        yDiff = yDown - yUp;
+                        if (Math.abs(yDiff) < 200 && Math.abs(xDiff) > 200) {
+                            if (xDiff > 0) {
+                                if (!isMenuRightShowed() && !isMenuLeftShowed()) {
+                                    showRightMenu();
+                                } else if (isMenuLeftShowed()) {
+                                    hideMenuLeft();
+                                }
+                            } else {
+                                if (!isMenuRightShowed() && !isMenuLeftShowed()) {
+                                    showLeftMenu();
+                                } else if (isMenuRightShowed()) {
+                                    hideMenuRight();
+                                }
                             }
                         }
                     }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
 
     /**
@@ -828,7 +836,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     public static void updatePreciosComerciales(){
         Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
-        Double precio = 0.0;
+        Double precio;
         for(Producto prod: catalogo.getProductosCatalogo()){
             precio = prod.getPrecio();
             prod.setPrecioComercial(precio - (precio * descCliente));
@@ -877,7 +885,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.setPositiveButton(R.string.aceptar, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // Valor de Descuento ingresado
-                if (null != input.getText().toString() && !input.getText().toString().isEmpty()) {
+                if (input.getText() != null && !input.getText().toString().isEmpty()) {
                     Double valor = Double.parseDouble(input.getText().toString());
                     if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
                         Log.d("DEBUG", valor.toString());
@@ -886,16 +894,16 @@ public class CatalogoActivity extends ParentMenuActivity {
                             adapterCarrito.notifyDataSetChanged();
                             adapterCarrito.getCarrito().recalcularMontos();
                             setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                            Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
+                            Toast.makeText(oThis, "Descuento manual eliminado", Toast.LENGTH_LONG).show();
                         }else{
                             producto.setDescuentoManual(valor);
                             adapterCarrito.notifyDataSetChanged();
                             adapterCarrito.getCarrito().recalcularMontos();
                             setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                            Toast.makeText(oThis, "Porcentaje de descuento manual asignado", 3000).show();
+                            Toast.makeText(oThis, "Porcentaje de descuento manual asignado", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(oThis, "Porcentaje de descuento manual no valido", 3000).show();
+                        Toast.makeText(oThis, "Porcentaje de descuento manual no valido", Toast.LENGTH_LONG).show();
                         Log.d("DEBUG", "porcentaje no valido");
                     }
                 } else {
@@ -903,14 +911,14 @@ public class CatalogoActivity extends ParentMenuActivity {
                     adapterCarrito.notifyDataSetChanged();
                     adapterCarrito.getCarrito().recalcularMontos();
                     setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                    Toast.makeText(oThis, "Descuento manual eliminado", 3000).show();
+                    Toast.makeText(oThis, "Descuento manual eliminado", Toast.LENGTH_LONG).show();
                 }
             }
         })
                 .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // Dialogo cancelado
-                        Toast.makeText(oThis, "Descuento manual no establecido", 3000).show();
+                        Toast.makeText(oThis, "Descuento manual no establecido", Toast.LENGTH_LONG).show();
                     }
                 });
         builder.create();
@@ -923,19 +931,24 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     public void onClickFiltroTextView(TextView selected){
         LinearLayout parent = (LinearLayout) selected.getParent();
-        if (((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.categorias))){
-            setCategoriaActual(selected);
-            catalogo.filter(marcaActual, categoriaActual);
-            adapterCatalogo.notifyDataSetChanged();
-        }else if(((TextView)parent.getChildAt(0)).getText().equals(getString(R.string.marcas))){
-            setMarcaActual(selected);
-            catalogo.filter(marcaActual, categoriaActual);
-            adapterCatalogo.notifyDataSetChanged();
-        }
-        if(!selected.equals(parent.getChildAt(1))){
-            //actualizar estilo
-            selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
-            selected.setTextColor(Color.parseColor("#3A70B9"));
+        if (parent != null) {
+            TextView tv = (TextView)parent.getChildAt(0);
+            if (tv != null) {
+                if (getString(R.string.categorias).equals(tv.getText())){
+                    setCategoriaActual(selected);
+                    catalogo.filter(marcaActual, categoriaActual);
+                    adapterCatalogo.notifyDataSetChanged();
+                }else if(getString(R.string.marcas).equals(tv.getText())){
+                    setMarcaActual(selected);
+                    catalogo.filter(marcaActual, categoriaActual);
+                    adapterCatalogo.notifyDataSetChanged();
+                }
+            }
+            if(!selected.equals(parent.getChildAt(1))){
+                //actualizar estilo
+                selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
+                selected.setTextColor(Color.parseColor("#3A70B9"));
+            }
         }
     }
 
@@ -952,14 +965,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         ArrayList<Producto> prodsCarrito = carrito.getProductos();
 
         try {
-            for (int i = 0, count = prodsCarrito.size(); i < count; i++) {
-                productoJSONObj = prodsCarrito.get(i).toJSON();
-                Log.d("DEBUG","prod: "+prodsCarrito.get(i).getCodigo()+"cant: "+prodsCarrito.get(i).getCantidad());
-//                Log.d("DEBUG", "productoJSONObj: "+ productoJSONObj.toString(1));
+            for (Producto aProdsCarrito : prodsCarrito) {
+                productoJSONObj = aProdsCarrito.toJSON();
+                Log.d("DEBUG", "prod: " + aProdsCarrito.getCodigo() + "cant: " + aProdsCarrito.getCantidad());
                 productosJSONArray.put(productoJSONObj);
             }
             productos = productosJSONArray.toString();
-//            Log.d("DEBUG", "Result productosJSONtoString: "+productos);
             return productos;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1020,8 +1031,8 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @return Exito en la busqueda
      */
     public Boolean isInCategorias(String categoria){
-        for(int i = 0, size = categorias.size(); i<size; i++){
-            if (categoria.equalsIgnoreCase(categorias.get(i).getNombre()))  return true;
+        for (Categoria categoria1 : categorias) {
+            if (categoria.equalsIgnoreCase(categoria1.getNombre())) return true;
         }
         return false;
     }
@@ -1031,8 +1042,10 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @param selected categoria seleccionada
      */
     public void setCategoriaActual(TextView selected){
-        categoriaActual = selected.getText().toString();
-        Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
+        if(selected.getText()!= null){
+            categoriaActual = selected.getText().toString();
+            Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
+        }
     }
 
     /**
@@ -1042,8 +1055,8 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     protected Categoria findCategoriaByName(String name) {
         Categoria categoriaActual, categoriaFinal = null;
-        for (int i = 0; i < categorias.size(); i++) {
-            categoriaActual = categorias.get(i);
+        for (Categoria categoria : categorias) {
+            categoriaActual = categoria;
             if (categoriaActual != null) {
                 if (name.equalsIgnoreCase(categoriaActual.getNombre())) {
                     categoriaFinal = categoriaActual;
@@ -1107,12 +1120,12 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /**
      * Revisa si el string cat está contenido dentro de las marcas almacenadas en el servidor
-     * @param marca
-     * @return Exito en la busqueda
+     * @param marcaCheck <code>String</code> a buscar
+     * @return Resultado de la busqueda
      */
-    public Boolean isInMarcas(String marca){
-        for(int i = 0, size = marcas.size(); i<size; i++){
-            if (marca.equals(marcas.get(i)))
+    public Boolean isInMarcas(String marcaCheck){
+        for (String marca : marcas) {
+            if (marca.equals(marcaCheck))
                 return true;
         }
         return false;
@@ -1123,7 +1136,9 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @param selected marca seleccionada
      */
     protected void setMarcaActual(TextView selected){
-        marcaActual = selected.getText().toString();
+        if(selected.getText()!= null){
+            marcaActual = selected.getText().toString();
+        }
     }
 
     /*---
@@ -1144,17 +1159,14 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @return <code>GrupoCategorias</code> o <code>null</code> de no existir grupo de categorias asociado
      */
     public GrupoCategorias findGrupoCategoriasByName(String name) {
-        GrupoCategorias grupoCategoriasActual, grupoCategoriasFinal = null;
-        for (int i = 0; i < gruposCategorias.size(); i++) {
-            grupoCategoriasActual = gruposCategorias.get(i);
-            if (grupoCategoriasActual != null) {
-                if (name.equalsIgnoreCase(grupoCategoriasActual.getNombre())) {
-                    grupoCategoriasFinal = grupoCategoriasActual;
-                    break;
+        for (GrupoCategorias gruposCategoria : gruposCategorias) {
+            if (gruposCategoria != null) {
+                if (name.equalsIgnoreCase(gruposCategoria.getNombre())) {
+                    return gruposCategoria;
                 }
             }
         }
-        return grupoCategoriasFinal;
+        return null;
     }
 
     /*---

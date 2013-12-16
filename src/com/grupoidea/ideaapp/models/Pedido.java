@@ -1,5 +1,7 @@
 package com.grupoidea.ideaapp.models;
 
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -20,7 +22,10 @@ public class Pedido {
 	/** Variable para verificar el estado del pedido */
 	private int estado;
 	/** Listado de productos que se encuentran en el pedido */
-	private ArrayList<Producto> productos;
+    private ArrayList<Producto> productos;
+    private String objectId;
+    private String numPedido;
+    private ParseObject parseObject;
 	
 	public Cliente getCliente() {
 		return cliente;
@@ -52,4 +57,28 @@ public class Pedido {
 	public void setProductos(ArrayList<Producto> productos) {
 		this.productos = productos;
 	}
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
+    public String getNumPedido() {
+        return numPedido;
+    }
+
+    public void setNumPedido(String numPedido) {
+        this.numPedido = numPedido;
+    }
+
+    public ParseObject getParseObject() {
+        return parseObject;
+    }
+
+    public void setParseObject(ParseObject parseObject) {
+        this.parseObject = parseObject;
+    }
 }

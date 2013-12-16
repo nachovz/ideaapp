@@ -22,7 +22,6 @@ import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowPedido;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
-import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
@@ -179,9 +178,10 @@ public class DashboardActivity extends ParentMenuActivity {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if(e == null){
+                    app.metasParse = parseObjects;
                     Meta meta;
                     Producto producto;
-                    int facturadoMetas = 0, totalMetas = 0, pedidoMetas = 0;
+                    int facturadoMetas = 0, totalMetas = 0;
 
                     for (ParseObject parseObject: parseObjects){
                         meta = new Meta();
@@ -202,9 +202,10 @@ public class DashboardActivity extends ParentMenuActivity {
 
                         //Acumular metas y cosas
                         facturadoMetas += meta.getCantFacturado();
-                        pedidoMetas +=meta.getCantPedido();
                         totalMetas += meta.getCantMeta();
                     }
+
+                    app.metas = metas;
 
                     TextView metasTextView=(TextView)findViewById(R.id.metas_actual_textView);
                     metasTextView.setTextSize(18);
@@ -343,14 +344,6 @@ public class DashboardActivity extends ParentMenuActivity {
 
 	}
 	 
-	private Cliente retrieveCliente(ParseObject producto){
-		
-		String nombre = producto.getString("nombre");		
-		Cliente client = new Cliente(nombre);
-		
-		return client;
-	}
-	 
 	@Override
 	protected void manageResponse(Response response, boolean isLiveData) {
 	}
@@ -361,10 +354,9 @@ public class DashboardActivity extends ParentMenuActivity {
 	}
 	
 	public void createNewPedido(View view){
-		Bundle bundle;
-		bundle = new Bundle();
+		Bundle bundle = new Bundle();
+        app.pedido = null;
 		this.dispatchActivity(CatalogoActivity.class, bundle, false);
-
 	}
 
     private class ObtenerMetasTask extends AsyncTask<ParseQuery, Void, ArrayList<TableRow>> {
@@ -554,13 +546,13 @@ public class DashboardActivity extends ParentMenuActivity {
         queryIva.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseImp, ParseException e) {
-                iva = parseImp.getDouble("porcentaje")/100.0;
+                app.iva = parseImp.getDouble("porcentaje")/100.0;
             }
         });
     }
 
     public double getIva(){
-        return iva;
+        return app.iva;
     }
 
     @Override

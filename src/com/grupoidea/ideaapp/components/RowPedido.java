@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -14,13 +13,24 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.*;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DashboardActivity;
 import com.grupoidea.ideaapp.activities.ParentActivity;
+import com.grupoidea.ideaapp.activities.ParentMenuActivity;
 import com.grupoidea.ideaapp.models.Pedido;
-import com.parse.*;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -131,10 +141,16 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //Relanzar pedido como "nuevo" pedido
                                     Bundle bundle = new Bundle();
-                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
-                                    bundle.putString("idPedido", idPedido);
-                                    bundle.putString("numPedido", numPedido);
-                                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
+                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
+                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(rowClienteTextView.getText().toString());
+                                    app.pedido = new Pedido();
+                                    app.pedido.setObjectId(idPedido);
+                                    app.pedido.setNumPedido(numPedido);
+                                    app.pedido.setEstado(Pedido.ESTADO_RECHAZADO);
+//                                    bundle.putString("cliente", "" + rowClienteTextView.getText().toString());
+//                                    bundle.putString("idPedido", idPedido);
+//                                    bundle.putString("numPedido", numPedido);
+//                                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -184,10 +200,16 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
-                                    bundle.putString("idPedido", idPedido);
-                                    bundle.putString("numPedido", numPedido);
-                                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
+                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
+                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(rowClienteTextView.getText().toString());
+                                    app.pedido = new Pedido();
+                                    app.pedido.setObjectId(idPedido);
+                                    app.pedido.setNumPedido(numPedido);
+                                    app.pedido.setEstado(Pedido.ESTADO_VERIFICANDO);
+//                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
+//                                    bundle.putString("idPedido", idPedido);
+//                                    bundle.putString("numPedido", numPedido);
+//                                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -220,7 +242,10 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    bundle.putString("idPedido", idPedido);
+                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
+                                    app.pedido = new Pedido();
+                                    app.pedido.setObjectId(idPedido);
+//                                    bundle.putString("idPedido", idPedido);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -308,7 +333,10 @@ public class RowPedido extends RelativeLayout {
                             public void onClick(DialogInterface dialog, int id) {
                                 Bundle bundle;
                                 bundle = new Bundle();
-                                bundle.putString("idPedido", idPedido);
+                                GrupoIdea app = (GrupoIdea) parent.getApplication();
+                                app.pedido = new Pedido();
+                                app.pedido.setObjectId(idPedido);
+//                                bundle.putString("idPedido", idPedido);
                                 parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                             }
                         })

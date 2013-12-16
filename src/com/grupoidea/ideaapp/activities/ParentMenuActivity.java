@@ -328,6 +328,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         cliente.setId(parseObj.getString("codigo"));
                         cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
                         cliente.setParseId(parseObj.getObjectId());
+                        cliente.setClienteParse(parseObj);
                         //Almacenar clientes directamente en el adapter
                         clientes.add(cliente);
                         adapter.add(cliente.getNombre());
@@ -338,6 +339,20 @@ public abstract class ParentMenuActivity extends ParentActivity {
             }
         });
         return adapter;
+    }
+
+    public Cliente findClienteById(String objectId){
+        for(Cliente cliente:clientes){
+            if(cliente.getId().equals(objectId)) return cliente;
+        }
+        return null;
+    }
+
+    public Cliente findClienteByName(String name){
+        for(Cliente cliente:clientes){
+            if(cliente.getNombre().equals(name)) return cliente;
+        }
+        return null;
     }
 
     public ViewGroup getMenuLeft() {
