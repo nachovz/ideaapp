@@ -18,6 +18,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.RowPedido;
 import com.grupoidea.ideaapp.io.Request;
@@ -47,7 +48,6 @@ public class DashboardActivity extends ParentMenuActivity {
     private List<ParseObject> pedidos;
     private Spinner pedidosSpinner;
     private ArrayAdapter<String> pedidosSpinnerAdapter;
-    private double iva;
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     /** Lista de metas del usuario logueado */
@@ -77,6 +77,7 @@ public class DashboardActivity extends ParentMenuActivity {
         marcas = new HashSet<String>();
 		mContext = this;
 
+        app = (GrupoIdea) getApplication();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard_layout);
 
@@ -172,6 +173,7 @@ public class DashboardActivity extends ParentMenuActivity {
         ParseQuery query = new ParseQuery("Metas");
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
+        query.include("asesor");
 //        ObtenerMetasTask obtenerMetas =  new ObtenerMetasTask();
 //        obtenerMetas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
         query.findInBackground(new FindCallback() {

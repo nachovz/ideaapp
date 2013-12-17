@@ -96,6 +96,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
         mContext = getBaseContext();
         super.instanceContext = mContext;
+        app = (GrupoIdea) getApplication();
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
@@ -107,16 +108,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         carritoProgressDialog.setIndeterminate(true);
         carritoProgressDialog.setCancelable(false);
 
-        //ProgressBar Descuentos
-        //descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
-
-        modificarPedidoId = app.pedido.getObjectId();
-        modificarPedidoNum = app.pedido.getNumPedido();
-        clienteNombre = app.clienteActual.getNombre();
-
-//        modificarPedidoId= getIntent().getStringExtra("idPedido");
-//        modificarPedidoNum= getIntent().getStringExtra("numPedido");
-//        clienteNombre= getIntent().getStringExtra("clienteNombre");
+        //Obtener datos de pedido (en caso de que se esté modificando o clonando uno
+        if(app.pedido != null){
+            modificarPedidoId = app.pedido.getObjectId();
+            modificarPedidoNum = app.pedido.getNumPedido();
+            clienteNombre = app.clienteActual.getNombre();
+        }
 
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.catalogo_layout);
@@ -189,7 +186,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         descuentosProgressBar.setVisibility(View.VISIBLE);
         descuentosProgressBar.setMax(productosParse.size()*3);
         descuentosProgressBar.setProgress(1);
-        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_SHORT).show();
 
         GrupoIdea app = (GrupoIdea) getApplication();
         app.productos = productos;
@@ -260,6 +257,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		double precio = productoParse.getDouble("costo");
 		final String objectId = productoParse.getObjectId();
 		final Producto producto = new Producto(objectId, nombre, codigo, precio);
+        producto.setProductoParse(productoParse);
 
         //Obtener Descripcion
         producto.setDescripcion(productoParse.getString("descripcion"));
@@ -317,7 +315,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
             descuentosProgressBar.setVisibility(View.GONE);
             Log.d("DEBUG", "Finalizada carga de productos");
-            Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_SHORT).show();
             refresh.setClickable(true);
         }
 
@@ -562,9 +560,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Pedido Id
         final ParseQuery queryPedido = new ParseQuery("Pedido");
         queryPedido.whereEqualTo("objectId", modificarPedidoId);
+        queryPedido.include("asesor");
+        queryPedido.include("cliente");
         queryPedido.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
+                app.pedido.setParseObject(parseObject);
                 //Productos en pedido
                 final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
                 productosEnPedido.whereEqualTo("pedido", parseObject);
@@ -656,12 +657,8 @@ public class CatalogoActivity extends ParentMenuActivity {
         app.pedido.setObjectId(modificarPedidoId);
         app.pedido.setNumPedido(modificarPedidoNum);
 
-//        String productos = productsToJSONString();
-//        if(!productos.equalsIgnoreCase("")){
         if(carrito.getProductos().size()>0){
             Bundle bundle = new Bundle();
-//            bundle.putString("productos", productos);
-//            Cliente clienteM;
             if(modificarPedidoId != null){
                 //Obtener indice de cliente
                 for(int j=0, size= clientes.size(); j<size; j++){
@@ -672,20 +669,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                         app.clienteActual = clientes.get(j);
                     }
                 }
-//                clienteM = clientes.get(clienteSelected);
                 Log.d("DEBUG", "id de Pedido a modificar: " + modificarPedidoId + " #" + modificarPedidoNum + " del Cliente: " + app.clienteActual.getNombre());
             }else{
                 app.clienteActual = clientes.get(clienteSpinner.getSelectedItemPosition());
-//                clienteM = clientes.get(clienteSpinner.getSelectedItemPosition());
                 Log.d("DEBUG", "Nuevo pedido de Cliente: " + app.clienteActual.getNombre());
             }
-
-//            bundle.putString("Cliente", clienteM.getNombre());
-//            bundle.putString("ClienteId", clienteM.getId());
-//            bundle.putDouble("Descuento", clienteM.getDescuento());
-//            bundle.putString("parseId", clienteM.getParseId());
-//            bundle.putString("idPedido", modificarPedidoId);
-//            bundle.putString("numPedido", modificarPedidoNum);
 
             dispatchActivity(GestionPedidosActivity.class, bundle, false);
 

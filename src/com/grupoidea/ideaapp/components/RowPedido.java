@@ -64,6 +64,8 @@ public class RowPedido extends RelativeLayout {
 	private int estado;
     private boolean previewExists;
 
+    public GrupoIdea app;
+
 	/**
 	 * Constructor de clase RowPedido. Permite crear una fila con el
 	 * nombre del cliente (Razon Social) con la que se genero el pedido, la
@@ -82,7 +84,7 @@ public class RowPedido extends RelativeLayout {
      * @param updatedAt
      *            Fecha en que fue actualizado el pedido
 	 */
-	public RowPedido(Context contextParam, String idPedidoParam, String nombreCliente, int estadoParam, final String numPedidoParam, Date createdAt, Date updatedAt) {
+	public RowPedido(Context contextParam, String idPedidoParam, final String nombreCliente, int estadoParam, final String numPedidoParam, Date createdAt, Date updatedAt) {
 		super(contextParam);
 
         this.context = contextParam;
@@ -90,6 +92,7 @@ public class RowPedido extends RelativeLayout {
         previewExists = false;
         numPedido = numPedidoParam;
         idPedido = idPedidoParam;
+        app = (GrupoIdea) parent.getApplication();
 
 		parent = (ParentActivity) context;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -141,16 +144,11 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //Relanzar pedido como "nuevo" pedido
                                     Bundle bundle = new Bundle();
-                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
-                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(rowClienteTextView.getText().toString());
+                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(nombreCliente);
                                     app.pedido = new Pedido();
                                     app.pedido.setObjectId(idPedido);
                                     app.pedido.setNumPedido(numPedido);
                                     app.pedido.setEstado(Pedido.ESTADO_RECHAZADO);
-//                                    bundle.putString("cliente", "" + rowClienteTextView.getText().toString());
-//                                    bundle.putString("idPedido", idPedido);
-//                                    bundle.putString("numPedido", numPedido);
-//                                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -200,16 +198,11 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
-                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(rowClienteTextView.getText().toString());
+                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(nombreCliente);
                                     app.pedido = new Pedido();
                                     app.pedido.setObjectId(idPedido);
                                     app.pedido.setNumPedido(numPedido);
                                     app.pedido.setEstado(Pedido.ESTADO_VERIFICANDO);
-//                                    bundle.putString("cliente", "" + rowClienteTextView.getText());
-//                                    bundle.putString("idPedido", idPedido);
-//                                    bundle.putString("numPedido", numPedido);
-//                                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -242,7 +235,6 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    GrupoIdea app = (GrupoIdea) parent.getApplication();
                                     app.pedido = new Pedido();
                                     app.pedido.setObjectId(idPedido);
 //                                    bundle.putString("idPedido", idPedido);
@@ -333,10 +325,8 @@ public class RowPedido extends RelativeLayout {
                             public void onClick(DialogInterface dialog, int id) {
                                 Bundle bundle;
                                 bundle = new Bundle();
-                                GrupoIdea app = (GrupoIdea) parent.getApplication();
                                 app.pedido = new Pedido();
                                 app.pedido.setObjectId(idPedido);
-//                                bundle.putString("idPedido", idPedido);
                                 parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                             }
                         })
