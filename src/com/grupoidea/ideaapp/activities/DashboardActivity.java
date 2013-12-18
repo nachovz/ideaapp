@@ -96,6 +96,8 @@ public class DashboardActivity extends ParentMenuActivity {
         estados.add("ANULADO");
         estados.add("TODOS");
 
+//        clientes = app.clientes = getClientesFromParse();
+
         pedidosSpinnerAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, estados);
         pedidosSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pedidosSpinner = (Spinner)findViewById(R.id.pedidos_spinner);
@@ -138,7 +140,7 @@ public class DashboardActivity extends ParentMenuActivity {
                             for (ParseObject parseObject : pedidos) {
                                 if(parseObject.getInt("estado") == position || position == Pedido.ESTADO_TODOS){
                                     ParseObject cliente = parseObject.getParseObject("cliente");
-                                    row = new RowPedido(mContext, parseObject.getObjectId(), cliente.getString("nombre"), parseObject.getInt("estado"), parseObject.getString("num_pedido"), parseObject.getCreatedAt(), parseObject.getUpdatedAt());
+                                    row = new RowPedido(mContext, parseObject);
 
                                     if(position == Pedido.ESTADO_RECHAZADO){
                                         if(null != parseObject.getString("comentario_cambio_status")){

@@ -26,6 +26,19 @@ public class Pedido {
     private String objectId;
     private String numPedido;
     private ParseObject parseObject;
+
+    public Pedido(ParseObject parse){
+        direccion = parse.getString("direccion");
+        fechaCreado = parse.getCreatedAt();
+        estado = parse.getInt("estado");
+        objectId = parse.getObjectId();
+        numPedido = parse.getString("num_pedido");
+        parseObject = parse;
+    }
+
+    public Pedido(){
+
+    }
 	
 	public Cliente getCliente() {
 		return cliente;

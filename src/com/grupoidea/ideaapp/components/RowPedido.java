@@ -23,8 +23,7 @@ import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DashboardActivity;
-import com.grupoidea.ideaapp.activities.ParentActivity;
-import com.grupoidea.ideaapp.activities.ParentMenuActivity;
+import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
@@ -53,10 +52,12 @@ public class RowPedido extends RelativeLayout {
 
 	private TextView rowClienteTextView, rowCodPedidoTextView, rowFechaPedidoTextView;
 
-	private ParentActivity parent;
+	private DashboardActivity parent;
 	public final Context context;
 	public String idPedido;
     public String numPedido;
+    public Date createdAt, updatedAt;
+    public String nombreCliente;
     public String observacionesRechazoPedido;
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
@@ -73,28 +74,25 @@ public class RowPedido extends RelativeLayout {
 	 * 
 	 * @param contextParam
 	 *            Contexto actual de la app
-	 * @param nombreCliente
-	 *            Cadena de texto con el nombre (Razon Social) del cliente
-     * @param estadoParam
-     *            estado del pedido
-     * @param numPedidoParam
-     *            Codigo del Pedido, se muestra en la vista con el formato "#numPedidoParam"
-     * @param createdAt
-     *            Fecha en que fue creado el pedido
-     * @param updatedAt
-     *            Fecha en que fue actualizado el pedido
+	 * @param pedidoParse
+     *              ParseObject del Pedido, con el ParseObject del Cliente incluido
 	 */
-	public RowPedido(Context contextParam, String idPedidoParam, final String nombreCliente, int estadoParam, final String numPedidoParam, Date createdAt, Date updatedAt) {
+	public RowPedido(Context contextParam, final ParseObject pedidoParse) {
 		super(contextParam);
 
         this.context = contextParam;
 		LayoutInflater inflater;
         previewExists = false;
-        numPedido = numPedidoParam;
-        idPedido = idPedidoParam;
+        numPedido = pedidoParse.getString("num_pedido");
+        idPedido = pedidoParse.getObjectId();
+        createdAt = pedidoParse.getCreatedAt();
+        updatedAt = pedidoParse.getUpdatedAt();
+
+        nombreCliente = pedidoParse.getParseObject("cliente").getString("nombre");
+
+        parent = (DashboardActivity) context;
         app = (GrupoIdea) parent.getApplication();
 
-		parent = (ParentActivity) context;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		rowPedidoLayout = (RelativeLayout) inflater.inflate(R.layout.row_pedido_layout, this);
         rowPedidoLayout.setBackgroundResource(R.drawable.selector_row_pedido);
@@ -103,7 +101,7 @@ public class RowPedido extends RelativeLayout {
 		rowClienteTextView.setText(nombreCliente);
 
         rowCodPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_num_pedido_textview);
-        rowCodPedidoTextView.setText("   #" + numPedidoParam);
+        rowCodPedidoTextView.setText("   #" + numPedido);
 
         //Mostrar fechas de creacion y de actualizacion del pedido
         rowFechaPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_pedido_date_textview);
@@ -115,8 +113,8 @@ public class RowPedido extends RelativeLayout {
 
         //Status de Pedido
 		rowStatusLayout = (FrameLayout) rowPedidoLayout.findViewById(R.id.cliente_pedido_status_layout);
-		estado = estadoParam;
-		this.setEstado(estado);
+		estado = pedidoParse.getInt("estado");
+		this.setEstadoString(estado);
 
 
         /**
@@ -144,11 +142,8 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //Relanzar pedido como "nuevo" pedido
                                     Bundle bundle = new Bundle();
-                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(nombreCliente);
-                                    app.pedido = new Pedido();
-                                    app.pedido.setObjectId(idPedido);
-                                    app.pedido.setNumPedido(numPedido);
-                                    app.pedido.setEstado(Pedido.ESTADO_RECHAZADO);
+                                    app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
+                                    app.pedido = new Pedido(pedidoParse);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -198,11 +193,8 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    app.clienteActual = ((ParentMenuActivity)parent).findClienteByName(nombreCliente);
-                                    app.pedido = new Pedido();
-                                    app.pedido.setObjectId(idPedido);
-                                    app.pedido.setNumPedido(numPedido);
-                                    app.pedido.setEstado(Pedido.ESTADO_VERIFICANDO);
+                                    app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
+                                    app.pedido = new Pedido(pedidoParse);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -235,9 +227,7 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    app.pedido = new Pedido();
-                                    app.pedido.setObjectId(idPedido);
-//                                    bundle.putString("idPedido", idPedido);
+                                    app.pedido = new Pedido(pedidoParse);
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -298,7 +288,7 @@ public class RowPedido extends RelativeLayout {
                                     productosPedidoView = inflater.inflate(R.layout.pedido_aprobado_preview_layout, null, false);
                                     builder.setView(productosPedidoView);
                                     final AlertDialog alert = builder.create();
-                                    setPreview(productosPedido, numPedidoParam);
+                                    setPreview(productosPedido, numPedido);
                                     alertProgress.dismiss();
                                     alert.show();
                                 }
@@ -325,8 +315,7 @@ public class RowPedido extends RelativeLayout {
                             public void onClick(DialogInterface dialog, int id) {
                                 Bundle bundle;
                                 bundle = new Bundle();
-                                app.pedido = new Pedido();
-                                app.pedido.setObjectId(idPedido);
+                                app.pedido = new Pedido(pedidoParse);
                                 parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                             }
                         })
@@ -386,7 +375,7 @@ public class RowPedido extends RelativeLayout {
 	 * Permite colocar la etiqueta del estado para el pedido actual. Esta funcion sobreescribe el estado anterior.
 	 * @param estado Valor del Estado en <code>Pedido.ESTADO_*</code>
 	 */
-	public void setEstado(int estado) {
+	public void setEstadoString(int estado) {
 		String estadoString;
 		switch (estado) {
 		case Pedido.ESTADO_VERIFICANDO:

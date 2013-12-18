@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.parse.FindCallback;
@@ -88,6 +89,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 
 		menuRightShowed = false;
 		menuLeftShowed = false;
+        app = (GrupoIdea) getApplication();
 		
 		menuTituloTextView = (TextView) findViewById(R.id.menu_titulo_text_view);
         refresh = (ImageView) findViewById(R.id.menu_refresh_image_view);
@@ -314,10 +316,21 @@ public abstract class ParentMenuActivity extends ParentActivity {
      * Obtener Clientes desde Parse y almacenarlos en un ArrayAdapter
      * @return ArrayAdapter con los nombres de clientes
      */
-    public ArrayAdapter<String> getClientesFromParse(){
-        ParseQuery query = new ParseQuery("Cliente");
+    public ArrayAdapter<String> getClientesAdapterFromParse(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        clientes = getClientesFromParse();
+        adapter.addAll(String.valueOf(clientes));
+        return adapter;
+    }
+
+    /**
+     * Obtiene los Clientes desde Parse y los almacena en <code>Application</code>
+     * @return <code>ArrayList</code> de clientes obtenidos desde Parse insanciados como <code>Cliente</code>
+     */
+    public ArrayList<Cliente> getClientesFromParse(){
         clientes = new ArrayList<Cliente>();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        ParseQuery query = new ParseQuery("Cliente");
+        query.setCachePolicy(getParseCachePolicy());
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> listaClientes, ParseException e) {
                 Cliente cliente;
@@ -325,34 +338,20 @@ public abstract class ParentMenuActivity extends ParentActivity {
                     Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
                     for (ParseObject parseObj:listaClientes){
                         cliente = new Cliente(parseObj.getString("nombre"));
-                        cliente.setId(parseObj.getString("codigo"));
+                        cliente.setCodigo(parseObj.getString("codigo"));
                         cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
                         cliente.setParseId(parseObj.getObjectId());
                         cliente.setClienteParse(parseObj);
                         //Almacenar clientes directamente en el adapter
                         clientes.add(cliente);
-                        adapter.add(cliente.getNombre());
                     }
                 } else {
                     Log.d("DEBUG", "Error: " + e.getMessage());
                 }
             }
         });
-        return adapter;
-    }
-
-    public Cliente findClienteById(String objectId){
-        for(Cliente cliente:clientes){
-            if(cliente.getId().equals(objectId)) return cliente;
-        }
-        return null;
-    }
-
-    public Cliente findClienteByName(String name){
-        for(Cliente cliente:clientes){
-            if(cliente.getNombre().equals(name)) return cliente;
-        }
-        return null;
+        app.clientes = clientes;
+        return clientes;
     }
 
     public ViewGroup getMenuLeft() {

@@ -119,7 +119,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 		setContentView(R.layout.catalogo_layout);
 
         //Poblar Spinner de Clientes e inflar
-        adapter = getClientesFromParse();
+        adapter = getClientesAdapterFromParse();
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         clienteSpinner.setAdapter(adapter);
         clienteSpinner.setEnabled(true);
@@ -555,6 +555,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     private void editarPedido(ArrayList<Producto> productos) {
         Log.d("DEBUG", "Modificar Pedido " + modificarPedidoId);
         carritoProgressDialog.show();
+        //TODO Ver si se puede optimizar esto
         clienteSpinner.setVisibility(View.INVISIBLE);
         final ArrayList<Producto> prodsModPedido=productos;
         //Pedido Id
@@ -652,10 +653,8 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     protected void generarFactura() {
         GrupoIdea app = (GrupoIdea) getApplication();
-        app.pedido = new Pedido();
+        if(app.pedido == null)  app.pedido = new Pedido();
         app.pedido.setProductos(carrito.getProductos());
-        app.pedido.setObjectId(modificarPedidoId);
-        app.pedido.setNumPedido(modificarPedidoNum);
 
         if(carrito.getProductos().size()>0){
             Bundle bundle = new Bundle();

@@ -29,6 +29,8 @@ public class GrupoIdea extends Application {
     public Cliente clienteActual;
     public double iva;
 
+    public ArrayList<Cliente> clientes;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();

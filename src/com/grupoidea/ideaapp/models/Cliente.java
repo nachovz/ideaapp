@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Cliente {
 	/** Cadena de texto que contiene el nombre del cliente.*/
 	private String nombre;
-    private String id;
+    private String codigo;
     private double descuento;
     private String parseId;
     private ParseObject clienteParse;
@@ -17,6 +17,14 @@ public class Cliente {
 	public Cliente(String nombre) {
 		this.nombre = nombre;
 	}
+
+    public Cliente(ParseObject parseObject){
+        this(parseObject.getString("nombre"));
+        clienteParse = parseObject;
+        parseId = parseObject.getObjectId();
+        codigo = parseObject.getString("codigo");
+        descuento = parseObject.getDouble("descuentoComercial");
+    }
 	
 	public String getNombre() {
 		return nombre;
@@ -31,12 +39,12 @@ public class Cliente {
 		this.marcas = marcas;
 	}
 
-    public String getId() {
-        return id;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public double getDescuento() {
@@ -61,5 +69,10 @@ public class Cliente {
 
     public void setClienteParse(ParseObject clienteParse) {
         this.clienteParse = clienteParse;
+    }
+
+    @Override
+    public String toString(){
+        return nombre;
     }
 }
