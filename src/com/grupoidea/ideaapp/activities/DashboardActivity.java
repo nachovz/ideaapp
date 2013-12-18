@@ -97,6 +97,9 @@ public class DashboardActivity extends ParentMenuActivity {
         estados.add("TODOS");
 
 //        clientes = app.clientes = getClientesFromParse();
+		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
+        clienteSpinner.setEnabled(false);
+        clienteSpinner.setVisibility(View.INVISIBLE);
 
         pedidosSpinnerAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, estados);
         pedidosSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

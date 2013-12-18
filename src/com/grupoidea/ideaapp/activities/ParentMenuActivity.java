@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -90,6 +89,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuRightShowed = false;
 		menuLeftShowed = false;
         app = (GrupoIdea) getApplication();
+//        app.clientes = getClientesFromParse();
 		
 		menuTituloTextView = (TextView) findViewById(R.id.menu_titulo_text_view);
         refresh = (ImageView) findViewById(R.id.menu_refresh_image_view);
@@ -97,21 +97,21 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 
-        //Poblar Spinner de Clientes e inflar
+//        //Poblar Spinner de Clientes e inflar
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         clienteSpinner.setEnabled(false);
         clienteSpinner.setVisibility(View.INVISIBLE);
-        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                clienteSelected=i;
-                Log.d("DEBUG", "Cliente seleccionado: "+i);
-                CatalogoActivity.updatePreciosComerciales();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
+//        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                clienteSelected=i;
+//                Log.d("DEBUG", "Cliente seleccionado: "+i);
+//                CatalogoActivity.updatePreciosComerciales();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {}
+//        });
 
         frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 
@@ -313,22 +313,12 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	}
 
     /**
-     * Obtener Clientes desde Parse y almacenarlos en un ArrayAdapter
-     * @return ArrayAdapter con los nombres de clientes
-     */
-    public ArrayAdapter<String> getClientesAdapterFromParse(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-        clientes = getClientesFromParse();
-        adapter.addAll(String.valueOf(clientes));
-        return adapter;
-    }
-
-    /**
      * Obtiene los Clientes desde Parse y los almacena en <code>Application</code>
      * @return <code>ArrayList</code> de clientes obtenidos desde Parse insanciados como <code>Cliente</code>
      */
     public ArrayList<Cliente> getClientesFromParse(){
         clientes = new ArrayList<Cliente>();
+        adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item);
         ParseQuery query = new ParseQuery("Cliente");
         query.setCachePolicy(getParseCachePolicy());
         query.findInBackground(new FindCallback() {
@@ -344,13 +334,13 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         cliente.setClienteParse(parseObj);
                         //Almacenar clientes directamente en el adapter
                         clientes.add(cliente);
+                        adapter.add(cliente.getNombre());
                     }
                 } else {
                     Log.d("DEBUG", "Error: " + e.getMessage());
                 }
             }
         });
-        app.clientes = clientes;
         return clientes;
     }
 

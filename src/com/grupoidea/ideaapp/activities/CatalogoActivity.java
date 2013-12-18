@@ -98,6 +98,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         mContext = getBaseContext();
         super.instanceContext = mContext;
         app = (GrupoIdea) getApplication();
+        app.clientes = getClientesFromParse();
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
@@ -120,13 +121,11 @@ public class CatalogoActivity extends ParentMenuActivity {
 		setContentView(R.layout.catalogo_layout);
 
         //Poblar Spinner de Clientes e inflar
-        adapter = getClientesAdapterFromParse();
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         clienteSpinner.setAdapter(adapter);
         clienteSpinner.setEnabled(true);
         clienteSpinner.setVisibility(View.VISIBLE);
         clienteSpinner.setSelection(0);
-        clienteSelected=0;
+        clienteSelected = 0;
         clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -1210,4 +1209,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     * FIN DESCUENTOS
     * ---------------
     * ---*/
-}
+
+
+ }
