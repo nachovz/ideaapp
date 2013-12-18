@@ -2,14 +2,16 @@ package com.grupoidea.ideaapp.activities;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
+import com.grupoidea.ideaapp.models.Producto;
 
 public class DetalleProductoActivity extends ParentMenuActivity {
 	/** Cadena de texto que contiene el codigo del producto a detallar*/
@@ -18,6 +20,8 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 	private String precio;
 	/** Imagen del producto a detallar*/
 	private Bitmap bitmap;
+
+    private GrupoIdea app;
 
     private String descripcion, excedente, meta, categoria, grupo, marca;
 	
@@ -34,16 +38,46 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.detalle_producto_layout);
-        codigo = getIntent().getExtras().getString("codigo");
-        marca = getIntent().getExtras().getString("marca");
-		precio = getIntent().getExtras().getString("precio");
-        bitmap = getIntent().getExtras().getParcelable("bitmap");
-        categoria = getIntent().getExtras().getString("categoria");
-        grupo = getIntent().getExtras().getString("grupo");
-        meta = getIntent().getExtras().getString("meta");
-        excedente = getIntent().getExtras().getString("excedente");
-        descripcion = getIntent().getExtras().getString("descripcion");
+        app = (GrupoIdea) getApplication();
+        int position = getIntent().getIntExtra("position", 0);
+        Producto prod = app.productos.get(position);
 
+        Log.d("DEBUG","-----------------------------------------------------");
+        Log.d("DEBUG", "-- Detalle de Producto --");
+        //Codigo
+        codigo = prod.getCodigo();
+        Log.d("DEBUG","Codigo: "+codigo);
+
+        //Marca
+        marca = prod.getMarca();
+        Log.d("DEBUG","Marca: "+marca);
+
+        //Precio
+        precio = prod.getPrecioComercialSinIvaConIvaString();
+        Log.d("DEBUG","Precio: "+precio);
+
+        //Imagen
+        bitmap = prod.getImagen();
+
+        //Categoria
+        categoria = (null != prod.getCategoria().getNombre())? prod.getCategoria().getNombre() : "-";
+        Log.d("DEBUG","Categoria: "+categoria);
+
+        //Grupo
+        grupo = (null != prod.getNombreGrupoCategorias())? prod.getNombreGrupoCategorias() : "-";
+        Log.d("DEBUG","Grupo: "+grupo);
+
+        //Meta
+        meta = String.valueOf(prod.getExistencia());
+        Log.d("DEBUG","Meta: "+meta);
+
+        //Excedente
+        excedente = String.valueOf(prod.getExcedente());
+        Log.d("DEBUG","Excedente: "+excedente);
+
+        //Descripcion
+        descripcion = (null != prod.getDescripcion())? prod.getDescripcion() : "-";
+        Log.d("DEBUG","Descripcion: "+descripcion);
 
         parentInflater = (RelativeLayout) findViewById(R.id.detalle_producto_image_zone);
         if(parentInflater != null) {
@@ -61,11 +95,7 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 
             //Imagen
             imageView = (ImageView) findViewById(R.id.producto_imageView);
-//            if(null != bitmap){
-                imageView.setImageBitmap(bitmap);
-//            }else{
-//                imageView.setImageResource(R.drawable.prod_background);
-//            }
+            imageView.setImageBitmap(bitmap);
 
             //Categoria
             textView = (TextView) findViewById(R.id.categoria_textView);

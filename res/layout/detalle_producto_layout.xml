@@ -99,7 +99,7 @@
 
         <LinearLayout
             android:id="@+id/detalle_producto_inflated"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_below="@+id/detalle_producto_image_zone"
@@ -131,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/categoria_label"
                         android:id="@+id/categorias_label_textView"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label"
                         android:textStyle="bold|italic"
                         android:textSize="18sp" />
@@ -154,7 +154,7 @@
                         android:textAppearance="@style/detalle_producto.label"
                         android:text="@string/grupo_categorias_label"
                         android:id="@+id/grupo_categorias_label_textView"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:textStyle="bold|italic"
                         android:textSize="18sp" />
 
@@ -163,8 +163,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         android:id="@+id/grupo_categorias_textView"
-                        android:layout_weight="2"
-                        style="@style/detalle_producto.desc" />
+                        style="@style/detalle_producto.desc"
+                        android:layout_weight="2" />
                 </TableRow>
 
                 <TableRow
@@ -179,7 +179,7 @@
                         android:id="@+id/meta_label_textView"
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label" />
 
                     <TextView
@@ -203,7 +203,7 @@
                         android:id="@+id/excedente_label_textView"
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label" />
 
                     <TextView
@@ -226,14 +226,21 @@
                         android:id="@+id/descripcion_label_textView"
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
-                        android:layout_weight="1"
+                        android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label" />
+
                 </TableRow>
+
+            </TableLayout>
+
+            <TableLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/desc_prod_only_tableLayout">
 
                 <TableRow
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.dark">
+                    android:layout_height="fill_parent">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -241,9 +248,12 @@
                         android:id="@+id/descripcion_textView"
                         style="@style/detalle_producto.desc"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp" />
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="2" />
+
                 </TableRow>
             </TableLayout>
+
         </LinearLayout>
 
     </RelativeLayout>

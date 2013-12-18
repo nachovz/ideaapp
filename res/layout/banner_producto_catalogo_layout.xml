@@ -25,34 +25,33 @@
 	            android:scaleType="fitCenter"
 	            android:src="@drawable/prod_background" />
 
-            <ImageView
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:id="@+id/banner_producto_titulo_marca_linearLayout">
+
+                <TextView
+                    android:id="@+id/banner_producto_titulo_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imageView" android:background="@drawable/marca_img_bannerproducto"
-                    android:layout_below="@+id/banner_producto_tittle_image_view"
-                    android:layout_alignLeft="@+id/banner_producto_tittle_image_view"/>
-            <ImageView
-	            android:id="@+id/banner_producto_tittle_image_view"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="2dp"
-	            android:src="@drawable/client_img_bannerproducto" />
-	
-	        <TextView
-	            android:id="@+id/banner_producto_titulo_text_view"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="7dp"
-	            android:layout_marginTop="10dp"
-	            android:text="@string/nombre_producto_label"
-	            android:textColor="#ffffff"
-	            android:textSize="16sp"
-	            android:textStyle="bold|italic"/>
+                    android:text="@string/nombre_producto_label"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"
+                    android:textStyle="bold|italic"
+                    android:background="@drawable/client_img_bannerproducto"
+                    android:padding="8dp" />
 
-            <TextView android:id="@+id/banner_producto_marca_textView" android:layout_width="wrap_content"
-                      android:layout_height="wrap_content" android:layout_marginLeft="7dp"
-                      android:layout_marginTop="50dp" android:text="@string/nombre_producto_label" android:textColor="#ffffff"
-                      android:textSize="16sp" android:textStyle="bold|italic"/>
+                <TextView android:id="@+id/banner_producto_marca_textView" android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                    android:text="@string/nombre_producto_label" android:textColor="#ffffff"
+                          android:textSize="16sp" android:textStyle="bold|italic"
+                    android:layout_below="@+id/banner_producto_titulo_text_view"
+                    android:background="@drawable/marca_img_bannerproducto"
+                    android:padding="8dp" />
+            </LinearLayout>
+
             <ImageView
 	            android:id="@+id/banner_producto_menu_image_view"
 	            android:layout_width="wrap_content"

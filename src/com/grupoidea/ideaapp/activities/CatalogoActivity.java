@@ -85,6 +85,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected static  Context mContext;
     protected ProgressBar descuentosProgressBar;
     public List<ParseObject> descuentosParse;
+    protected static GrupoIdea app;
 
 	public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
@@ -822,7 +823,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      * Procedimiento que actualiza los precios comerciales de los productos del catalogo con respecto al cliente seleccionado
      */
     public static void updatePreciosComerciales(){
-        Double descCliente = clientes.get(clienteSelected).getDescuento()/100.0;
+        Double descCliente = app.clientes.get(clienteSelected).getDescuento()/100.0;
         Double precio;
         for(Producto prod: catalogo.getProductosCatalogo()){
             precio = prod.getPrecio();

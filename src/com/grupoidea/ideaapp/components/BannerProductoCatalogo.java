@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +38,6 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
     private Catalogo catalogo;
 	/** ViewGroup que permite mostrar el menu del producto.*/
     private LinearLayout menu;
-    private PopupMenu popup;
-    private ScrollView menuScroll;
 	protected Producto producto;
 	private BannerProductoCatalogo catalogoAdapter;
 	private Context mContext;
@@ -195,23 +192,14 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             }
 
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
-			imageView = (ImageView) view.findViewById(R.id.banner_producto_tittle_image_view);
-			imageView.setOnClickListener(new OnClickListener() {
+			View title = view.findViewById(R.id.banner_producto_titulo_marca_linearLayout);
+			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					Producto producto;
-					producto = catalogo.getProductosCatalogo().get(position);
-					
+
+                    //Colocar posicion en el Bundle
 					Bundle extras = new Bundle();
-                    extras.putString("codigo",producto.getCodigo());
-                    extras.putString("marca",producto.getMarca());
-					extras.putString("precio", producto.getPrecioComercialSinIvaConIvaString());
-					extras.putParcelable("bitmap", producto.getImagen());
-                    extras.putString("categoria", producto.getNombreCategoria());
-                    extras.putString("grupo", producto.getNombreGrupoCategorias());
-                    extras.putString("meta", String.valueOf(producto.getExistencia()));
-                    extras.putString("excedente", String.valueOf(producto.getExcedente()));
-                    extras.putString("descripcion", producto.getDescripcion());
+                    extras.putInt("position", position);
 					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
 				}
 			});
