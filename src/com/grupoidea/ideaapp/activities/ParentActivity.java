@@ -136,10 +136,10 @@ public abstract class ParentActivity extends Activity {
         Log.d("DEBUG", "Cargando Data");
 		Request request = getRequestAction();
 
-		if (useCache) {
-            Log.d("DEBUG", "useCache: true");
-			loadFromCache();
-		}
+//		if (useCache) {
+//            Log.d("DEBUG", "useCache: true");
+//			loadFromCache();
+//		}
 
 		if (request != null) {
 			loadingTextView.setText(getString(R.string.cargando));
@@ -200,10 +200,8 @@ public abstract class ParentActivity extends Activity {
                 is.close();
                 fis.close();
 
-
-//                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
                 Log.d("DEBUG", "loadFromCache cached result?  "+String.valueOf(query.hasCachedResult()));
-                query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+                query.setCachePolicy(getParseCachePolicy());
                 query.findInBackground(new FindCallback() {
                     @Override
                     public void done(List<ParseObject> parseData, ParseException e) {
@@ -213,9 +211,9 @@ public abstract class ParentActivity extends Activity {
                             response.setResponse(parseData);
                             manageResponse(response, true);
 
-                            if (useCache) {
-                                setCache(response);
-                            }
+//                            if (useCache) {
+//                                setCache(response);
+//                            }
 
                             loadingTextView.setText(getString(R.string.end_cargando));
                         }
@@ -309,10 +307,6 @@ public abstract class ParentActivity extends Activity {
 						response = new Response();
 						response.setResponse(parseData);
 						manageResponse(response, true);
-
-//						if (useCache) {
-//							setCache(response);
-//						}
 
 						loadingTextView.setText(getString(R.string.end_cargando));
 					}

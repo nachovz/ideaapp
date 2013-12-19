@@ -112,7 +112,7 @@ public class DashboardActivity extends ParentMenuActivity {
         //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
         ParseQuery queryPedidos = new ParseQuery("Pedido");
-        queryPedidos.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        queryPedidos.setCachePolicy(getParseCachePolicy());
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
         queryPedidos.orderByAscending("estado");
@@ -176,6 +176,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
         //Carga de metas
         ParseQuery query = new ParseQuery("Metas");
+        query.setCachePolicy(getParseCachePolicy());
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
         query.include("asesor");
@@ -549,6 +550,7 @@ public class DashboardActivity extends ParentMenuActivity {
     private void getIVAFromParse(){
         //Obtener IVA desde Parse
         ParseQuery queryIva = new ParseQuery("Impuestos");
+        queryIva.setCachePolicy(getParseCachePolicy());
         queryIva.whereEqualTo("nombre","IVA");
         queryIva.getFirstInBackground(new GetCallback() {
             @Override

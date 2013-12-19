@@ -166,6 +166,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         Request req = new Request(Request.PARSE_REQUEST);
         ParseQuery query = new ParseQuery("Producto");
         query.include("categoria");
+        query.setCachePolicy(getParseCachePolicy());
         query.include("iva");
         query.include("grupo_categorias");
         query.orderByAscending("marca");
