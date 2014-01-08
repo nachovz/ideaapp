@@ -143,4 +143,9 @@ public class Categoria {
     public double getDescActual() {
         return descActual;
     }
+
+    @Override
+    public String toString(){
+        return nombre;
+    }
 }

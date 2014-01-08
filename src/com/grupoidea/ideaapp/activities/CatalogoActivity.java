@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,10 +18,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -33,12 +30,15 @@ import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.components.BannerProductoCarrito;
 import com.grupoidea.ideaapp.components.BannerProductoCatalogo;
+import com.grupoidea.ideaapp.components.CategoriasAdapter;
+import com.grupoidea.ideaapp.components.MarcasAdapter;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Categoria;
 import com.grupoidea.ideaapp.models.GrupoCategorias;
+import com.grupoidea.ideaapp.models.Marca;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.FindCallback;
@@ -47,10 +47,6 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,7 +61,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
 	private static ArrayList<Producto> catalogoProductos;
     /** Objeto que representa al catalogo.*/
-    private static Catalogo catalogo;
+    public static Catalogo catalogo;
 	/** Objeto que representa al carrito de compras del catalogo.*/
 	private Carrito carrito;
     private ListView listCarrito;
@@ -78,10 +74,12 @@ public class CatalogoActivity extends ParentMenuActivity {
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
     protected ArrayList<GrupoCategorias> gruposCategorias;
     protected ArrayList<Categoria> categorias;
-    protected String categoriaActual="Todas", marcaActual="Todas";
+//    protected String categoriaActual="Todas", marcaActual="Todas";
     protected static ArrayList<String> marcas;
-    protected static ArrayAdapter marcasAdapter, categoriasAdapter;
-    protected LinearLayout categoriasFiltro, marcasFiltro;
+    protected static MarcasAdapter marcasAdapter;
+    protected static CategoriasAdapter categoriasAdapter;
+    public ListView categoriasFiltro;
+    public ListView marcasFiltro;
     protected static  Context mContext;
     protected ProgressBar descuentosProgressBar;
     public List<ParseObject> descuentosParse;
@@ -140,8 +138,11 @@ public class CatalogoActivity extends ParentMenuActivity {
         });
 
         marcas = new ArrayList<String>();
-        categoriaActual = getString(R.string.todas);
-        marcaActual = getString(R.string.todas);
+        categoriasAdapter = new CategoriasAdapter(mContext);
+        marcasAdapter = new MarcasAdapter(mContext, categoriasAdapter);
+        categoriasAdapter.setMarcasAdapter(marcasAdapter);
+//        categoriaActual = getString(R.string.todas);
+//        marcaActual = getString(R.string.todas);
 	}
 
     @Override
@@ -234,6 +235,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
 
         catalogo = new Catalogo(this, productos);
+        marcasAdapter.setCatalogo(catalogo);
 
         if(listCarrito != null) {
             initCatalogoLayout();
@@ -248,8 +250,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /**
      * Instanciar nuevo producto en base a un ParseObject
-     * @param productoParse producto obtenido de Parse
-     * @return Instancia de Clase Producto
+     * @param productoParse {@link com.parse.ParseObject} del producto, obtenido desde Parse
+     * @return Instancia de {@link Producto}
      */
 	private Producto retrieveProducto(final ParseObject productoParse, final int pos, final int size){
         final boolean[] prodDone = {false}, catDone={false}, groupDone = {false};
@@ -294,7 +296,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Asignar marca
         producto.setMarca(productoParse.getString("marca"));
         //agregar marca a filtro de catalogo
-        addMarcaTextView(productoParse.getString("marca"));
+        Marca marca = marcasAdapter.addMarca(productoParse.getString("marca"));
 
         /*-------------- PRODUCTOS -------------- */
         //Obtener descuentos por producto
@@ -337,7 +339,13 @@ public class CatalogoActivity extends ParentMenuActivity {
                 categoria = new Categoria(categoriaParse.getString("nombre"));
             }
 
-            addCategoriaTextView(categoria);
+            //Agregar Categoria a Marca
+            if(!marca.findCategoria(categoria.getNombre()))
+                marca.addCategoria(categoria);
+            //Agregar Categoria a Todas
+            if(!marcasAdapter.todas.findCategoria(categoria.getNombre()))
+                marcasAdapter.todas.addCategoria(categoria);
+                marcasAdapter.notifyDataSetChanged();
 
             //Obtener descuentos por categoria
             final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
@@ -401,6 +409,8 @@ public class CatalogoActivity extends ParentMenuActivity {
                         Log.d("DEBUG", "Finalizada carga de productos");
                         Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                         refresh.setClickable(true);
+                        marcasAdapter.notifyDataSetChanged();
+                        categoriasAdapter.notifyDataSetChanged();
                     }
                 }
             }else{
@@ -417,6 +427,8 @@ public class CatalogoActivity extends ParentMenuActivity {
                 Log.d("DEBUG", "Finalizada carga de productos");
                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
+                marcasAdapter.notifyDataSetChanged();
+                categoriasAdapter.notifyDataSetChanged();
             }
 
             //Verificar y Notificar Carga Completa de Productos
@@ -442,6 +454,8 @@ public class CatalogoActivity extends ParentMenuActivity {
                 Log.d("DEBUG", "Finalizada carga de productos");
                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
+                marcasAdapter.notifyDataSetChanged();
+                categoriasAdapter.notifyDataSetChanged();
             }else{
                 Log.d("DEBUG","pasando por producto "+producto.getCodigo());
             }
@@ -451,16 +465,21 @@ public class CatalogoActivity extends ParentMenuActivity {
         return producto;
 	}
 
-    public void retrieveImage(Producto prod, ParseObject producto){
+    /**
+     * Metodo invocado para obtener las imágenes de los productos desde el servidor de IDEA
+     * @param producto {@link com.grupoidea.ideaapp.models.Producto} Instancia local del producto
+     * @param productoParse {@link ParseObject} del producto obtenido desde Parse
+     */
+    public void retrieveImage(Producto producto, ParseObject productoParse){
         //Obtener imagen
-        if(producto.getString("picture")!= null && !producto.getString("picture").isEmpty()){
-            ImageDownloadTask imgDownloader = new ImageDownloadTask(prod);
-            imgDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,producto.getString("picture"));
+        if(productoParse.getString("picture")!= null && !productoParse.getString("picture").isEmpty()){
+            ImageDownloadTask imgDownloader = new ImageDownloadTask(producto);
+            imgDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,productoParse.getString("picture"));
         }
     }
 
     /**
-     * Clase AsyncTask que se encarga de descargar las imagenes de los productos del catalogo
+     * AsyncTask que se encarga de descargar las imagenes de los productos del catalogo
      */
     public class ImageDownloadTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<Producto> productoWeakReference;
@@ -553,6 +572,10 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---------------
     * ---*/
 
+    /**
+     * Metodo llamado al haber seleccionado un pedido para editar desde el Dashboard
+     * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
+     */
     private void editarPedido(ArrayList<Producto> productos) {
         Log.d("DEBUG", "Modificar Pedido " + modificarPedidoId);
         carritoProgressDialog.show();
@@ -605,6 +628,10 @@ public class CatalogoActivity extends ParentMenuActivity {
         adapterCarrito.showCarrito();
     }
 
+    /**
+     * Metodo llamado al haber seleccionado crear un nuevo pedido a partir de uno existente desde el Dashboard
+     * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
+     */
     private void clonarPedido(ArrayList<Producto> productos) {
         Log.d("DEBUG", "Clonar Pedido " + modificarPedidoId);
         final ArrayList<Producto> prodsModPedido=productos;
@@ -650,7 +677,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     }
 
     /**
-     * Accion que es llamada al hacer tap sobre el boton de siguiente en el Carrito
+     * Accion que es llamada al hacer tap sobre el total del Carrito
      */
     protected void generarFactura() {
         GrupoIdea app = (GrupoIdea) getApplication();
@@ -688,7 +715,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---------------
     * ---*/
 
-
     /*---
     * ---------------
     * LAYOUT
@@ -700,6 +726,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     private void initCatalogoLayout(){
         adapterCatalogo = new BannerProductoCatalogo(this, catalogo, listCarrito);
+        marcasAdapter.setAdapterCatalogo(adapterCatalogo);
         /* Elemento que permite mostrar Views en forma de grid.*/
         GridView grid = (GridView) this.findViewById(R.id.catalogo_grid);
 
@@ -750,49 +777,21 @@ public class CatalogoActivity extends ParentMenuActivity {
      * Metodo que inicializa el layout para el menú izquierdo o filtro de categorias
      */
     private void initMenuLeft() {
-        categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
-        View child = categoriasFiltro.getChildAt(1);
-        if(child!= null){
-            child.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //poner todos los views en default
-                    TextView item;
-                    for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
-                        item = (TextView) categoriasFiltro.getChildAt(i);
-                        if (item != null) {
-                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-                            item.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-                    }
-                    //aplicar item seleccionado de filtro
-                    onClickFiltroTextView((TextView) v);
-                }
-            });
-        }
+        //Filtro Categorias
+        categoriasFiltro = (ListView) findViewById(R.id.categorias_filtro_listView);
+        categoriasFiltro.setAdapter(categoriasAdapter);
+        categoriasAdapter.setCategoriasListView(categoriasFiltro);
+//        categoriasFiltro.setSelection(0);
+//        categoriasAdapter.notifyDataSetInvalidated();
+        categoriasAdapter.notifyDataSetChanged();
 
-        //onClick en Marcas
-        marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
-        child = marcasFiltro.getChildAt(1);
-        if(child!= null){
-            child.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //poner todos los views en default
-                    TextView item;
-                    for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
-                        item = (TextView) marcasFiltro.getChildAt(i);
-                        if (item != null) {
-                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-                            item.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-
-                    }
-                    //aplicar item seleccionado de filtro
-                    onClickFiltroTextView((TextView) v);
-                }
-            });
-        }
+        //Filtro Marcas
+        marcasFiltro = (ListView) findViewById(R.id.marcas_filtro_listView);
+        marcasFiltro.setAdapter(marcasAdapter);
+        marcasAdapter.setMarcasListView(marcasFiltro);
+//        marcasFiltro.setSelection(0);
+//        marcasAdapter.notifyDataSetInvalidated();
+        marcasAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -803,7 +802,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
         RelativeLayout relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
         if(relativeLayout != null) {
-            //Agregar onClick Listener para cuando se haga tap sobre el total del carrito
+            //Agregar onClick MarcasListener para cuando se haga tap sobre el total del carrito
             relativeLayout.setOnClickListener(new OnClickListener(){
                 @Override
                 public void onClick(View arg0) {
@@ -913,32 +912,32 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.show();
     }
 
-    /**
-     * Maneja el comportamiento de los taps en el filtro de Marcas y Categorias
-     * @param selected TextView seleccionado
-     */
-    public void onClickFiltroTextView(TextView selected){
-        LinearLayout parent = (LinearLayout) selected.getParent();
-        if (parent != null) {
-            TextView tv = (TextView)parent.getChildAt(0);
-            if (tv != null) {
-                if (getString(R.string.categorias).equals(tv.getText())){
-                    setCategoriaActual(selected);
-                    catalogo.filter(marcaActual, categoriaActual);
-                    adapterCatalogo.notifyDataSetChanged();
-                }else if(getString(R.string.marcas).equals(tv.getText())){
-                    setMarcaActual(selected);
-                    catalogo.filter(marcaActual, categoriaActual);
-                    adapterCatalogo.notifyDataSetChanged();
-                }
-            }
-            if(!selected.equals(parent.getChildAt(1))){
-                //actualizar estilo
-                selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
-                selected.setTextColor(Color.parseColor("#3A70B9"));
-            }
-        }
-    }
+//    /**
+//     * Maneja el comportamiento de los taps en el filtro de Marcas y Categorias
+//     * @param selected TextView seleccionado
+//     */
+//    public void onClickFiltroTextView(TextView selected){
+//        LinearLayout parent = (LinearLayout) selected.getParent();
+//        if (parent != null) {
+//            TextView tv = (TextView)parent.getChildAt(0);
+//            if (tv != null) {
+//                if (getString(R.string.categorias).equals(tv.getText())){
+//                    setCategoriaActual(selected);
+//                    catalogo.filter(marcaActual, categoriaActual);
+//                    adapterCatalogo.notifyDataSetChanged();
+//                }else if(getString(R.string.marcas).equals(tv.getText())){
+//                    setMarcaActual(selected);
+//                    catalogo.filter(marcaActual, categoriaActual);
+//                    adapterCatalogo.notifyDataSetChanged();
+//                }
+//            }
+//            if(!selected.equals(parent.getChildAt(1))){
+//                //actualizar estilo
+//                selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
+//                selected.setTextColor(Color.parseColor("#3A70B9"));
+//            }
+//        }
+//    }
 
     /*---
     * ---------------
@@ -946,72 +945,51 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---------------
     * ---*/
 
-    protected String productsToJSONString() {
-		String productos;
-		JSONArray productosJSONArray = new JSONArray();
-		JSONObject productoJSONObj;
-        ArrayList<Producto> prodsCarrito = carrito.getProductos();
-
-        try {
-            for (Producto aProdsCarrito : prodsCarrito) {
-                productoJSONObj = aProdsCarrito.toJSON();
-                Log.d("DEBUG", "prod: " + aProdsCarrito.getCodigo() + "cant: " + aProdsCarrito.getCantidad());
-                productosJSONArray.put(productoJSONObj);
-            }
-            productos = productosJSONArray.toString();
-            return productos;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.d("DEBUG", e.getCause().toString() + e.getMessage());
-        }
-        return  null;
-	}
-
-    /*---
+     /*---
     * ---------------
     * CATEGORIAS
     * ---------------
     * ---*/
 
-    /**
-     * Agrega la categoria cat a la lista de categorias en el menu lateral de filtros
-     * @param categoria Categoria
-     */
-    public void addCategoriaTextView(Categoria categoria){
-        String cat = categoria.getNombre();
-        if((cat != null) && !isInCategorias(cat)){
-            categorias.add(categoria);
-            TextView tv = new TextView(mContext);
-            tv.setText(cat);
-            tv.setTextColor(Color.parseColor("#FFFFFF"));
-            tv.setTextSize(22);
-            tv.setGravity(Gravity.CENTER);
-            tv.setPadding(10, 10, 10, 10);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 5, 0, 5);
-            tv.setLayoutParams(layoutParams);
-            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
-            tv.setTypeface(null, Typeface.BOLD_ITALIC);
-            tv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //poner todos los views en default
-                    TextView item;
-                    for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
-                        item = (TextView) categoriasFiltro.getChildAt(i);
-                        if (item != null) {
-                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-                            item.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-                    }
-                    //aplicar item seleccionado de filtro
-                    onClickFiltroTextView((TextView) v);
-                }
-            });
-            categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
-            categoriasFiltro.addView(tv);
-        }
-    }
+//    /**
+//     * Agrega la categoria cat a la lista de categorias en el menu lateral de filtros
+//     * @param categoria Categoria
+//     */
+//    public void addCategoriaTextView(Categoria categoria){
+//        String cat = categoria.getNombre();
+//        if((cat != null) && !isInCategorias(cat)){
+//            categorias.add(categoria);
+//            TextView tv = new TextView(mContext);
+//            tv.setText(cat);
+//            tv.setTextColor(Color.parseColor("#FFFFFF"));
+//            tv.setTextSize(22);
+//            tv.setGravity(Gravity.CENTER);
+//            tv.setPadding(10, 10, 10, 10);
+//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            layoutParams.setMargins(0, 5, 0, 5);
+//            tv.setLayoutParams(layoutParams);
+//            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
+//            tv.setTypeface(null, Typeface.BOLD_ITALIC);
+//            tv.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //poner todos los views en default
+//                    TextView item;
+//                    for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
+//                        item = (TextView) categoriasFiltro.getChildAt(i);
+//                        if (item != null) {
+//                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+//                            item.setTextColor(Color.parseColor("#FFFFFF"));
+//                        }
+//                    }
+//                    //aplicar item seleccionado de filtro
+//                    onClickFiltroTextView((TextView) v);
+//                }
+//            });
+//            categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
+//            categoriasFiltro.addView(tv);
+//        }
+//    }
 
     /**
      * Revisa si el string cat está contenido dentro de las categorias almacenadas en el servidor
@@ -1025,16 +1003,16 @@ public class CatalogoActivity extends ParentMenuActivity {
         return false;
     }
 
-    /**
-     * Establecer categoria seleccionada
-     * @param selected categoria seleccionada
-     */
-    public void setCategoriaActual(TextView selected){
-        if(selected.getText()!= null){
-            categoriaActual = selected.getText().toString();
-            Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
-        }
-    }
+//    /**
+//     * Establecer categoria seleccionada
+//     * @param selected categoria seleccionada
+//     */
+//    public void setCategoriaActual(TextView selected){
+//        if(selected.getText()!= null){
+//            categoriaActual = selected.getText().toString();
+//            Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
+//        }
+//    }
 
     /**
      * Busca una Categoria por nombre, devuelve <code>null</code> de no existir
@@ -1067,44 +1045,44 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---------------
     * ---*/
 
-    /**
-     * Agregar marca al menu lateral de filtros
-     * @param mar marca a agregar
-     */
-    protected void addMarcaTextView(String mar){
-        if((mar != null) && !isInMarcas(mar)){
-            marcas.add(mar);
-            TextView tv = new TextView(mContext);
-            tv.setText(mar);
-            tv.setTextColor(Color.parseColor("#FFFFFF"));
-            tv.setTextSize(22);
-            tv.setGravity(Gravity.CENTER);
-            tv.setPadding(10, 10, 10, 10);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 5, 0, 5);
-            tv.setLayoutParams(layoutParams);
-            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
-            tv.setTypeface(null, Typeface.BOLD_ITALIC);
-            tv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //poner todos los views en default
-                    TextView item;
-                    for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
-                        item = (TextView) marcasFiltro.getChildAt(i);
-                        if (item != null) {
-                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-                            item.setTextColor(Color.parseColor("#FFFFFF"));
-                        }
-                    }
-                    //aplicar item seleccionado de filtro
-                    onClickFiltroTextView((TextView) v);
-                }
-            });
-            marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
-            marcasFiltro.addView(tv);
-        }
-    }
+//    /**
+//     * Agregar marca al menu lateral de filtros
+//     * @param mar marca a agregar
+//     */
+//    protected void addMarcaTextView(String mar){
+//        if((mar != null) && !isInMarcas(mar)){
+//            marcas.add(mar);
+//            TextView tv = new TextView(mContext);
+//            tv.setText(mar);
+//            tv.setTextColor(Color.parseColor("#FFFFFF"));
+//            tv.setTextSize(22);
+//            tv.setGravity(Gravity.CENTER);
+//            tv.setPadding(10, 10, 10, 10);
+//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            layoutParams.setMargins(0, 5, 0, 5);
+//            tv.setLayoutParams(layoutParams);
+//            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
+//            tv.setTypeface(null, Typeface.BOLD_ITALIC);
+//            tv.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //poner todos los views en default
+//                    TextView item;
+//                    for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
+//                        item = (TextView) marcasFiltro.getChildAt(i);
+//                        if (item != null) {
+//                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
+//                            item.setTextColor(Color.parseColor("#FFFFFF"));
+//                        }
+//                    }
+//                    //aplicar item seleccionado de filtro
+//                    onClickFiltroTextView((TextView) v);
+//                }
+//            });
+//            marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
+//            marcasFiltro.addView(tv);
+//        }
+//    }
 
     /**
      * Revisa si el string cat está contenido dentro de las marcas almacenadas en el servidor
@@ -1119,15 +1097,15 @@ public class CatalogoActivity extends ParentMenuActivity {
         return false;
     }
 
-    /**
-     * Establece la marca actual
-     * @param selected marca seleccionada
-     */
-    protected void setMarcaActual(TextView selected){
-        if(selected.getText()!= null){
-            marcaActual = selected.getText().toString();
-        }
-    }
+//    /**
+//     * Establece la marca actual
+//     * @param selected marca seleccionada
+//     */
+//    protected void setMarcaActual(TextView selected){
+//        if(selected.getText()!= null){
+//            marcaActual = selected.getText().toString();
+//        }
+//    }
 
     /*---
     * ---------------

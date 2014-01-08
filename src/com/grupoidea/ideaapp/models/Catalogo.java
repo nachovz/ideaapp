@@ -1,6 +1,7 @@
 package com.grupoidea.ideaapp.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.grupoidea.ideaapp.R;
 
@@ -70,6 +71,7 @@ public class Catalogo {
 	}
 
     public ArrayList<Producto> filter(String marcaActual, String categoriaActual){
+        Log.d("DEBUG","Catalogo.filter("+marcaActual+", "+categoriaActual+")");
         productosCatalogo = new ArrayList<Producto>();
         Producto prod = null;
         for(int i=0; i<productos.size(); i++) {

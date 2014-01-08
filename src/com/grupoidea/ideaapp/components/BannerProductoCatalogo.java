@@ -142,7 +142,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 				imageView.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.client_boton_carrito));
 			}
 
-            //Listener de agregar al carrito y mostrar carrito
+            //MarcasListener de agregar al carrito y mostrar carrito
             imageView = (ImageView) view.findViewById(R.id.banner_producto_add_carrito_image_view);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override

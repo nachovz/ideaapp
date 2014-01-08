@@ -56,11 +56,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		TextView textView;
 		ImageView imageView;
 		LayoutInflater inflater = null;
-		TextView editText;
 		
 		producto = (Producto) getItem(position);
-//        carrito.recalcularDescuentosGrupoCategoria(producto);
-//        carrito.recalcularMontos();
 		
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,6 +65,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		} else {
 			view = convertView;
 		}
+
         mContext= view.getContext();
 			
 		if(producto != null) {
