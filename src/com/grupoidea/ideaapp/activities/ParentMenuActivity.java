@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ParentMenuActivity extends ParentActivity {
+    protected String TAG = this.getClass().getSimpleName();
 	private TextView menuTituloTextView; 
 	private ImageView logOff;
     protected ImageView refresh;
@@ -105,7 +106,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 //            @Override
 //            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 //                clienteSelected=i;
-//                Log.d("DEBUG", "Cliente seleccionado: "+i);
+//                Log.d(TAG, "Cliente seleccionado: "+i);
 //                CatalogoActivity.updatePreciosComerciales();
 //            }
 //
@@ -325,7 +326,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
             public void done(List<ParseObject> listaClientes, ParseException e) {
                 Cliente cliente;
                 if (e == null) {
-                    Log.d("DEBUG", "Obtenidos " + listaClientes.size() + " clientes");
+                    Log.d(TAG, "Obtenidos " + listaClientes.size() + " clientes");
                     for (ParseObject parseObj:listaClientes){
                         cliente = new Cliente(parseObj.getString("nombre"));
                         cliente.setCodigo(parseObj.getString("codigo"));
@@ -337,7 +338,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         adapter.add(cliente.getNombre());
                     }
                 } else {
-                    Log.d("DEBUG", "Error: " + e.getMessage());
+                    Log.d(TAG, "Error: " + e.getMessage());
                 }
             }
         });

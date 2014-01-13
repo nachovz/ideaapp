@@ -44,6 +44,7 @@ import java.util.List;
  * 
  */
 public class RowPedido extends RelativeLayout {
+    protected String TAG = this.getClass().getSimpleName();
     private RelativeLayout rowPedidoLayout;
 	private RelativeLayout fillLayout;
 	private RelativeLayout backgroundLayout;

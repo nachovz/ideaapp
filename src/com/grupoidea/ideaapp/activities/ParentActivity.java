@@ -42,6 +42,7 @@ import java.util.List;
  * cual debe se implementar en los hijos.
  */
 public abstract class ParentActivity extends Activity {
+    protected String TAG = this.getClass().getSimpleName();
 	/**
 	 * Boolean que denota si el Activity debe consultar al proveedor de
 	 * servicios al inciar.
@@ -133,11 +134,11 @@ public abstract class ParentActivity extends Activity {
 	 * hijos en cualquier momento que deseen iniciar el proceso descrito.
 	 */
 	protected void loadData() {
-        Log.d("DEBUG", "Cargando Data");
+        Log.d(TAG, "Cargando Data");
 		Request request = getRequestAction();
 
 //		if (useCache) {
-//            Log.d("DEBUG", "useCache: true");
+//            Log.d(TAG, "useCache: true");
 //			loadFromCache();
 //		}
 
@@ -178,7 +179,7 @@ public abstract class ParentActivity extends Activity {
 	 * <code>drawData(Response response, boolean isLiveData)</code>
 	 */
 	private void loadFromCache() {
-        Log.d("DEBUG", "Cargando Cache");
+        Log.d(TAG, "Cargando Cache");
         ParseQuery query;
         Context mContext = this.getBaseContext();
         if(isExternalStorageReadable()){
@@ -193,14 +194,14 @@ public abstract class ParentActivity extends Activity {
                 File file2 = new File(appDir, fileName);
 
                 fileName = file2.getAbsolutePath();
-                Log.d("DEBUG","file2 abs path:" + file2.getAbsolutePath());
+                Log.d(TAG,"file2 abs path:" + file2.getAbsolutePath());
                 fis = mContext.openFileInput(file2.getName());
                 is = new ObjectInputStream(fis);
                 query = (ParseQuery)is.readObject();
                 is.close();
                 fis.close();
 
-                Log.d("DEBUG", "loadFromCache cached result?  "+String.valueOf(query.hasCachedResult()));
+                Log.d(TAG, "loadFromCache cached result?  "+String.valueOf(query.hasCachedResult()));
                 query.setCachePolicy(getParseCachePolicy());
                 query.findInBackground(new FindCallback() {
                     @Override
@@ -242,7 +243,7 @@ public abstract class ParentActivity extends Activity {
 	 *           forma persistente en el dispositivo
 	 */
 	private void setCache(Object response) {
-        Log.d("DEBUG", "Guardando Cache");
+        Log.d(TAG, "Guardando Cache");
         Context mContext = this.getBaseContext();
         if(isExternalStorageWritable()){
             try
@@ -296,7 +297,7 @@ public abstract class ParentActivity extends Activity {
 	 *            desea realizar (para mas info revisar documentacion de Parse)
 	 */
 	private void loadFromParse(ParseQuery query) {
-        Log.d("DEBUG", "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
+        Log.d(TAG, "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
         query.setCachePolicy(getParseCachePolicy());
 		query.findInBackground(new FindCallback() {
 

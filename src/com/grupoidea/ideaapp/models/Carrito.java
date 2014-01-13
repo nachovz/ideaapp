@@ -27,6 +27,9 @@ public class Carrito {
     }
 	
 	public ArrayList<Producto> getProductos() {
+        for(Producto prod:productos){
+            if(prod.getCantidad() <1) prod.setCantidad(1);
+        }
 		return productos;
 	}
 	public void setProductos(ArrayList<Producto> productos) {

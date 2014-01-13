@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * Created by fernando on 1/3/14.
  */
 public class CategoriasAdapter extends BaseAdapter {
+    protected String TAG = this.getClass().getSimpleName();
     ArrayList<Categoria> categorias;
     private ListView categoriasListView;
     Categoria todas;
@@ -86,7 +87,7 @@ public class CategoriasAdapter extends BaseAdapter {
             Categoria categoria = (Categoria)v.getTag();
             categoriaActual = categoria;
             //Asignar las categorias de la marca al adapter de categorias
-            Log.d("DEBUG", "getTag() Categoria: " + categoria.toString());
+            Log.d(TAG, "getTag() Categoria: " + categoria.toString());
 
             TextView item; ListView categoriasFiltro = (ListView) v.getParent();
             assert categoriasFiltro != null;
@@ -130,7 +131,7 @@ public class CategoriasAdapter extends BaseAdapter {
         categorias.add(todas);
         categorias.addAll(categoriasParam);
         categoriaActual = todas;
-        Log.d("DEBUG","setCategorias Resultado: "+categorias.toString());
+        Log.d(TAG,"setCategorias Resultado: "+categorias.toString());
         this.notifyDataSetChanged();
     }
 

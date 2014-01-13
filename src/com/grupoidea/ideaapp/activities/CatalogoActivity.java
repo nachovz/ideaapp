@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CatalogoActivity extends ParentMenuActivity {
+    protected String TAG = this.getClass().getSimpleName();
     /** Cadena de texto que contiene el nombre del cliente*/
 	private String clienteNombre;
 	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
@@ -128,7 +129,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 clienteSelected = i;
-                Log.d("DEBUG", "Cliente seleccionado: " + i);
+                Log.d(TAG, "Cliente seleccionado: " + i);
                 updatePreciosComerciales();
             }
 
@@ -147,7 +148,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     @Override
     public void onBackPressed(){
-        Log.d("DEBUG", "accionando onBackPressed");
+        Log.d(TAG, "accionando onBackPressed");
         //Correr Thread para cancelar queries en proceso
         new Thread(new Runnable() {
             public void run(){
@@ -222,7 +223,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(modificarPedidoId == null && getIntent().getIntExtra("status", 0)!= Pedido.ESTADO_RECHAZADO){
             //Pedido Nuevo
             //Pedido no está rechazado ni tiene identificador de pedido a ser modificado/clonado
-            Log.d("DEBUG", "Pedido Nuevo "+getIntent().getIntExtra("status", 0));
+            Log.d(TAG, "Pedido Nuevo "+getIntent().getIntExtra("status", 0));
 
         }else if(getIntent().getIntExtra("status", 0)== Pedido.ESTADO_RECHAZADO || getIntent().getIntExtra("status", 0)== Pedido.ESTADO_VERIFICANDO){
             //Editar pedido rechazado
@@ -285,7 +286,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     if(existencia >0){ producto.setExistencia(existencia);
                     }else{ producto.setExistencia(0);}
                 }
-                else Log.d("DEBUG", "No existe registro del producto "+objectId+" en la tabla Metas");
+                else Log.d(TAG, "No existe registro del producto "+objectId+" en la tabla Metas");
             }
         });
 
@@ -307,7 +308,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
         }else{
-            Log.d("DEBUG", "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
+            Log.d(TAG, "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
         }
 
         //Encender flags y actualizar progressBar
@@ -317,7 +318,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Verificar y Notificar Carga Completa de Productos
         if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
             descuentosProgressBar.setVisibility(View.GONE);
-            Log.d("DEBUG", "Finalizada carga de productos");
+            Log.d(TAG, "Finalizada carga de productos");
             Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_SHORT).show();
             refresh.setClickable(true);
         }
@@ -355,7 +356,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                 }
             }else{
-                Log.d("DEBUG", "La Categoria " + categoria.getNombre() + " no posee descuentos");
+                Log.d(TAG, "La Categoria " + categoria.getNombre() + " no posee descuentos");
             }
 
             //Encender flags y actualizar progressBar
@@ -365,7 +366,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //Verificar y Notificar Carga Completa de Productos
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
-                Log.d("DEBUG", "Finalizada carga de productos");
+                Log.d(TAG, "Finalizada carga de productos");
                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
             }
@@ -406,7 +407,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
                     //Verificar y Notificar Carga Completa de Productos
                     if(i == sizeDesc-1 && pos == size -1){
-                        Log.d("DEBUG", "Finalizada carga de productos");
+                        Log.d(TAG, "Finalizada carga de productos");
                         Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                         refresh.setClickable(true);
                         marcasAdapter.notifyDataSetChanged();
@@ -414,7 +415,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     }
                 }
             }else{
-                Log.d("DEBUG", "El Grupo " + grupo.getNombre() + " no posee descuentos");
+                Log.d(TAG, "El Grupo " + grupo.getNombre() + " no posee descuentos");
             }
 
             //Encender flags y actualizar progressBar
@@ -424,7 +425,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             //Verificar y Notificar Carga Completa de Productos
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
-                Log.d("DEBUG", "Finalizada carga de productos");
+                Log.d(TAG, "Finalizada carga de productos");
                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
                 marcasAdapter.notifyDataSetChanged();
@@ -435,7 +436,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
             }else{
-                Log.d("DEBUG","pasando por producto "+producto.getCodigo());
+                Log.d(TAG,"pasando por producto "+producto.getCodigo());
             }
 
             //Establecer descuentos de Grupo
@@ -451,13 +452,13 @@ public class CatalogoActivity extends ParentMenuActivity {
             //Verificar y Notificar Carga Completa de Productos
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
-                Log.d("DEBUG", "Finalizada carga de productos");
+                Log.d(TAG, "Finalizada carga de productos");
                 Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
                 marcasAdapter.notifyDataSetChanged();
                 categoriasAdapter.notifyDataSetChanged();
             }else{
-                Log.d("DEBUG","pasando por producto "+producto.getCodigo());
+                Log.d(TAG,"pasando por producto "+producto.getCodigo());
             }
         }
         /* -------------- FIN GRUPO CATEGORIAS -------------- */
@@ -500,12 +501,12 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if(isExternalStorageReadable()){
                     appDir = mContext.getExternalFilesDir("img/");
                     file2 = new File(appDir, fileName);
-                    Log.d("DEBUG", "Buscando imagen en SD "+ file2.getAbsolutePath());
+                    Log.d(TAG, "Buscando imagen en SD "+ file2.getAbsolutePath());
                     bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
 
                     if(bitmap == null){
                         //Descarga imagen del server de IDEA
-                        Log.d("DEBUG", "Imagen no existe localmente. Descargando del servidor");
+                        Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
                         InputStream in = new java.net.URL(params[0]).openStream();
                         bitmap = BitmapFactory.decodeStream(in);
 
@@ -515,7 +516,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                             File fileSave = new File(appDir,fileName);
                             if(!fileSave.exists())
                                 if(fileSave.createNewFile()){
-                                    Log.d("DEBUG", "Guardando imagen en "+ fileSave.getAbsolutePath());
+                                    Log.d(TAG, "Guardando imagen en "+ fileSave.getAbsolutePath());
                                     FileOutputStream out = new FileOutputStream(fileSave);
                                     Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
                                     bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -523,7 +524,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     out.close();
                                 }
                         }else{
-                            Log.d("DEBUG", "No se pudo salvar la imagen "+fileName);
+                            Log.d(TAG, "No se pudo salvar la imagen "+fileName);
                             Toast.makeText(mContext, "No se pudo salvar la imagen "+fileName, Toast.LENGTH_SHORT).show();
                         }
 
@@ -533,7 +534,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         return bitmap;
                     }
                 }else{
-                    Log.d("DEBUG", "Tarjeta SD no disponible ");
+                    Log.d(TAG, "Tarjeta SD no disponible ");
                     Toast.makeText(mContext, "Tarjeta SD no disponible ", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -550,7 +551,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             if (productoWeakReference != null) {
                 Producto prod = productoWeakReference.get();
                 if (prod != null) {
-                    Log.d("DEBUG","Imagen de producto "+prod.getCodigo()+" obtenida");
+                    Log.d(TAG,"Imagen de producto "+prod.getCodigo()+" obtenida");
                     prod.setImagen(bitmap);
                     if(adapterCatalogo != null){
                         adapterCatalogo.notifyDataSetChanged();
@@ -577,7 +578,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
      */
     private void editarPedido(ArrayList<Producto> productos) {
-        Log.d("DEBUG", "Modificar Pedido " + modificarPedidoId);
+        Log.d(TAG, "Modificar Pedido " + modificarPedidoId);
         carritoProgressDialog.show();
         //TODO Ver si se puede optimizar esto
         clienteSpinner.setVisibility(View.INVISIBLE);
@@ -605,12 +606,12 @@ public class CatalogoActivity extends ParentMenuActivity {
                             for (Producto aProdsModPedido : prodsModPedido) {
                                 if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
                                     aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
-                                    Log.d("DEBUG", "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
+                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
                                     //Agregar cantidad a existencia temporalmente
                                     aProdsModPedido.setExistencia(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia());
                                     aProdsModPedido.setIsInCarrito(true);
                                     adapterCarrito.notifyDataSetChanged();
-                                    Log.d("DEBUG", "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
+                                    Log.d(TAG, "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
                                     adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                                     adapterCarrito.notifyDataSetChanged();
                                     adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
@@ -633,7 +634,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
      */
     private void clonarPedido(ArrayList<Producto> productos) {
-        Log.d("DEBUG", "Clonar Pedido " + modificarPedidoId);
+        Log.d(TAG, "Clonar Pedido " + modificarPedidoId);
         final ArrayList<Producto> prodsModPedido=productos;
         carritoProgressDialog.show();
         //Pedido Id
@@ -658,7 +659,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
                                     aProdsModPedido.setIsInCarrito(true);
                                     adapterCarrito.notifyDataSetChanged();
-//                                        Log.d("DEBUG", "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
+//                                        Log.d(TAG, "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
                                     adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                                     adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                                 }
@@ -696,10 +697,10 @@ public class CatalogoActivity extends ParentMenuActivity {
                         app.clienteActual = clientes.get(j);
                     }
                 }
-                Log.d("DEBUG", "id de Pedido a modificar: " + modificarPedidoId + " #" + modificarPedidoNum + " del Cliente: " + app.clienteActual.getNombre());
+                Log.d(TAG, "id de Pedido a modificar: " + modificarPedidoId + " #" + modificarPedidoNum + " del Cliente: " + app.clienteActual.getNombre());
             }else{
                 app.clienteActual = clientes.get(clienteSpinner.getSelectedItemPosition());
-                Log.d("DEBUG", "Nuevo pedido de Cliente: " + app.clienteActual.getNombre());
+                Log.d(TAG, "Nuevo pedido de Cliente: " + app.clienteActual.getNombre());
             }
 
             dispatchActivity(GestionPedidosActivity.class, bundle, false);
@@ -875,7 +876,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if (input.getText() != null && !input.getText().toString().isEmpty()) {
                     Double valor = Double.parseDouble(input.getText().toString());
                     if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-                        Log.d("DEBUG", valor.toString());
+                        Log.d(TAG, valor.toString());
                         if(valor == 0.0){
                             producto.setDescuentoManual(0.0);
                             adapterCarrito.notifyDataSetChanged();
@@ -891,7 +892,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                         }
                     } else {
                         Toast.makeText(oThis, "Porcentaje de descuento manual no valido", Toast.LENGTH_LONG).show();
-                        Log.d("DEBUG", "porcentaje no valido");
+                        Log.d(TAG, "porcentaje no valido");
                     }
                 } else {
                     producto.setDescuentoManual(0.0);
@@ -1010,7 +1011,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 //    public void setCategoriaActual(TextView selected){
 //        if(selected.getText()!= null){
 //            categoriaActual = selected.getText().toString();
-//            Log.d("DEBUG", "categoria seleccionada: "+ categoriaActual);
+//            Log.d(TAG, "categoria seleccionada: "+ categoriaActual);
 //        }
 //    }
 
@@ -1159,7 +1160,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             @Override
             public void done(List<ParseObject> descuentos, ParseException e) {
                 if (e == null) {
-                    Log.d("DEBUG", "Descuentos obtenidos");
+                    Log.d(TAG, "Descuentos obtenidos");
                     descuentosParse = descuentos;
                 }
             }

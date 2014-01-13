@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
@@ -16,6 +17,7 @@ import com.parse.ParseUser;
 
 /** Activity que permite al usuario autentificarse en la aplicaion mediante la data obtenida de Parse*/
 public class LoginActivity extends ParentActivity {
+    protected String TAG = this.getClass().getSimpleName();
 	private LoginActivity loginActivity;
 	/** View que almacena el nombre de usuario*/
 	private TextView userTextView;
@@ -40,10 +42,10 @@ public class LoginActivity extends ParentActivity {
 		currentUser = ParseUser.getCurrentUser();
 		
 		if(currentUser != null) {
-			Log.d("DEBUG", "Usuario almacenado, despachando al Dashboard");
+			Log.d(TAG, "Usuario almacenado, despachando al Dashboard");
 			dispatchActivity(DashboardActivity.class, null, true);
 		} else {
-			Log.d("DEBUG", "Usuario no almacenado.");
+			Log.d(TAG, "Usuario no almacenado.");
 		}
 		
 		userTextView = (TextView) findViewById(R.id.username_edit_text);
@@ -71,7 +73,7 @@ public class LoginActivity extends ParentActivity {
 			ParseUser.logInInBackground(login, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
 				    if (user != null) {
-				    	Log.d("DEBUG", "Usuario autentificado correctamente");
+				    	Log.d(TAG, "Usuario autentificado correctamente");
 				    	loginActivity.dispatchActivity(DashboardActivity.class, null, true);
 				    } else {
 				    	Log.e("EXCEPTION", "Error al autentificar el usuario: "+e.getMessage());

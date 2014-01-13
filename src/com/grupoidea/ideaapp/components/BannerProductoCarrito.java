@@ -1,11 +1,14 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
@@ -18,6 +21,7 @@ import com.grupoidea.ideaapp.models.Producto;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
 public class BannerProductoCarrito extends ParentBannerProducto{
+    protected String TAG = this.getClass().getSimpleName();
 	/** Objeto que contiene la logica del carrito de productos*/
 	private Carrito carrito;
 	/** Objeto que contiene un producto de manera temporal*/
@@ -52,11 +56,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		View view = null;
-		TextView textView;
-		ImageView imageView;
-		LayoutInflater inflater = null;
-		
+		View view; TextView textView; ImageView imageView; LayoutInflater inflater;
 		producto = (Producto) getItem(position);
 		
 		if (convertView == null) {  
@@ -65,7 +65,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		} else {
 			view = convertView;
 		}
-
+        assert view != null;
         mContext= view.getContext();
 			
 		if(producto != null) {
@@ -73,29 +73,40 @@ public class BannerProductoCarrito extends ParentBannerProducto{
             NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker);
             np.setMinValue(1);
             np.setMaxValue(producto.getExcedente()+producto.getExistencia());
+            np.setWrapSelectorWheel(true);
 
-            Log.d("DEBUG", "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
+            Log.d(TAG, "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
             np.setValue(producto.getCantidad());
             np.setTag(producto);
 
+            EditText edit = (EditText) np.getChildAt(1);
+            assert edit != null;
+            final EditText tv = edit;
+
+            //TextWatcher para cuando se actualiza la cantidad por teclado
+            TextWatcher tw = new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if(tv.getText() != null && !tv.getText().toString().isEmpty() && tv.getParent() != null)
+                        updateCantidadCarrito((Producto)((View)tv.getParent()).getTag(), Integer.valueOf(tv.getText().toString()));
+                }
+            };
+            edit.addTextChangedListener(tw);
+
+            //Listener para cuando se cambia el valor mediante +/-
             np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                 @Override
                 public void onValueChange(NumberPicker numberPicker, int prev, int act) {
-                    Producto productoListener = (Producto)numberPicker.getTag();
-                    productoListener.setCantidad(act);
-                    carrito.recalcularMontos();
-                    carritoAdapter.notifyDataSetChanged();
-                    if(productoListener.hasDescuentos()){
-                        Log.d("DEBUG", productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+" % : "+productoListener.getDescuentoAplicado());
+                    if(numberPicker.getValue() > 1){
+                        numberPicker.clearFocus();
+                        updateCantidadCarrito((Producto)numberPicker.getTag(), act);
                     }
-                    if(productoListener.getCategoria()!= null){
-                        Log.d("DEBUG", productoListener.getCodigo()+ "Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+" % : "+productoListener.getCategoria().getDescActual());
-                    }
-                    if(productoListener.getGrupoCategorias() != null){
-                        Log.d("DEBUG", productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+"  % : "+productoListener.getGrupoCategorias().getDescActual());
-                    }
-                    //Calcula el total del carrito
-                    setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
                 }
             });
 
@@ -159,9 +170,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
             //Etiqueta de Descuento Aplicado
             RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
             rlDesc.setVisibility(View.INVISIBLE);
-//            if(producto.getDescuentoAplicado() != 0.0){
             if(producto.calcularDescuentoAplicado() > 0.0){
-                Log.d("DEBUG", "Descuento aplicado : " + producto.calcularDescuentoAplicado());
+                Log.d(TAG, "Descuento aplicado : " + producto.calcularDescuentoAplicado());
                 rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
                 rlDesc.setVisibility(View.VISIBLE);
                 TextView porcDescTextView = (TextView) view.findViewById(R.id.descuento_textView);
@@ -178,6 +188,28 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		}
 		return view;
 	}
+
+    /**
+     * Procedimiento que actualiza la cantidad del <code>Producto</code> siendo modificado en el carrito
+     * @param productoListener <code>Producto</code> siendo modificado
+     * @param cant cantidad a setear en el <code>Producto</code>
+     */
+    protected void updateCantidadCarrito(Producto productoListener, int cant){
+        productoListener.setCantidad(cant);
+        carrito.recalcularMontos();
+        carritoAdapter.notifyDataSetChanged();
+        if(productoListener.hasDescuentos()){
+            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
+        }
+        if(productoListener.getCategoria()!= null){
+            Log.d(TAG, productoListener.getCodigo()+ " Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+", % : "+productoListener.getCategoria().getDescActual());
+        }
+        if(productoListener.getGrupoCategorias() != null){
+            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
+        }
+        //Calcula el total del carrito
+        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+    }
 	
 	public Carrito getCarrito() {
 		return carrito;

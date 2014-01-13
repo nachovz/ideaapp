@@ -20,6 +20,7 @@ import java.util.ArrayList;
  * Created by fernando on 1/3/14.
  */
 public class MarcasAdapter extends BaseAdapter {
+    protected String TAG = this.getClass().getSimpleName();
     protected ArrayList<Marca> marcas;
     private ListView marcasListView;
     public Marca todas;
@@ -101,7 +102,7 @@ public class MarcasAdapter extends BaseAdapter {
             Marca marca = (Marca)v.getTag();
             marcaActual = marca;
             //Asignar las categorias de la marca al adapter de categorias
-            Log.d("DEBUG", "getTag() Marca: " + marca.toString());
+            Log.d(TAG, "getTag() Marca: " + marca.toString());
             categoriasAdapter.setCategorias(marca.getCategorias());
 
             TextView item; ListView marcasFiltro = (ListView) v.getParent();

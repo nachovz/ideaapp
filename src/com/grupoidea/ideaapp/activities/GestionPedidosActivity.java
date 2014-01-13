@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Random;
 
 public class GestionPedidosActivity extends ParentMenuActivity {
+    protected String TAG = this.getClass().getSimpleName();
     protected Context mContext;
     protected JSONArray productosJSON;
     protected double subtotal, desc, flete, misc, imp, total;
@@ -108,7 +109,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     editar = false;
                     Random rand = new Random();
                     numPedido = String.valueOf(56000 + rand.nextInt(10000));
-                    Log.d("DEBUG", "numPedido: " + numPedido);
+                    Log.d(TAG, "numPedido: " + numPedido);
                 }else{
                     editar = true;
                 }
@@ -219,7 +220,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             }
 
 //        } catch (JSONException e) {
-//            Log.d("DEBUG", "onCreate: "+e.getMessage());
+//            Log.d(TAG, "onCreate: "+e.getMessage());
 //        }
 	}
 
@@ -233,7 +234,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 	}
 
     public void commitPedido(View view) {
-        Log.d("DEBUG", "Finalizar Pedido Button clicked");
+        Log.d(TAG, "Finalizar Pedido Button clicked");
         Button finalizarPedidoButton = (Button) findViewById(R.id.finalizarPedidoButton);
         finalizarPedidoButton.setEnabled(false);
 
@@ -248,17 +249,17 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         observaciones = ""+String.valueOf(obs.getText());
 
         //Obtener Cliente de Parse
-        Log.d("DEBUG", "Pidiendo Cliente");
+        Log.d(TAG, "Pidiendo Cliente");
 
         ParseObject clienteParse = app.clienteActual.getClienteParse();
-        Log.d("DEBUG", "entrando en Done de Cliente");
+        Log.d(TAG, "entrando en Done de Cliente");
         //Crear Pedido
         final ParseObject pedidoParse;
 
         // Si es un pedido nuevo
         if(!editar){
             //Instanciar nuevo ParseObject de Pedido
-            Log.d("DEBUG", "Obteniendo Pedido desde Parse");
+            Log.d(TAG, "Obteniendo Pedido desde Parse");
             pedidoParse = new ParseObject("Pedido");
             pedidoParse.put("asesor", ParseUser.getCurrentUser());
             pedidoParse.put("cliente", clienteParse);
@@ -324,9 +325,9 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                 public void done(ParseException e) {
                                     if (e != null) {
                                         e.printStackTrace();
-                                        Log.d("DEBUG", "Error guardando Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                        Log.d(TAG, "Error guardando Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                     }else{
-                                        Log.d("DEBUG", "Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                        Log.d(TAG, "Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                     }
                                 }
                             });
@@ -337,7 +338,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                 public void done(ParseException e) {
                                     if(e!=null){
                                         e.printStackTrace();
-                                        Log.d("DEBUG", "Error Guardando meta");
+                                        Log.d(TAG, "Error Guardando meta");
                                     }else{
                                         Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
                                         dispatchActivity(DashboardActivity.class, null, true);
@@ -347,7 +348,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         }
                     }else{
                         e.printStackTrace();
-                        Log.d("DEBUG", "Error guardando Pedido");
+                        Log.d(TAG, "Error guardando Pedido");
                     }
                 }
             });
@@ -357,14 +358,14 @@ public class GestionPedidosActivity extends ParentMenuActivity {
          */
         }else{
             //Si es un pedido rechazado que se está modificando
-            Log.d("DEBUG", "Editando pedido "+idPedido);
+            Log.d(TAG, "Editando pedido "+idPedido);
             pedidoParse = app.pedido.getParseObject();
 
             /*
             Obtener productos asociados con el pedido para eliminarlos y colocar los productos nuevos
             */
             //Query para obtener Productos relacionados al Pedido
-            Log.d("DEBUG", "Recuperando productos previamente existentes en pedido");
+            Log.d(TAG, "Recuperando productos previamente existentes en pedido");
             ParseQuery query = new ParseQuery("PedidoHasProductos");
             query.include("producto");
             query.include("pedido");
@@ -379,23 +380,23 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             final ParseObject meta = findMeta(ParseUser.getCurrentUser(), productoPedidoHasProductos.getParseObject("producto").getString("codigo"));
 
                             //restaurarle la cantidad a campo pedido en metas
-                            Log.d("DEBUG", "Restaurando metas para producto " + meta.getParseObject("producto").getObjectId());
+                            Log.d(TAG, "Restaurando metas para producto " + meta.getParseObject("producto").getObjectId());
                             int pedido = meta.getInt("pedido") - productoPedidoHasProductos.getInt("cantidad");
-                            Log.d("DEBUG", "pedido meta: " + meta.get("pedido").toString() + " - producto cantidad: " + productoPedidoHasProductos.get("cantidad").toString() + " = " + pedido);
+                            Log.d(TAG, "pedido meta: " + meta.get("pedido").toString() + " - producto cantidad: " + productoPedidoHasProductos.get("cantidad").toString() + " = " + pedido);
                             meta.put("pedido", pedido);
                             meta.saveEventually(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e == null)
-                                        Log.d("DEBUG", "Meta Actualizada");
+                                        Log.d(TAG, "Meta Actualizada");
                                     else
-                                        Log.d("DEBUG", "No se pudo actualizar meta " + e.getCause() + " " + e.getMessage());
+                                        Log.d(TAG, "No se pudo actualizar meta " + e.getCause() + " " + e.getMessage());
                                 }
                             });
 
                             //restaurar excedentes de existir
                             if (productoPedidoHasProductos.getInt("excedente") > 0) {
-                                Log.d("DEBUG", "Restaurando excedentes");
+                                Log.d(TAG, "Restaurando excedentes");
                                 ParseObject productoEx = productoPedidoHasProductos.getParseObject("producto");
                                 int excedente = productoEx.getInt("excedente") + productoPedidoHasProductos.getInt("excedente");
                                 productoEx.put("excedente", excedente);
@@ -403,16 +404,16 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             }
 
                             //borrar el producto del pedido
-                            Log.d("DEBUG", "Solicitando borrar producto");
+                            Log.d(TAG, "Solicitando borrar producto");
                             productoPedidoHasProductos.deleteEventually(new DeleteCallback() {
                                 @Override
                                 public void done(ParseException e) {
-                                    if (e != null) Log.d("DEBUG", "No se pudo borrar producto " + e.getCause() + " " + e.getMessage());
+                                    if (e != null) Log.d(TAG, "No se pudo borrar producto " + e.getCause() + " " + e.getMessage());
                                 }
                             });
                         }
                     }else{
-                        Log.d("DEBUG", "No se encontraron productos relacionados al pedido. Cause: " + e.getCause() + " Msg: " + e.getMessage());
+                        Log.d(TAG, "No se encontraron productos relacionados al pedido. Cause: " + e.getCause() + " Msg: " + e.getMessage());
                     }
                 }
             });
@@ -429,7 +430,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             //Obtener Productos
             for (final Producto prod : productos) {
                final ParseObject productoParse = prod.getProductoParse();
-                Log.d("DEBUG", "Agregando a PedidoHasProducto");
+                Log.d(TAG, "Agregando a PedidoHasProducto");
                 //Agregar a PedidoHasProducto
                 final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
                 ParseQuery queryMetas = new ParseQuery("Metas");
@@ -467,16 +468,16 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             @Override
                             public void done(ParseException e) {
                             if (e != null) e.printStackTrace();
-                            Log.d("DEBUG", "Producto: " + productoParse.getObjectId() + " agregado a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                            Log.d(TAG, "Producto: " + productoParse.getObjectId() + " agregado a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                             metaParse.saveEventually(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if(e == null){
-                                        Log.d("DEBUG", "Meta actualizada: "+metaParse.get("pedido"));
+                                        Log.d(TAG, "Meta actualizada: "+metaParse.get("pedido"));
                                         Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
                                         dispatchActivity(DashboardActivity.class, null, true);
                                     } else {
-                                        Log.d("DEBUG", e.getCause() + e.getMessage());
+                                        Log.d(TAG, e.getCause() + e.getMessage());
                                     }
                                 }
                             });
@@ -517,14 +518,14 @@ public class GestionPedidosActivity extends ParentMenuActivity {
      * @return el <code>ParseObject</code> de la Meta, <code>null</code> otherwise
      */
     public ParseObject findMeta(ParseUser usuario, String codigoProducto){
-        Log.d("DEBUG", "Buscando: "+codigoProducto+" asesor:"+usuario.getUsername());
+        Log.d(TAG, "Buscando: "+codigoProducto+" asesor:"+usuario.getUsername());
         for (ParseObject meta:app.metasParse){
             if(meta.getParseUser("asesor").getUsername().equals(usuario.getUsername()) && meta.getParseObject("producto").getString("codigo").equals(codigoProducto)){
-                Log.d("DEBUG", "Buscando: Coincidencia ncontrada para "+codigoProducto);
+                Log.d(TAG, "Buscando: Coincidencia ncontrada para "+codigoProducto);
                 return meta;
             }
         }
-        Log.d("DEBUG", "Buscando: No se pudo encontrar una meta para el producto "+codigoProducto);
+        Log.d(TAG, "Buscando: No se pudo encontrar una meta para el producto "+codigoProducto);
         return null;
     }
 }

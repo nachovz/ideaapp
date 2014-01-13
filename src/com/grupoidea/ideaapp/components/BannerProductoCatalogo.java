@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
 public class BannerProductoCatalogo extends ParentBannerProducto {
+    protected String TAG = this.getClass().getSimpleName();
 	/** Listado de elementos del carrito*/
 	private ListView listCarrito;
 	/** Arreglo de productos.*/
@@ -298,10 +299,10 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                         Toast.makeText(mContext, "Si desea eliminar el descuento manual pongalo de nuevo en 0", 3000).show();
                         break;
                     case R.id.add_desc_cat_popup_menu:
-//                        Log.d("DEBUG", "Tap en desc cat");
+//                        Log.d(TAG, "Tap en desc cat");
                         break;
                     case R.id.add_desc_grupo_cat_popup_menu:
-//                        Log.d("DEBUG", "Tap en desc grupo");
+//                        Log.d(TAG, "Tap en desc grupo");
                         break;
                     default:
                         break;

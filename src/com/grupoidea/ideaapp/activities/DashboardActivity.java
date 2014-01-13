@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class DashboardActivity extends ParentMenuActivity {
+    String TAG = this.getClass().getSimpleName();
 	/** Elemento que contiene la sesion del usuario actual*/ 
 	private ParseUser user;
 	/** ViewGroup que contiene las filas con informacion de los clientes*/
@@ -133,7 +134,7 @@ public class DashboardActivity extends ParentMenuActivity {
                             ProgressBar loading = (ProgressBar) pedidosList.findViewById(R.id.pedidos_progressBar);
                             loading.setVisibility(View.VISIBLE);
 
-                            Log.d("DEBUG","Estado seleccionado en Spinner "+estados.get(position));
+                            Log.d(TAG,"Estado seleccionado en Spinner "+estados.get(position));
                             RowPedido row;
 
                             //eliminar todos menos el primero
@@ -167,9 +168,9 @@ public class DashboardActivity extends ParentMenuActivity {
                     //poner Rechazado como seleccionado
                     pedidosSpinner.setSelection(2);
 
-                    Log.d("DEBUG", "Carga de pedidos completa");
+                    Log.d(TAG, "Carga de pedidos completa");
                 } else {
-                    Log.d("DEBUG", e.toString());
+                    Log.d(TAG, e.toString());
                 }
             }
         });
@@ -343,9 +344,9 @@ public class DashboardActivity extends ParentMenuActivity {
                         }
                     });
 
-                    Log.d("DEBUG","Metas cargadas");
+                    Log.d(TAG,"Metas cargadas");
                 }else{
-                    Log.d("DEBUG",e.toString());
+                    Log.d(TAG,e.toString());
                 }
             }
         });
