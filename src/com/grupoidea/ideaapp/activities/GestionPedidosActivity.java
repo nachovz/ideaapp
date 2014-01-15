@@ -62,7 +62,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         mContext=this;
-        setContentView(R.layout.gestion_pedidos_layout);
+        setContentView(R.layout.activity_gestion_pedidos_layout);
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());

@@ -1,6 +1,5 @@
 package com.grupoidea.ideaapp.models;
 
-import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
@@ -133,7 +132,7 @@ public class Categoria {
                     if((i+1) < tablaDescuentos.size()) nextCantDesc = tablaDescuentos.keyAt(i + 1);
                     //establecer descuento para cantidad actual
                     descActual = tablaDescuentos.valueAt(i);
-                    Log.d("DEBUG", "key: "+String.valueOf(tablaDescuentos.keyAt(i)));
+//                    Log.d("DEBUG", "Aplicando Descuento cant:"+cantItemsCarrito+" key: "+String.valueOf(tablaDescuentos.keyAt(i))+"cant: "+tablaDescuentos.valueAt(i));
                     break;
                 }
             }
@@ -141,6 +140,7 @@ public class Categoria {
     }
 
     public double getDescActual() {
+        calcularDescuento();
         return descActual;
     }
 

@@ -370,8 +370,16 @@ public class Producto {
 	public double calcularDescuentoAplicado(){
         if(descuentoManual == 0.0){
             double descCat, descGrupo;
-            if(categoria != null){ descCat = categoria.getDescActual();}else{ descCat = 0.0;}
-            if(grupoCategorias != null){ descGrupo = grupoCategorias.getDescActual();}else{ descGrupo = 0.0;}
+            if(categoria != null){
+                descCat = categoria.getDescActual();
+            }else{
+                descCat = 0.0;
+            }
+            if(grupoCategorias != null){
+                descGrupo = grupoCategorias.getDescActual();
+            }else{
+                descGrupo = 0.0;
+            }
 
             descuentoAplicado = max(max(descCat, descGrupo), descActual);
         }else{

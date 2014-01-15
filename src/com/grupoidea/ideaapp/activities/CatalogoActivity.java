@@ -117,7 +117,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
 
 		setParentLayoutVisibility(View.GONE);
-		setContentView(R.layout.catalogo_layout);
+		setContentView(R.layout.activity_catalogo_layout);
 
         //Poblar Spinner de Clientes e inflar
         clienteSpinner.setAdapter(adapter);

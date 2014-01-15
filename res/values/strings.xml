@@ -35,6 +35,7 @@
     <string name="copiar_dialog_title">Crear Nuevo Pedido</string>
     <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado?</string>
     <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string>
+    <string name="empty_obs_rechazo_pedido">No hay Observaciones para este Pedido</string>
     <!--Fin Row Pedido-->
 
     <!--Filtro Catalogo-->

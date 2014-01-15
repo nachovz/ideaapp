@@ -68,7 +68,7 @@ public class MarcasAdapter extends BaseAdapter {
 
         //Inflar el View si no existe
         if(convertView == null)
-            convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filtro_menu_item_layout, null);
+            convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_filtro_menu_layout, null);
 
         assert convertView != null;
         TextView tv = (TextView) convertView.findViewById(R.id.filtro_menu_item_textView);

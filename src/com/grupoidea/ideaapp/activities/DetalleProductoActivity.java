@@ -2,7 +2,6 @@ package com.grupoidea.ideaapp.activities;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,47 +37,47 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 		
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.detalle_producto_layout);
+		setContentView(R.layout.activity_detalle_producto_layout);
         app = (GrupoIdea) getApplication();
         int position = getIntent().getIntExtra("position", 0);
         Producto prod = app.productos.get(position);
 
-        Log.d(TAG,"-----------------------------------------------------");
-        Log.d(TAG, "-- Detalle de Producto --");
+//        Log.d(TAG,"-----------------------------------------------------");
+//        Log.d(TAG, "-- Detalle de Producto --");
         //Codigo
         codigo = prod.getCodigo();
-        Log.d(TAG,"Codigo: "+codigo);
+//        Log.d(TAG,"Codigo: "+codigo);
 
         //Marca
         marca = prod.getMarca();
-        Log.d(TAG,"Marca: "+marca);
+//        Log.d(TAG,"Marca: "+marca);
 
         //Precio
         precio = prod.getPrecioComercialSinIvaConIvaString();
-        Log.d(TAG,"Precio: "+precio);
+//        Log.d(TAG,"Precio: "+precio);
 
         //Imagen
         bitmap = prod.getImagen();
 
         //Categoria
         categoria = (null != prod.getCategoria().getNombre())? prod.getCategoria().getNombre() : "-";
-        Log.d(TAG,"Categoria: "+categoria);
+//        Log.d(TAG,"Categoria: "+categoria);
 
         //Grupo
         grupo = (null != prod.getNombreGrupoCategorias())? prod.getNombreGrupoCategorias() : "-";
-        Log.d(TAG,"Grupo: "+grupo);
+//        Log.d(TAG,"Grupo: "+grupo);
 
         //Meta
         meta = String.valueOf(prod.getExistencia());
-        Log.d(TAG,"Meta: "+meta);
+//        Log.d(TAG,"Meta: "+meta);
 
         //Excedente
         excedente = String.valueOf(prod.getExcedente());
-        Log.d(TAG,"Excedente: "+excedente);
+//        Log.d(TAG,"Excedente: "+excedente);
 
         //Descripcion
         descripcion = (null != prod.getDescripcion())? prod.getDescripcion() : "-";
-        Log.d(TAG,"Descripcion: "+descripcion);
+//        Log.d(TAG,"Descripcion: "+descripcion);
 
         parentInflater = (RelativeLayout) findViewById(R.id.detalle_producto_image_zone);
         if(parentInflater != null) {

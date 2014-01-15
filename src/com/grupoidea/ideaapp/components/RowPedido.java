@@ -96,6 +96,8 @@ public class RowPedido extends RelativeLayout {
 
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		rowPedidoLayout = (RelativeLayout) inflater.inflate(R.layout.row_pedido_layout, this);
+
+        assert rowPedidoLayout != null;
         rowPedidoLayout.setBackgroundResource(R.drawable.selector_row_pedido);
 
 		rowClienteTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_nombre_pedido_textview);
@@ -255,7 +257,7 @@ public class RowPedido extends RelativeLayout {
                     final AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     final LayoutInflater inflater = ((DashboardActivity)context).getLayoutInflater();
                     View progress = null;
-                    progress = inflater.inflate(R.layout.loading_layout, null, false);
+                    progress = inflater.inflate(R.layout.component_loading_layout, null, false);
                     builder.setView(progress);
                     builder.setTitle("Informacion del Pedido");
                     builder.setNegativeButton("Atras", new DialogInterface.OnClickListener() {
@@ -286,7 +288,7 @@ public class RowPedido extends RelativeLayout {
                                 if(e==null){
                                     //Crear dialogo de preview
                                     productosPedidoView = null;
-                                    productosPedidoView = inflater.inflate(R.layout.pedido_aprobado_preview_layout, null, false);
+                                    productosPedidoView = inflater.inflate(R.layout.component_pedido_aprobado_preview_layout, null, false);
                                     builder.setView(productosPedidoView);
                                     final AlertDialog alert = builder.create();
                                     setPreview(productosPedido, numPedido);

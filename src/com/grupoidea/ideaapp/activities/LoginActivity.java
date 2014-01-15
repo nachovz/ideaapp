@@ -36,7 +36,7 @@ public class LoginActivity extends ParentActivity {
 		ParseUser currentUser;
 		
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login_layout);
+		setContentView(R.layout.activity_login_layout);
 		
 		loginActivity = this;
 		currentUser = ParseUser.getCurrentUser();

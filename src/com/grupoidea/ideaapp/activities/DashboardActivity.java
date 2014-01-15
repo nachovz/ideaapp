@@ -80,7 +80,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
         app = (GrupoIdea) getApplication();
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dashboard_layout);
+		setContentView(R.layout.activity_dashboard_layout);
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
@@ -147,10 +147,10 @@ public class DashboardActivity extends ParentMenuActivity {
                                     row = new RowPedido(mContext, parseObject);
 
                                     if(position == Pedido.ESTADO_RECHAZADO){
-                                        if(null != parseObject.getString("comentario_cambio_status")){
+                                        if(null != parseObject.getString("comentario_cambio_status") && !parseObject.getString("comentario_cambio_status").isEmpty()){
                                             row.observacionesRechazoPedido = parseObject.getString("comentario_cambio_status");
                                         }else{
-                                            row.observacionesRechazoPedido = "";
+                                            row.observacionesRechazoPedido = getString(R.string.empty_obs_rechazo_pedido);
                                         }
                                     }
                                     pedidosList.addView(row);
