@@ -436,7 +436,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
             }else{
-                Log.d(TAG,"pasando por producto "+producto.getCodigo());
+//                Log.d(TAG,"pasando por producto "+producto.getCodigo());
             }
 
             //Establecer descuentos de Grupo

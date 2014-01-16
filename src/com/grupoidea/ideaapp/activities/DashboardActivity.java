@@ -379,6 +379,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     //Hacer find
                     ParseQuery query = queries[0];
+                    query.setCachePolicy(getParseCachePolicy());
                     List<ParseObject> parseObjects = query.find();
 
                     //Extraer Metas

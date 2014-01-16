@@ -199,13 +199,13 @@ public class BannerProductoCarrito extends ParentBannerProducto{
         carrito.recalcularMontos();
         carritoAdapter.notifyDataSetChanged();
         if(productoListener.hasDescuentos()){
-            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
+//            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
         }
         if(productoListener.getCategoria()!= null){
-            Log.d(TAG, productoListener.getCodigo()+ " Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+", % : "+productoListener.getCategoria().getDescActual());
+//            Log.d(TAG, productoListener.getCodigo()+ " Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+", % : "+productoListener.getCategoria().getDescActual());
         }
         if(productoListener.getGrupoCategorias() != null){
-            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
+//            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
         }
         //Calcula el total del carrito
         setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());

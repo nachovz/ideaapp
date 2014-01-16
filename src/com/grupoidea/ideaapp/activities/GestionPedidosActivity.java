@@ -76,152 +76,131 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         cliente = app.clienteActual;
         denom = productos.get(0).getDenominacion();
 
-//        try {
-//            //Extraer información de Pedido desde el Intent
-//            idPedido = getIntent().getStringExtra("idPedido");
-//            numPedido = getIntent().getStringExtra("numPedido");
-//            String jsonStr = getIntent().getStringExtra("productos");
-
-//            //Instanciar Cliente desde Intent
-//            cliente = new Cliente(getIntent().getStringExtra("Cliente"));
-//            cliente.setId(getIntent().getStringExtra("ClienteId"));
-//            cliente.setDescuento(getIntent().getDoubleExtra("Descuento", 0.0));
-//            cliente.setParseId(getIntent().getStringExtra("parseId"));
-
-            //Instanciar productos desde JSON
-//            productosJSON = new JSONArray(jsonStr);
-//            llenarProductosfromJSON(productosJSON);
-//            denom = productos.get(0).getDenominacion();
-
-            TextView text;
-            //Fecha
-                text = (TextView) findViewById(R.id.fecha_edit);
-                Time now = new Time(); now.setToNow();
-                text.setText(now.monthDay + "/" + now.month + "/" + now.year);
-            //ID Cliente
-                text = (TextView) findViewById(R.id.id_cliente_edit);
-                text.setText(cliente.getCodigo());
-            //Nombre Cliente
-                text = (TextView) findViewById(R.id.nombre_cliente_edit);
-                text.setText(cliente.getNombre());
-            //# Orden Compra
-                if(numPedido==null){
-                    editar = false;
-                    Random rand = new Random();
-                    numPedido = String.valueOf(56000 + rand.nextInt(10000));
-                    Log.d(TAG, "numPedido: " + numPedido);
-                }else{
-                    editar = true;
-                }
-                text = (TextView) findViewById(R.id.numero_orden_compra_edit);
-                text.setText("#"+numPedido);
-
-            //Subtotal
-                subtotal = getSubtotal();
-                text = (TextView) findViewById(R.id.subtotal_edit);
-                text.setText(df.format(subtotal)+" "+denom);
-
-            //Impuesto
-                imp=subtotal*(app.iva/100.0);
-                text = (TextView) findViewById(R.id.impuesto_edit);
-                text.setText(df.format(imp)+" "+denom);
-
-            //Total
-                total=subtotal+imp;
-                text = (TextView) findViewById(R.id.total_edit);
-                text.setText(df.format(total)+" "+denom);
-
-            //llenar TableRow con productos
-            TableLayout tl = (TableLayout)findViewById(R.id.listado_productos_pedido_table);
-            TableRow tr;
-            TableRow.LayoutParams params;
-            String descProd;
-            TextView nombreTextView, cantidadTextView, precioTextView, precioComercialTextView, descuentoTextView, precioFinalTextView;
-            Boolean darkBackground = true;
-
-            for (Producto prod : productos) {
-                tr = new TableRow(this);
-                tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-                //Nombre
-                nombreTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-                nombreTextView.setLayoutParams(params);
-                nombreTextView.setTextColor(Color.parseColor("#262626"));
-                nombreTextView.setPadding(18, 18, 18, 18);
-                nombreTextView.setText(prod.getCodigo());
-                tr.addView(nombreTextView);
-                if (darkBackground) nombreTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else nombreTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Cantidad
-                cantidadTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
-                cantidadTextView.setLayoutParams(params);
-                cantidadTextView.setTextColor(Color.parseColor("#262626"));
-                cantidadTextView.setPadding(18, 18, 18, 18);
-                cantidadTextView.setText(String.valueOf(prod.getCantidad()));
-                tr.addView(cantidadTextView);
-                if (darkBackground)
-                    cantidadTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else cantidadTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Precio Lista
-                precioTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-                precioTextView.setLayoutParams(params);
-                precioTextView.setTextColor(Color.parseColor("#262626"));
-                precioTextView.setPadding(18, 18, 18, 18);
-                precioTextView.setText(prod.getStringPrecio());
-                tr.addView(precioTextView);
-                if (darkBackground) precioTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else precioTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Precio con Desc Comercial
-                precioComercialTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-                precioComercialTextView.setLayoutParams(params);
-                precioComercialTextView.setTextColor(Color.parseColor("#262626"));
-                precioComercialTextView.setPadding(18, 18, 18, 18);
-                precioComercialTextView.setText(prod.getStringPrecioComercial());
-                tr.addView(precioComercialTextView);
-                if (darkBackground)
-                    precioComercialTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else precioComercialTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Descuento por Volumen
-                descuentoTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
-                descuentoTextView.setLayoutParams(params);
-                descuentoTextView.setTextColor(Color.parseColor("#262626"));
-                descuentoTextView.setPadding(18, 18, 18, 18);
-                descProd = df.format(prod.getPrecioComercial() * prod.getDescuentoAplicado());
-                descuentoTextView.setText(descProd + " (" + prod.getDescuentoAplicadoPorcString() + ")");
-                tr.addView(descuentoTextView);
-                if (darkBackground)
-                    descuentoTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else descuentoTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Precio Final
-                precioFinalTextView = new TextView(this);
-                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("4"));
-                precioFinalTextView.setLayoutParams(params);
-                precioFinalTextView.setTextColor(Color.parseColor("#262626"));
-                precioFinalTextView.setPadding(18, 18, 18, 18);
-                precioFinalTextView.setText(prod.getStringPrecioComercialTotal());
-                tr.addView(precioFinalTextView);
-                if (darkBackground)
-                    precioFinalTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-                else precioFinalTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-                //Añadir a TableLayout de productos
-                tl.addView(tr, tl.getChildCount(), new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-                darkBackground = !darkBackground;
+        TextView text;
+        //Fecha
+            text = (TextView) findViewById(R.id.fecha_edit);
+            Time now = new Time(); now.setToNow();
+            text.setText(now.monthDay + "/" + now.month + "/" + now.year);
+        //ID Cliente
+            text = (TextView) findViewById(R.id.id_cliente_edit);
+            text.setText(cliente.getCodigo());
+        //Nombre Cliente
+            text = (TextView) findViewById(R.id.nombre_cliente_edit);
+            text.setText(cliente.getNombre());
+        //# Orden Compra
+            if(numPedido==null){
+                editar = false;
+                Random rand = new Random();
+                numPedido = String.valueOf(56000 + rand.nextInt(10000));
+                Log.d(TAG, "numPedido: " + numPedido);
+            }else{
+                editar = true;
             }
+            text = (TextView) findViewById(R.id.numero_orden_compra_edit);
+            text.setText("#"+numPedido);
 
-//        } catch (JSONException e) {
-//            Log.d(TAG, "onCreate: "+e.getMessage());
-//        }
+        //Subtotal
+            subtotal = getSubtotal();
+            text = (TextView) findViewById(R.id.subtotal_edit);
+            text.setText(df.format(subtotal)+" "+denom);
+
+        //Impuesto
+            imp=subtotal*(app.iva/100.0);
+            text = (TextView) findViewById(R.id.impuesto_edit);
+            text.setText(df.format(imp)+" "+denom);
+
+        //Total
+            total=subtotal+imp;
+            text = (TextView) findViewById(R.id.total_edit);
+            text.setText(df.format(total)+" "+denom);
+
+        //llenar TableRow con productos
+        TableLayout tl = (TableLayout)findViewById(R.id.listado_productos_pedido_table);
+        TableRow tr;
+        TableRow.LayoutParams params;
+        String descProd;
+        TextView nombreTextView, cantidadTextView, precioTextView, precioComercialTextView, descuentoTextView, precioFinalTextView;
+        Boolean darkBackground = true;
+
+        for (Producto prod : productos) {
+            tr = new TableRow(this);
+            tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+            //Nombre
+            nombreTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
+            nombreTextView.setLayoutParams(params);
+            nombreTextView.setTextColor(Color.parseColor("#262626"));
+            nombreTextView.setPadding(18, 18, 18, 18);
+            nombreTextView.setText(prod.getCodigo());
+            tr.addView(nombreTextView);
+            if (darkBackground) nombreTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else nombreTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Cantidad
+            cantidadTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
+            cantidadTextView.setLayoutParams(params);
+            cantidadTextView.setTextColor(Color.parseColor("#262626"));
+            cantidadTextView.setPadding(18, 18, 18, 18);
+            cantidadTextView.setText(String.valueOf(prod.getCantidad()));
+            tr.addView(cantidadTextView);
+            if (darkBackground)
+                cantidadTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else cantidadTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Precio Lista
+            precioTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
+            precioTextView.setLayoutParams(params);
+            precioTextView.setTextColor(Color.parseColor("#262626"));
+            precioTextView.setPadding(18, 18, 18, 18);
+            precioTextView.setText(prod.getStringPrecio());
+            tr.addView(precioTextView);
+            if (darkBackground) precioTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else precioTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Precio con Desc Comercial
+            precioComercialTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
+            precioComercialTextView.setLayoutParams(params);
+            precioComercialTextView.setTextColor(Color.parseColor("#262626"));
+            precioComercialTextView.setPadding(18, 18, 18, 18);
+            precioComercialTextView.setText(prod.getStringPrecioComercial());
+            tr.addView(precioComercialTextView);
+            if (darkBackground)
+                precioComercialTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else precioComercialTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Descuento por Volumen
+            descuentoTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
+            descuentoTextView.setLayoutParams(params);
+            descuentoTextView.setTextColor(Color.parseColor("#262626"));
+            descuentoTextView.setPadding(18, 18, 18, 18);
+            descProd = df.format(prod.getPrecioComercial() * prod.getDescuentoAplicado());
+            descuentoTextView.setText(descProd + " (" + prod.getDescuentoAplicadoPorcString() + ")");
+            tr.addView(descuentoTextView);
+            if (darkBackground)
+                descuentoTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else descuentoTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Precio Final
+            precioFinalTextView = new TextView(this);
+            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("4"));
+            precioFinalTextView.setLayoutParams(params);
+            precioFinalTextView.setTextColor(Color.parseColor("#262626"));
+            precioFinalTextView.setPadding(18, 18, 18, 18);
+            precioFinalTextView.setText(prod.getStringPrecioComercialTotal());
+            tr.addView(precioFinalTextView);
+            if (darkBackground)
+                precioFinalTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            else precioFinalTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
+
+            //Añadir a TableLayout de productos
+            tl.addView(tr, tl.getChildCount(), new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
+            darkBackground = !darkBackground;
+        }
 	}
 
 	@Override
@@ -248,18 +227,15 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         EditText obs = (EditText) findViewById(R.id.obs_editText);
         observaciones = ""+String.valueOf(obs.getText());
 
-        //Obtener Cliente de Parse
-        Log.d(TAG, "Pidiendo Cliente");
-
+        //Obtener Cliente de Parse desde Application
         ParseObject clienteParse = app.clienteActual.getClienteParse();
-        Log.d(TAG, "entrando en Done de Cliente");
         //Crear Pedido
         final ParseObject pedidoParse;
 
         // Si es un pedido nuevo
         if(!editar){
             //Instanciar nuevo ParseObject de Pedido
-            Log.d(TAG, "Obteniendo Pedido desde Parse");
+            Log.d(TAG, "Creando nuevo Pedido para Parse");
             pedidoParse = new ParseObject("Pedido");
             pedidoParse.put("asesor", ParseUser.getCurrentUser());
             pedidoParse.put("cliente", clienteParse);
@@ -319,15 +295,14 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             metaToSave.add(metaParse);
 
                             //Guardar pedidoHasProductos
-                            final ParseObject finalPedidoParse = pedidoParse;
                             pedidoHasProductos.saveEventually(new SaveCallback() {
                                 @Override
                                 public void done(ParseException e) {
                                     if (e != null) {
                                         e.printStackTrace();
-                                        Log.d(TAG, "Error guardando Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                        Log.d(TAG, "Error guardando Pedido: " + pedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                     }else{
-                                        Log.d(TAG, "Pedido: " + finalPedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
+                                        Log.d(TAG, "Pedido: " + pedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
                                     }
                                 }
                             });
@@ -341,7 +316,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                         Log.d(TAG, "Error Guardando meta");
                                     }else{
                                         Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
-                                        dispatchActivity(DashboardActivity.class, null, true);
+                                        //Ubicacion Original
+//                                        dispatchActivity(DashboardActivity.class, null, true);
                                     }
                                 }
                             });
@@ -475,7 +451,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     if(e == null){
                                         Log.d(TAG, "Meta actualizada: "+metaParse.get("pedido"));
                                         Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
-                                        dispatchActivity(DashboardActivity.class, null, true);
+                                        //Ubicacion Original
+//                                        dispatchActivity(DashboardActivity.class, null, true);
                                     } else {
                                         Log.d(TAG, e.getCause() + e.getMessage());
                                     }
@@ -488,6 +465,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 });
             }
         }
+
+        dispatchActivity(DashboardActivity.class, null, false);
     }
 
     /**

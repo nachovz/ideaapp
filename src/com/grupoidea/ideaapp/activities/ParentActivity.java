@@ -149,7 +149,7 @@ public abstract class ParentActivity extends Activity {
 				loadFromParse(query);
 			} else if (request.getRequestType() == Request.HTTP_REQUEST) {}
 		} else {
-			Log.d("LOAD_DATA", "Este activity no posee query");
+			Log.d("TAG", "Este activity no posee query");
 		}
 
 	}
