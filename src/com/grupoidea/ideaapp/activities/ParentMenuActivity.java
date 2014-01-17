@@ -26,6 +26,7 @@ import java.util.List;
 
 public abstract class ParentMenuActivity extends ParentActivity {
     protected String TAG = this.getClass().getSimpleName();
+    final int QUERY_LIMIT = 1000;
 	private TextView menuTituloTextView; 
 	private ImageView logOff;
     protected ImageView refresh;
@@ -321,6 +322,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
         clientes = new ArrayList<Cliente>();
         adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item);
         ParseQuery query = new ParseQuery("Cliente");
+        query.setLimit(QUERY_LIMIT);
         query.setCachePolicy(getParseCachePolicy());
         query.findInBackground(new FindCallback() {
             public void done(List<ParseObject> listaClientes, ParseException e) {

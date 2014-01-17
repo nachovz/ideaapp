@@ -274,12 +274,14 @@ public class RowPedido extends RelativeLayout {
 
                     //Obtener ParseObject de Pedido
                     ParseQuery queryPedido = new ParseQuery("Pedido");
+                    queryPedido.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
                     queryPedido.getInBackground(idPedido, new GetCallback() {
                         @Override
                         public void done(ParseObject pedidoParse, ParseException e) {
 
                         //Obtener productos relacionados al pedido
                         ParseQuery queryProductosPedido = new ParseQuery("PedidoHasProductos");
+                        queryProductosPedido.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
                         queryProductosPedido.whereEqualTo("pedido", pedidoParse);
                         queryProductosPedido.include("producto");
                         queryProductosPedido.findInBackground(new FindCallback() {

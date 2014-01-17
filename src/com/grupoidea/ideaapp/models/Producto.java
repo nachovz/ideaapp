@@ -1,7 +1,6 @@
 package com.grupoidea.ideaapp.models;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.parse.ParseObject;
@@ -32,7 +31,9 @@ public class Producto {
     /** Precio del producto con descuento comercial del cliente*/
     private double precioComercial;
 	/** Mapa de bits con la representaci�n visual del producto.*/
-	private Bitmap imagen;
+	public Bitmap imagen;
+    private String imagenURL;
+    private int imagenID;
 	/** String que representa el c�digo del producto para IDEA */
 	private String codigo;
 	/** Identificador de categoria para obtener los descuentos desde parse */
@@ -318,31 +319,6 @@ public class Producto {
         productoJSON.put("IVA", getIva());
 		return productoJSON;
 	}
-
-    public static Producto setFromJSON(JSONObject json){
-        try{
-            String id = json.getString("id");
-            String nombre = json.getString("nombre");
-            Double precio = json.getDouble("precio");
-            Producto producto = new Producto(id, nombre, precio, "Bs.");
-            producto.setCodigo(json.getString("codigo"));
-            producto.setExistencia(json.getInt("existencia"));
-            producto.setExcedente(json.getInt("excedente"));
-            Log.d("DEBUG", "seteando cantidad en setFromJSON "+json.getInt("cantidad"));
-            producto.setCantidad(json.getInt("cantidad"));
-            Log.d("DEBUG", "cantidad seteada en setFromJSON "+producto.getCantidad());
-            producto.setPrecioComercial(json.getDouble("precioComercial"));
-            producto.setDescuentoManual(json.getDouble("descuentoManual"));
-            producto.setDescuentoAplicado(json.getDouble("descuentoAplicado"));
-            producto.setIva(json.getDouble("IVA")*100.0);
-
-            return producto;
-
-        }catch(JSONException e){
-            Log.d("DEBUG","Producto.setFromJSON JSONException: "+e.getMessage());
-            return null;
-        }
-    }
 	
 	public void setCantidadDescuento(int c, double d){
 		tablaDescuentos.append(c, d);
@@ -360,7 +336,7 @@ public class Producto {
                     if((i+1) < tablaDescuentos.size()) nextCantDesc = tablaDescuentos.keyAt(i + 1);
                     //establecer descuento para cantidad actual
                     descActual = tablaDescuentos.valueAt(i);
-                    Log.d("DEBUG", "key: " + String.valueOf(tablaDescuentos.keyAt(i)));
+//                    Log.d("DEBUG", "key: " + String.valueOf(tablaDescuentos.keyAt(i)));
                     break;
                 }
             }
@@ -560,5 +536,21 @@ public class Producto {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public int getImagenID() {
+        return imagenID;
+    }
+
+    public void setImagenID(int imagenID) {
+        this.imagenID = imagenID;
+    }
+
+    public String getImagenURL() {
+        return imagenURL;
+    }
+
+    public void setImagenURL(String imagenURL) {
+        this.imagenURL = imagenURL;
     }
 }

@@ -167,6 +167,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         getDescuentosFromParse();
         Request req = new Request(Request.PARSE_REQUEST);
         ParseQuery query = new ParseQuery("Producto");
+        query.setLimit(QUERY_LIMIT);
         query.include("categoria");
         query.setCachePolicy(getParseCachePolicy());
         query.include("iva");
@@ -189,11 +190,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         descuentosProgressBar.setVisibility(View.VISIBLE);
         descuentosProgressBar.setMax(productosParse.size()*3);
         descuentosProgressBar.setProgress(1);
-        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_SHORT).show();
 
         GrupoIdea app = (GrupoIdea) getApplication();
         app.productos = productos;
         app.productosParse = productosParse;
+        Log.d("NUMBER", "Numero de Productos en Query: "+productosParse.size());
 
         Producto producto;
         RelativeLayout menuRight, menuLeft;
@@ -267,14 +269,18 @@ public class CatalogoActivity extends ParentMenuActivity {
         producto.setDescripcion(productoParse.getString("descripcion"));
 
         //Obtener Imagen
-        if(null!= productoParse.getString("picture") && !productoParse.getString("picture").isEmpty()){
-            retrieveImage(producto, productoParse);
-        }else{
-            producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.prod_background));
-        }
+//        if(null!= productoParse.getString("picture") && !productoParse.getString("picture").isEmpty()){
+//            retrieveImage(producto, productoParse);
+//        }else{
+//            producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.prod_background));
+            producto.setImagenID(R.drawable.prod_background);
+            producto.setImagenURL(productoParse.getString("picture"));
+//        }
 
         //Obtener existencia
         ParseQuery queryExistencia = new ParseQuery("Metas");
+        queryExistencia.setLimit(QUERY_LIMIT);
+        queryExistencia.setCachePolicy(getParseCachePolicy());
         queries.add(queryExistencia);
         queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryExistencia.whereEqualTo("producto", productoParse);
@@ -286,7 +292,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     if(existencia >0){ producto.setExistencia(existencia);
                     }else{ producto.setExistencia(0);}
                 }
-                else Log.d(TAG, "No existe registro del producto "+objectId+" en la tabla Metas");
+//                else Log.d(TAG, "No existe registro del producto "+objectId+" en la tabla Metas");
             }
         });
 
@@ -308,7 +314,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
         }else{
-            Log.d(TAG, "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
+//            Log.d(TAG, "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
         }
 
         //Encender flags y actualizar progressBar
@@ -318,8 +324,8 @@ public class CatalogoActivity extends ParentMenuActivity {
         //Verificar y Notificar Carga Completa de Productos
         if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
             descuentosProgressBar.setVisibility(View.GONE);
-            Log.d(TAG, "Finalizada carga de productos");
-            Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "Finalizada carga de productos");
+            Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_SHORT).show();
             refresh.setClickable(true);
         }
 
@@ -356,7 +362,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
                 }
             }else{
-                Log.d(TAG, "La Categoria " + categoria.getNombre() + " no posee descuentos");
+//                Log.d(TAG, "La Categoria " + categoria.getNombre() + " no posee descuentos");
             }
 
             //Encender flags y actualizar progressBar
@@ -408,14 +414,14 @@ public class CatalogoActivity extends ParentMenuActivity {
                     //Verificar y Notificar Carga Completa de Productos
                     if(i == sizeDesc-1 && pos == size -1){
                         Log.d(TAG, "Finalizada carga de productos");
-                        Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_LONG).show();
                         refresh.setClickable(true);
                         marcasAdapter.notifyDataSetChanged();
                         categoriasAdapter.notifyDataSetChanged();
                     }
                 }
             }else{
-                Log.d(TAG, "El Grupo " + grupo.getNombre() + " no posee descuentos");
+//                Log.d(TAG, "El Grupo " + grupo.getNombre() + " no posee descuentos");
             }
 
             //Encender flags y actualizar progressBar
@@ -453,12 +459,12 @@ public class CatalogoActivity extends ParentMenuActivity {
             if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
                 descuentosProgressBar.setVisibility(View.GONE);
                 Log.d(TAG, "Finalizada carga de productos");
-                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_LONG).show();
                 refresh.setClickable(true);
                 marcasAdapter.notifyDataSetChanged();
                 categoriasAdapter.notifyDataSetChanged();
             }else{
-                Log.d(TAG,"pasando por producto "+producto.getCodigo());
+//                Log.d(TAG,"pasando por producto "+producto.getCodigo());
             }
         }
         /* -------------- FIN GRUPO CATEGORIAS -------------- */
@@ -508,7 +514,14 @@ public class CatalogoActivity extends ParentMenuActivity {
                         //Descarga imagen del server de IDEA
                         Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
                         InputStream in = new java.net.URL(params[0]).openStream();
-                        bitmap = BitmapFactory.decodeStream(in);
+
+                        BitmapFactory.Options opt = new BitmapFactory.Options();
+                        opt.inPurgeable = true;
+                        opt.inInputShareable = true;
+                        opt.inPreferredConfig = Bitmap.Config.RGB_565;
+
+                        bitmap = BitmapFactory.decodeStream(in, null, opt);
+                        in.close();
 
                         //Guardar imagen en SD
                         if(isExternalStorageWritable()){
@@ -585,6 +598,8 @@ public class CatalogoActivity extends ParentMenuActivity {
         final ArrayList<Producto> prodsModPedido=productos;
         //Pedido Id
         final ParseQuery queryPedido = new ParseQuery("Pedido");
+        queryPedido.setCachePolicy(getParseCachePolicy());
+        queryPedido.setLimit(QUERY_LIMIT);
         queryPedido.whereEqualTo("objectId", modificarPedidoId);
         queryPedido.include("asesor");
         queryPedido.include("cliente");
@@ -594,6 +609,8 @@ public class CatalogoActivity extends ParentMenuActivity {
                 app.pedido.setParseObject(parseObject);
                 //Productos en pedido
                 final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+                productosEnPedido.setCachePolicy(getParseCachePolicy());
+                productosEnPedido.setLimit(QUERY_LIMIT);
                 productosEnPedido.whereEqualTo("pedido", parseObject);
                 productosEnPedido.include("producto");
                 productosEnPedido.findInBackground(new FindCallback() {
@@ -606,12 +623,12 @@ public class CatalogoActivity extends ParentMenuActivity {
                             for (Producto aProdsModPedido : prodsModPedido) {
                                 if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
                                     aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
-                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
+//                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
                                     //Agregar cantidad a existencia temporalmente
                                     aProdsModPedido.setExistencia(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia());
                                     aProdsModPedido.setIsInCarrito(true);
                                     adapterCarrito.notifyDataSetChanged();
-                                    Log.d(TAG, "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
+//                                    Log.d(TAG, "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
                                     adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                                     adapterCarrito.notifyDataSetChanged();
                                     adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
@@ -639,12 +656,16 @@ public class CatalogoActivity extends ParentMenuActivity {
         carritoProgressDialog.show();
         //Pedido Id
         final ParseQuery queryPedido = new ParseQuery("Pedido");
+        queryPedido.setCachePolicy(getParseCachePolicy());
+        queryPedido.setLimit(QUERY_LIMIT);
         queryPedido.whereEqualTo("objectId", modificarPedidoId);
         queryPedido.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 //Productos en pedido
                 final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+                productosEnPedido.setCachePolicy(getParseCachePolicy());
+                productosEnPedido.setLimit(QUERY_LIMIT);
                 productosEnPedido.whereEqualTo("pedido", parseObject);
                 productosEnPedido.include("producto");
                 productosEnPedido.findInBackground(new FindCallback() {
@@ -876,7 +897,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if (input.getText() != null && !input.getText().toString().isEmpty()) {
                     Double valor = Double.parseDouble(input.getText().toString());
                     if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-                        Log.d(TAG, valor.toString());
+//                        Log.d(TAG, valor.toString());
                         if(valor == 0.0){
                             producto.setDescuentoManual(0.0);
                             adapterCarrito.notifyDataSetChanged();
@@ -913,33 +934,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         builder.show();
     }
 
-//    /**
-//     * Maneja el comportamiento de los taps en el filtro de Marcas y Categorias
-//     * @param selected TextView seleccionado
-//     */
-//    public void onClickFiltroTextView(TextView selected){
-//        LinearLayout parent = (LinearLayout) selected.getParent();
-//        if (parent != null) {
-//            TextView tv = (TextView)parent.getChildAt(0);
-//            if (tv != null) {
-//                if (getString(R.string.categorias).equals(tv.getText())){
-//                    setCategoriaActual(selected);
-//                    catalogo.filter(marcaActual, categoriaActual);
-//                    adapterCatalogo.notifyDataSetChanged();
-//                }else if(getString(R.string.marcas).equals(tv.getText())){
-//                    setMarcaActual(selected);
-//                    catalogo.filter(marcaActual, categoriaActual);
-//                    adapterCatalogo.notifyDataSetChanged();
-//                }
-//            }
-//            if(!selected.equals(parent.getChildAt(1))){
-//                //actualizar estilo
-//                selected.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
-//                selected.setTextColor(Color.parseColor("#3A70B9"));
-//            }
-//        }
-//    }
-
     /*---
     * ---------------
     * FIN LAYOUT
@@ -951,69 +945,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     * CATEGORIAS
     * ---------------
     * ---*/
-
-//    /**
-//     * Agrega la categoria cat a la lista de categorias en el menu lateral de filtros
-//     * @param categoria Categoria
-//     */
-//    public void addCategoriaTextView(Categoria categoria){
-//        String cat = categoria.getNombre();
-//        if((cat != null) && !isInCategorias(cat)){
-//            categorias.add(categoria);
-//            TextView tv = new TextView(mContext);
-//            tv.setText(cat);
-//            tv.setTextColor(Color.parseColor("#FFFFFF"));
-//            tv.setTextSize(22);
-//            tv.setGravity(Gravity.CENTER);
-//            tv.setPadding(10, 10, 10, 10);
-//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            layoutParams.setMargins(0, 5, 0, 5);
-//            tv.setLayoutParams(layoutParams);
-//            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
-//            tv.setTypeface(null, Typeface.BOLD_ITALIC);
-//            tv.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    //poner todos los views en default
-//                    TextView item;
-//                    for(int i =2, size= categoriasFiltro.getChildCount(); i <size; i++){
-//                        item = (TextView) categoriasFiltro.getChildAt(i);
-//                        if (item != null) {
-//                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-//                            item.setTextColor(Color.parseColor("#FFFFFF"));
-//                        }
-//                    }
-//                    //aplicar item seleccionado de filtro
-//                    onClickFiltroTextView((TextView) v);
-//                }
-//            });
-//            categoriasFiltro = (LinearLayout) findViewById(R.id.categorias_filtro_layout);
-//            categoriasFiltro.addView(tv);
-//        }
-//    }
-
-    /**
-     * Revisa si el string cat está contenido dentro de las categorias almacenadas en el servidor
-     * @param categoria categoria
-     * @return Exito en la busqueda
-     */
-    public Boolean isInCategorias(String categoria){
-        for (Categoria categoria1 : categorias) {
-            if (categoria.equalsIgnoreCase(categoria1.getNombre())) return true;
-        }
-        return false;
-    }
-
-//    /**
-//     * Establecer categoria seleccionada
-//     * @param selected categoria seleccionada
-//     */
-//    public void setCategoriaActual(TextView selected){
-//        if(selected.getText()!= null){
-//            categoriaActual = selected.getText().toString();
-//            Log.d(TAG, "categoria seleccionada: "+ categoriaActual);
-//        }
-//    }
 
     /**
      * Busca una Categoria por nombre, devuelve <code>null</code> de no existir
@@ -1037,80 +968,6 @@ public class CatalogoActivity extends ParentMenuActivity {
     /*---
     * ---------------
     * FIN CATEGORIAS
-    * ---------------
-    * ---*/
-
-    /*---
-    * ---------------
-    * MARCAS
-    * ---------------
-    * ---*/
-
-//    /**
-//     * Agregar marca al menu lateral de filtros
-//     * @param mar marca a agregar
-//     */
-//    protected void addMarcaTextView(String mar){
-//        if((mar != null) && !isInMarcas(mar)){
-//            marcas.add(mar);
-//            TextView tv = new TextView(mContext);
-//            tv.setText(mar);
-//            tv.setTextColor(Color.parseColor("#FFFFFF"));
-//            tv.setTextSize(22);
-//            tv.setGravity(Gravity.CENTER);
-//            tv.setPadding(10, 10, 10, 10);
-//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//            layoutParams.setMargins(0, 5, 0, 5);
-//            tv.setLayoutParams(layoutParams);
-//            tv.setBackgroundResource(R.drawable.pastilla_items_filtro);
-//            tv.setTypeface(null, Typeface.BOLD_ITALIC);
-//            tv.setOnClickListener(new OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    //poner todos los views en default
-//                    TextView item;
-//                    for(int i =2, size= marcasFiltro.getChildCount(); i <size; i++){
-//                        item = (TextView) marcasFiltro.getChildAt(i);
-//                        if (item != null) {
-//                            item.setBackgroundResource(R.drawable.pastilla_items_filtro);
-//                            item.setTextColor(Color.parseColor("#FFFFFF"));
-//                        }
-//                    }
-//                    //aplicar item seleccionado de filtro
-//                    onClickFiltroTextView((TextView) v);
-//                }
-//            });
-//            marcasFiltro = (LinearLayout) findViewById(R.id.marcas_filtro_layout);
-//            marcasFiltro.addView(tv);
-//        }
-//    }
-
-    /**
-     * Revisa si el string cat está contenido dentro de las marcas almacenadas en el servidor
-     * @param marcaCheck <code>String</code> a buscar
-     * @return Resultado de la busqueda
-     */
-    public Boolean isInMarcas(String marcaCheck){
-        for (String marca : marcas) {
-            if (marca.equals(marcaCheck))
-                return true;
-        }
-        return false;
-    }
-
-//    /**
-//     * Establece la marca actual
-//     * @param selected marca seleccionada
-//     */
-//    protected void setMarcaActual(TextView selected){
-//        if(selected.getText()!= null){
-//            marcaActual = selected.getText().toString();
-//        }
-//    }
-
-    /*---
-    * ---------------
-    * FIN MARCAS
     * ---------------
     * ---*/
 
@@ -1153,6 +1010,7 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     private void getDescuentosFromParse(){
         ParseQuery query = new ParseQuery("Descuento");
+        query.setLimit(QUERY_LIMIT);
         if(null == queries) queries = new ArrayList<ParseQuery>();
         queries.add(query);
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);

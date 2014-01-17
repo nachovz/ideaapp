@@ -113,6 +113,7 @@ public class DashboardActivity extends ParentMenuActivity {
         //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
         ParseQuery queryPedidos = new ParseQuery("Pedido");
+        queryPedidos.setLimit(QUERY_LIMIT);
         queryPedidos.setCachePolicy(getParseCachePolicy());
         queryPedidos.whereEqualTo("asesor", ParseUser.getCurrentUser());
         queryPedidos.include("cliente");
@@ -177,6 +178,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
         //Carga de metas
         ParseQuery query = new ParseQuery("Metas");
+        query.setLimit(QUERY_LIMIT);
         query.setCachePolicy(getParseCachePolicy());
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
@@ -379,6 +381,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     //Hacer find
                     ParseQuery query = queries[0];
+                    query.setLimit(QUERY_LIMIT);
                     query.setCachePolicy(getParseCachePolicy());
                     List<ParseObject> parseObjects = query.find();
 
@@ -552,12 +555,21 @@ public class DashboardActivity extends ParentMenuActivity {
     private void getIVAFromParse(){
         //Obtener IVA desde Parse
         ParseQuery queryIva = new ParseQuery("Impuestos");
+        queryIva.setLimit(QUERY_LIMIT);
         queryIva.setCachePolicy(getParseCachePolicy());
         queryIva.whereEqualTo("nombre","IVA");
         queryIva.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseImp, ParseException e) {
-                app.iva = parseImp.getDouble("porcentaje")/100.0;
+                if(e != null){
+                    if(app == null) Log.d(TAG, "app.iva = null");
+                    if(parseImp == null){
+                        Log.d(TAG, "parseImp null");
+                        app.iva = 12.0;
+                    }else{
+                        app.iva = parseImp.getDouble("porcentaje")/100.0;
+                    }
+                }
             }
         });
     }

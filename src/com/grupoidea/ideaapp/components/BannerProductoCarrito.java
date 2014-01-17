@@ -57,13 +57,14 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		View view; TextView textView; ImageView imageView; LayoutInflater inflater;
-		producto = (Producto) getItem(position);
 		
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(R.layout.banner_producto_carrito_layout, null);
+            producto = (Producto) getItem(position);
 		} else {
 			view = convertView;
+            producto = (Producto) view.getTag();
 		}
         assert view != null;
         mContext= view.getContext();
@@ -71,44 +72,24 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		if(producto != null) {
             view.setTag(producto);
             NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker);
-            np.setMinValue(1);
-            np.setMaxValue(producto.getExcedente()+producto.getExistencia());
-            np.setWrapSelectorWheel(true);
+            int max = producto.getExcedente()+producto.getExistencia();
+            np.setMaxValue(max);
+            np.setMinValue(0);
 
-            Log.d(TAG, "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
+//            Log.d(TAG, "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
             np.setValue(producto.getCantidad());
             np.setTag(producto);
 
             EditText edit = (EditText) np.getChildAt(1);
             assert edit != null;
-            final EditText tv = edit;
 
             //TextWatcher para cuando se actualiza la cantidad por teclado
-            TextWatcher tw = new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    if(tv.getText() != null && !tv.getText().toString().isEmpty() && tv.getParent() != null)
-                        updateCantidadCarrito((Producto)((View)tv.getParent()).getTag(), Integer.valueOf(tv.getText().toString()));
-                }
-            };
+            TextWatcher tw = new NumberPickerTextWatcher(np, edit);
             edit.addTextChangedListener(tw);
 
             //Listener para cuando se cambia el valor mediante +/-
-            np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int prev, int act) {
-                    if(numberPicker.getValue() > 1){
-                        numberPicker.clearFocus();
-                        updateCantidadCarrito((Producto)numberPicker.getTag(), act);
-                    }
-                }
-            });
+            CustomOnValueChangeListener onValueChangeListener = new CustomOnValueChangeListener(np, edit);
+            np.setOnValueChangedListener(onValueChangeListener);
 
             //Monto total de productos de este tipo
 			textView = (TextView) view.findViewById(R.id.banner_carrito_total_text_view);
@@ -157,15 +138,17 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 			}
 
             //Imagen del producto
-			if(producto.getImagen() != null) {
-                //Tiene imagen
-                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-                imageView.setImageBitmap(producto.getImagen());
-            }else{
-                //No tiene imagen, colocar imagen por default
-                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
-            }
+//			if(producto.getImagen() != null) {
+//                //Tiene imagen
+//                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
+//                imageView.setImageBitmap(producto.getImagen());
+//            }else{
+//                //No tiene imagen, colocar imagen por default
+//                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
+//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+//            }
+            imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
+            imageView.setImageResource(producto.getImagenID());
 
             //Etiqueta de Descuento Aplicado
             RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
@@ -197,22 +180,65 @@ public class BannerProductoCarrito extends ParentBannerProducto{
     protected void updateCantidadCarrito(Producto productoListener, int cant){
         productoListener.setCantidad(cant);
         carrito.recalcularMontos();
-        carritoAdapter.notifyDataSetChanged();
-        if(productoListener.hasDescuentos()){
-//            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
-        }
-        if(productoListener.getCategoria()!= null){
-//            Log.d(TAG, productoListener.getCodigo()+ " Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+", % : "+productoListener.getCategoria().getDescActual());
-        }
-        if(productoListener.getGrupoCategorias() != null){
-//            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
-        }
-        //Calcula el total del carrito
         setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+//        if(productoListener.hasDescuentos()){
+//            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
+//        }
+//        if(productoListener.getCategoria()!= null){
+//            Log.d(TAG, productoListener.getCodigo()+ " Descuento categoria : cant : "+productoListener.getCategoria().getCantItemsCarrito()+", % : "+productoListener.getCategoria().getDescActual());
+//        }
+//        if(productoListener.getGrupoCategorias() != null){
+//            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
+//        }
+        //Calcula el total del carrito
+        carritoAdapter.notifyDataSetChanged();
     }
-	
+
 	public Carrito getCarrito() {
 		return carrito;
 	}
 
+    public class NumberPickerTextWatcher implements TextWatcher{
+        NumberPicker numberPicker;
+        EditText tv;
+
+        public NumberPickerTextWatcher(NumberPicker np, EditText tv){
+        this.numberPicker = np;
+        this.tv = tv;
+        }
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {}
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            if(tv.getText() != null && !tv.getText().toString().isEmpty() && Integer.valueOf(tv.getText().toString())>0 && tv.getParent() != null) {
+                updateCantidadCarrito((Producto) numberPicker.getTag(), Integer.valueOf(tv.getText().toString()));
+//                tv = (EditText)numberPicker.getChildAt(1);
+//                if(tv != null) tv.requestFocus();
+//                tv.requestFocus();
+//                carritoAdapter.notifyDataSetChanged();
+//                tv.requestFocus();
+            }
+        }
+    }
+
+    private class CustomOnValueChangeListener implements NumberPicker.OnValueChangeListener{
+        NumberPicker np;
+        EditText edit;
+
+        CustomOnValueChangeListener(NumberPicker np, EditText edit){
+            this.np = np;
+            this.edit = edit;
+        }
+
+        @Override
+        public void onValueChange(NumberPicker numberPicker, int prev, int act) {
+            if(numberPicker.getValue() > 1){
+                updateCantidadCarrito((Producto) numberPicker.getTag(), act);
+            }
+        }
+    }
 }

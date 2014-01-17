@@ -1,11 +1,13 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
 import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Producto;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
@@ -178,30 +180,40 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                         //Calcula el total del carrito
                         setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                     }else{
-                        Toast.makeText(mContext, "No hay disponibilidad del producto", 3000).show();
+                        Toast.makeText(mContext, "No hay disponibilidad del producto", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
             //Cargar Imagen
-			if(producto.getImagen() != null) {
-				imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
-				imageView.setImageBitmap(producto.getImagen());
-			}else{
-                imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
-                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
-            }
+//			if(producto.getImagen() != null) {
+//				imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
+//				imageView.setImageBitmap(producto.getImagen());
+//			}else{
+//                imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
+//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+//            }
+            imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
+
+//            if(producto.imagen == null){
+                if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+                    imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+                }else{
+                    loadBitmap(producto, imageView);
+                }
+//            }else{
+//                imageView.setImageBitmap(producto.imagen);
+//            }
 
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			View title = view.findViewById(R.id.banner_producto_titulo_marca_linearLayout);
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
-                    //Colocar posicion en el Bundle
-					Bundle extras = new Bundle();
-                    extras.putInt("position", position);
-					menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
+                //Colocar posicion en el Bundle
+                Bundle extras = new Bundle();
+                extras.putInt("position", position);
+                menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
 				}
 			});
 
@@ -315,23 +327,58 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
         popup.show();
     }
 
-    /**
-     * Funcion que retorna un TextView configurado para el menu de producto, con el contexto y texto especificado
-     * @param mContext Contexto del menu
-     * @param text Texto a mostrar por el TextView
-     * @return TextView configurado
-     */
-    public TextView createProductoMenuTextView(Context mContext, String text){
-        TextView descProd = new TextView(mContext);
-        descProd.setHeight(40);
-        descProd.setWidth(LayoutParams.MATCH_PARENT);
-        descProd.setTextColor(Color.parseColor("#646464"));
-        descProd.setTypeface(Typeface.DEFAULT_BOLD, Typeface.BOLD_ITALIC);
-        descProd.setGravity(Gravity.CENTER);
-        descProd.setBackgroundResource(R.drawable.menu_producto_selector);
-        descProd.setText(text);
+    public void loadBitmap(Producto producto, ImageView imageView) {
+        String imageURL = producto.getImagenURL();
+        if (cancelPotentialWork(imageURL, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView);
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), producto.imagen, task);
+            imageView.setImageDrawable(asyncDrawable);
+//            task.execute(imageURL);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,imageURL);
+        }
+    }
 
-        return descProd;
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final String bitmapData = bitmapWorkerTask.data;
+            if(bitmapData != null && data != null){
+                if (!bitmapData.equals(data)) {
+                    // Cancel previous task
+                    bitmapWorkerTask.cancel(true);
+                } else {
+                    // The same work is already in progress
+                    return false;
+                }
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 
 }
