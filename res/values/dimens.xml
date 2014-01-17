@@ -2,4 +2,5 @@
 <resources>
     <dimen name="detalle_producto_row_margin">8dp</dimen>
     <dimen name="detalle_producto_row_padding">8dp</dimen>
+    <dimen name="metas_list_item_padding">18dp</dimen>
 </resources>

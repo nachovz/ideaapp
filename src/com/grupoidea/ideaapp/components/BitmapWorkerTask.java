@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,7 +18,7 @@ import java.io.InputStream;
 public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
     String TAG = this.getClass().getSimpleName();
     Context mContext;
-    String data;
+    public String data;
     ImageView imageView;
 
     public BitmapWorkerTask(Context mContext, ImageView imageView) {
@@ -40,12 +39,12 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
             if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)){
                 appDir = mContext.getExternalFilesDir("img/");
                 file2 = new File(appDir, fileName);
-                Log.d(TAG, "Buscando imagen en SD " + file2.getAbsolutePath());
+//                Log.d(TAG, "Buscando imagen en SD " + file2.getAbsolutePath());
                 bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
 
                 if(bitmap == null){
                     //Descarga imagen del server de IDEA
-                    Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
+//                    Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
                     InputStream in = new java.net.URL(params[0]).openStream();
 
                     BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -62,7 +61,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                         File fileSave = new File(appDir,fileName);
                         if(!fileSave.exists())
                             if(fileSave.createNewFile()){
-                                Log.d(TAG, "Guardando imagen en "+ fileSave.getAbsolutePath());
+//                                Log.d(TAG, "Guardando imagen en "+ fileSave.getAbsolutePath());
                                 FileOutputStream out = new FileOutputStream(fileSave);
                                 Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
                                 bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -70,7 +69,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                                 out.close();
                             }
                     }else{
-                        Log.d(TAG, "No se pudo salvar la imagen "+fileName);
+//                        Log.d(TAG, "No se pudo salvar la imagen "+fileName);
                         Toast.makeText(mContext, "No se pudo salvar la imagen " + fileName, Toast.LENGTH_SHORT).show();
                     }
 
@@ -80,7 +79,7 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
                     return bitmap;
                 }
             }else{
-                Log.d(TAG, "Tarjeta SD no disponible ");
+//                Log.d(TAG, "Tarjeta SD no disponible ");
                 Toast.makeText(mContext, "Tarjeta SD no disponible ", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {

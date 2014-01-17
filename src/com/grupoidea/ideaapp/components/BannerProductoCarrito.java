@@ -1,6 +1,11 @@
 package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -18,6 +23,8 @@ import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.models.Carrito;
 import com.grupoidea.ideaapp.models.Producto;
+
+import java.lang.ref.WeakReference;
 
 /** Adaptador que permite crear el listado de Views de productos utilizando un ArrayList de Productos*/
 public class BannerProductoCarrito extends ParentBannerProducto{
@@ -85,6 +92,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 
             //TextWatcher para cuando se actualiza la cantidad por teclado
             TextWatcher tw = new NumberPickerTextWatcher(np, edit);
+            edit.setFocusable(false);
+            edit.setTextIsSelectable(false);
             edit.addTextChangedListener(tw);
 
             //Listener para cuando se cambia el valor mediante +/-
@@ -138,17 +147,14 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 			}
 
             //Imagen del producto
-//			if(producto.getImagen() != null) {
-//                //Tiene imagen
-//                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-//                imageView.setImageBitmap(producto.getImagen());
-//            }else{
-//                //No tiene imagen, colocar imagen por default
-//                imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
-//            }
+
             imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
-            imageView.setImageResource(producto.getImagenID());
+
+            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+            }else{
+                loadBitmap(producto, imageView);
+            }
 
             //Etiqueta de Descuento Aplicado
             RelativeLayout rlDesc = (RelativeLayout) view.findViewById(R.id.banner_carrito_descuento_layout);
@@ -216,11 +222,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
         public void afterTextChanged(Editable editable) {
             if(tv.getText() != null && !tv.getText().toString().isEmpty() && Integer.valueOf(tv.getText().toString())>0 && tv.getParent() != null) {
                 updateCantidadCarrito((Producto) numberPicker.getTag(), Integer.valueOf(tv.getText().toString()));
-//                tv = (EditText)numberPicker.getChildAt(1);
-//                if(tv != null) tv.requestFocus();
-//                tv.requestFocus();
-//                carritoAdapter.notifyDataSetChanged();
-//                tv.requestFocus();
             }
         }
     }
@@ -240,5 +241,59 @@ public class BannerProductoCarrito extends ParentBannerProducto{
                 updateCantidadCarrito((Producto) numberPicker.getTag(), act);
             }
         }
+    }
+
+    public void loadBitmap(Producto producto, ImageView imageView) {
+        String imageURL = producto.getImagenURL();
+        if (cancelPotentialWork(imageURL, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView);
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), producto.imagen, task);
+            imageView.setImageDrawable(asyncDrawable);
+//            task.execute(imageURL);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,imageURL);
+        }
+    }
+
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final String bitmapData = bitmapWorkerTask.data;
+            if(bitmapData != null && data != null){
+                if (!bitmapData.equals(data)) {
+                    // Cancel previous task
+                    bitmapWorkerTask.cancel(true);
+                } else {
+                    // The same work is already in progress
+                    return false;
+                }
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 }

@@ -42,4 +42,8 @@ public class Meta {
     public void setValorBs(double valorBs) {
         this.valorBs = valorBs;
     }
+
+    public String getMarca(){
+        return producto.getMarca();
+    }
 }

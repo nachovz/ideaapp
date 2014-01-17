@@ -186,24 +186,13 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             });
 
             //Cargar Imagen
-//			if(producto.getImagen() != null) {
-//				imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
-//				imageView.setImageBitmap(producto.getImagen());
-//			}else{
-//                imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
-//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
-//            }
             imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
 
-//            if(producto.imagen == null){
-                if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
-                    imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
-                }else{
-                    loadBitmap(producto, imageView);
-                }
-//            }else{
-//                imageView.setImageBitmap(producto.imagen);
-//            }
+            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+            }else{
+                loadBitmap(producto, imageView);
+            }
 
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			View title = view.findViewById(R.id.banner_producto_titulo_marca_linearLayout);

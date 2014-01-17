@@ -5,4 +5,5 @@
     <color name="gray_text">#6D6D6D</color>
     <color name="light_background">#ECECEC</color>
     <color name="dark_background">#D5D6D6</color>
+    <color name="metas_list_item_text_color">#262626</color>
 </resources>

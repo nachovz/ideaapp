@@ -1,6 +1,11 @@
 package com.grupoidea.ideaapp.activities;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -8,9 +13,12 @@ import android.widget.TextView;
 
 import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.components.BitmapWorkerTask;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Producto;
+
+import java.lang.ref.WeakReference;
 
 public class DetalleProductoActivity extends ParentMenuActivity {
     protected String TAG = this.getClass().getSimpleName();
@@ -24,6 +32,8 @@ public class DetalleProductoActivity extends ParentMenuActivity {
     private GrupoIdea app;
 
     private String descripcion, excedente, meta, categoria, grupo, marca;
+
+    private Context mContext;
 	
 	public DetalleProductoActivity() {
 		super(false, false);
@@ -34,6 +44,8 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 		RelativeLayout parentInflater;
 		TextView textView;
 		ImageView imageView;
+
+        mContext = this.getBaseContext();
 		
 		super.onCreate(savedInstanceState);
 
@@ -95,7 +107,13 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 
             //Imagen
             imageView = (ImageView) findViewById(R.id.producto_imageView);
-            imageView.setImageBitmap(bitmap);
+//            imageView.setImageBitmap(bitmap);
+
+            if(prod.getImagenURL() == null || prod.getImagenURL().isEmpty()){
+                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+            }else{
+                loadBitmap(prod, imageView);
+            }
 
             //Categoria
             textView = (TextView) findViewById(R.id.categoria_textView);
@@ -128,5 +146,59 @@ public class DetalleProductoActivity extends ParentMenuActivity {
 	protected Request getRequestAction() {
 		return null;
 	}
+
+    public void loadBitmap(Producto producto, ImageView imageView) {
+        String imageURL = producto.getImagenURL();
+        if (cancelPotentialWork(imageURL, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(mContext, imageView);
+            final AsyncDrawable asyncDrawable = new AsyncDrawable(mContext.getResources(), producto.imagen, task);
+            imageView.setImageDrawable(asyncDrawable);
+//            task.execute(imageURL);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,imageURL);
+        }
+    }
+
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res, Bitmap bitmap, BitmapWorkerTask bitmapWorkerTask) {
+            super(res, bitmap);
+            bitmapWorkerTaskReference = new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+
+        if (bitmapWorkerTask != null) {
+            final String bitmapData = bitmapWorkerTask.data;
+            if(bitmapData != null && data != null){
+                if (!bitmapData.equals(data)) {
+                    // Cancel previous task
+                    bitmapWorkerTask.cancel(true);
+                } else {
+                    // The same work is already in progress
+                    return false;
+                }
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
+    }
 
 }

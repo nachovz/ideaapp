@@ -100,7 +100,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         app.clientes = getClientesFromParse();
 
         //mostrar nombre de usuario
-        setMenuTittle(ParseUser.getCurrentUser().getUsername());
+//        setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
         //Dialogo de carga carrito
         carritoProgressDialog = new ProgressDialog(this);
@@ -773,7 +773,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
                         xDiff = xDown - xUp;
                         yDiff = yDown - yUp;
-                        if (Math.abs(yDiff) < 200 && Math.abs(xDiff) > 200) {
+                        if (Math.abs(yDiff) < 400 && Math.abs(xDiff) > 200) {
                             if (xDiff > 0) {
                                 if (!isMenuRightShowed() && !isMenuLeftShowed()) {
                                     showRightMenu();
