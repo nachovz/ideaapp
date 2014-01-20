@@ -5,21 +5,25 @@ import android.util.Log;
 
 import com.grupoidea.ideaapp.R;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class Catalogo {
 	private ArrayList<Producto> productos, productosCatalogo;
     private Context mContext;
-    public DecimalFormat df = new DecimalFormat("###,###,##0.##");
+
+    public Catalogo(Context context){
+        mContext = context;
+        productosCatalogo = new ArrayList<Producto>();
+    }
 
 	/** Constructor por defecto, permite instanciar el listado de productos.*/
 	public Catalogo(Context context, ArrayList<Producto> prods) {
-		mContext = context;
+		this(context);
 		//almacenar productos originales
         productos = prods;
         //crear ArrayList para los productos que se van a mostrar
-        productosCatalogo = new ArrayList<Producto>(productos);
+        productosCatalogo.clear();
+        productosCatalogo.addAll(prods);
 	}
 	
 	public ArrayList<Producto> getProductosCatalogo() {
@@ -32,6 +36,8 @@ public class Catalogo {
 
 	public void setProductos(ArrayList<Producto> productos) {
 		this.productos = productos;
+        productosCatalogo.clear();
+        productosCatalogo.addAll(productos);
 	}
 	
 	/** Permite determinar el indice de un producto si se encuentra actualmente en el listado de productos
@@ -72,7 +78,7 @@ public class Catalogo {
 
     public ArrayList<Producto> filter(String marcaActual, String categoriaActual){
         Log.d("DEBUG","Catalogo.filter("+marcaActual+", "+categoriaActual+")");
-        productosCatalogo = new ArrayList<Producto>();
+        productosCatalogo.clear();
         Producto prod = null;
         for(int i=0; i<productos.size(); i++) {
             prod = productos.get(i);

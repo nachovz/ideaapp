@@ -98,9 +98,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         super.instanceContext = mContext;
         app = (GrupoIdea) getApplication();
         app.clientes = getClientesFromParse();
-
-        //mostrar nombre de usuario
-//        setMenuTittle(ParseUser.getCurrentUser().getUsername());
+        catalogo = new Catalogo(mContext);
 
         //Dialogo de carga carrito
         carritoProgressDialog = new ProgressDialog(this);
@@ -125,18 +123,18 @@ public class CatalogoActivity extends ParentMenuActivity {
         clienteSpinner.setVisibility(View.VISIBLE);
         clienteSpinner.setSelection(0);
         clienteSelected = 0;
-        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                clienteSelected = i;
-                Log.d(TAG, "Cliente seleccionado: " + i);
-                updatePreciosComerciales();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
+//        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                clienteSelected = i;
+////                Log.d(TAG, "Cliente seleccionado: " + i);
+//                updatePreciosComerciales();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//            }
+//        });
 
         marcas = new ArrayList<String>();
         categoriasAdapter = new CategoriasAdapter(mContext);
@@ -148,7 +146,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     @Override
     public void onBackPressed(){
-        Log.d(TAG, "accionando onBackPressed");
+//        Log.d(TAG, "accionando onBackPressed");
         //Correr Thread para cancelar queries en proceso
         new Thread(new Runnable() {
             public void run(){
@@ -195,7 +193,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         GrupoIdea app = (GrupoIdea) getApplication();
         app.productos = productos;
         app.productosParse = productosParse;
-        Log.d("NUMBER", "Numero de Productos en Query: "+productosParse.size());
+//        Log.d("NUMBER", "Numero de Productos en Query: "+productosParse.size());
 
         Producto producto;
         RelativeLayout menuRight, menuLeft;
@@ -237,8 +235,22 @@ public class CatalogoActivity extends ParentMenuActivity {
             clonarPedido(productos);
         }
 
-        catalogo = new Catalogo(this, productos);
+//        catalogo = new Catalogo(this, productos);
+        catalogo.setProductos(productos);
         marcasAdapter.setCatalogo(catalogo);
+
+        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                clienteSelected = i;
+//                Log.d(TAG, "Cliente seleccionado: " + i);
+                updatePreciosComerciales();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         if(listCarrito != null) {
             initCatalogoLayout();
@@ -269,13 +281,13 @@ public class CatalogoActivity extends ParentMenuActivity {
         producto.setDescripcion(productoParse.getString("descripcion"));
 
         //Obtener Imagen
-//        if(null!= productoParse.getString("picture") && !productoParse.getString("picture").isEmpty()){
-//            retrieveImage(producto, productoParse);
-//        }else{
-//            producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.prod_background));
+        if(null!= productoParse.getString("picture") && !productoParse.getString("picture").isEmpty()){
+            retrieveImage(producto, productoParse);
+        }else{
+            producto.setImagen(BitmapFactory.decodeResource(getResources(), R.drawable.prod_background));
             producto.setImagenID(R.drawable.prod_background);
             producto.setImagenURL(productoParse.getString("picture"));
-//        }
+        }
 
         //Obtener existencia
         ParseQuery queryExistencia = new ParseQuery("Metas");
@@ -507,12 +519,12 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if(isExternalStorageReadable()){
                     appDir = mContext.getExternalFilesDir("img/");
                     file2 = new File(appDir, fileName);
-                    Log.d(TAG, "Buscando imagen en SD "+ file2.getAbsolutePath());
+//                    Log.d(TAG, "Buscando imagen en SD "+ file2.getAbsolutePath());
                     bitmap = BitmapFactory.decodeFile(file2.getAbsolutePath());
 
                     if(bitmap == null){
                         //Descarga imagen del server de IDEA
-                        Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
+//                        Log.d(TAG, "Imagen no existe localmente. Descargando del servidor");
                         InputStream in = new java.net.URL(params[0]).openStream();
 
                         BitmapFactory.Options opt = new BitmapFactory.Options();
@@ -529,7 +541,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                             File fileSave = new File(appDir,fileName);
                             if(!fileSave.exists())
                                 if(fileSave.createNewFile()){
-                                    Log.d(TAG, "Guardando imagen en "+ fileSave.getAbsolutePath());
+//                                    Log.d(TAG, "Guardando imagen en "+ fileSave.getAbsolutePath());
                                     FileOutputStream out = new FileOutputStream(fileSave);
                                     Bitmap bitmapSave = Bitmap.createBitmap(bitmap);
                                     bitmapSave.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -537,7 +549,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                                     out.close();
                                 }
                         }else{
-                            Log.d(TAG, "No se pudo salvar la imagen "+fileName);
+//                            Log.d(TAG, "No se pudo salvar la imagen "+fileName);
                             Toast.makeText(mContext, "No se pudo salvar la imagen "+fileName, Toast.LENGTH_SHORT).show();
                         }
 
@@ -547,11 +559,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                         return bitmap;
                     }
                 }else{
-                    Log.d(TAG, "Tarjeta SD no disponible ");
+//                    Log.d(TAG, "Tarjeta SD no disponible ");
                     Toast.makeText(mContext, "Tarjeta SD no disponible ", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
-                Log.e("ImageDownload Exception: ", e.getMessage());
+//                Log.e("ImageDownload Exception: ", e.getMessage());
             }
             return null;
         }
@@ -564,7 +576,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             if (productoWeakReference != null) {
                 Producto prod = productoWeakReference.get();
                 if (prod != null) {
-                    Log.d(TAG,"Imagen de producto "+prod.getCodigo()+" obtenida");
+//                    Log.d(TAG,"Imagen de producto "+prod.getCodigo()+" obtenida");
                     prod.setImagen(bitmap);
                     if(adapterCatalogo != null){
                         adapterCatalogo.notifyDataSetChanged();
@@ -587,7 +599,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---*/
 
     /**
-     * Metodo llamado al haber seleccionado un pedido para editar desde el Dashboard
+     * Metodo llamado al haber seleccionado un pedido para isNuevoPedido desde el Dashboard
      * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
      */
     private void editarPedido(ArrayList<Producto> productos) {
@@ -613,7 +625,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 productosEnPedido.setLimit(QUERY_LIMIT);
                 productosEnPedido.whereEqualTo("pedido", parseObject);
                 productosEnPedido.include("producto");
-                productosEnPedido.findInBackground(new FindCallback() {
+                productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
                         //Recorrer los productos relacionados al pedido
@@ -668,7 +680,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                 productosEnPedido.setLimit(QUERY_LIMIT);
                 productosEnPedido.whereEqualTo("pedido", parseObject);
                 productosEnPedido.include("producto");
-                productosEnPedido.findInBackground(new FindCallback() {
+                productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
                         //Me muevo en los productos relacionados al pedido
@@ -767,13 +779,14 @@ public class CatalogoActivity extends ParentMenuActivity {
                         xDown = (int) event.getX();
                         yDown = (int) event.getY();
                     }
+
                     if (event.getActionMasked() == MotionEvent.ACTION_UP) {
                         xUp = (int) event.getX();
                         yUp = (int) event.getY();
 
                         xDiff = xDown - xUp;
                         yDiff = yDown - yUp;
-                        if (Math.abs(yDiff) < 400 && Math.abs(xDiff) > 200) {
+                        if (Math.abs(yDiff) < 200 && Math.abs(xDiff) > 200) {
                             if (xDiff > 0) {
                                 if (!isMenuRightShowed() && !isMenuLeftShowed()) {
                                     showRightMenu();
@@ -843,10 +856,12 @@ public class CatalogoActivity extends ParentMenuActivity {
     /**
      * Procedimiento que actualiza los precios comerciales de los productos del catalogo con respecto al cliente seleccionado
      */
-    public static void updatePreciosComerciales(){
+    public void updatePreciosComerciales(){
         Double descCliente = app.clientes.get(clienteSelected).getDescuento()/100.0;
         Double precio;
-        for(Producto prod: catalogo.getProductosCatalogo()){
+        if(catalogo == null) Log.d(TAG, "Catalogo null");
+        if(catalogo != null && catalogo.getProductos() == null) Log.d(TAG, "Productos Catalogo null");
+        for(Producto prod: catalogo.getProductos()){
             precio = prod.getPrecio();
             prod.setPrecioComercial(precio - (precio * descCliente));
         }
@@ -1014,7 +1029,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(null == queries) queries = new ArrayList<ParseQuery>();
         queries.add(query);
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-        query.findInBackground(new FindCallback() {
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> descuentos, ParseException e) {
                 if (e == null) {

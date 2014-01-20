@@ -188,10 +188,16 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
             //Cargar Imagen
             imageView = (ImageView) view.findViewById(R.id.banner_producto_image_view);
 
-            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+//            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+//            }else{
+//                loadBitmap(producto, imageView);
+////                imageView.setImageBitmap(producto.getImagen());
+//            }
+            if(producto.getImagen() == null){
                 imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
             }else{
-                loadBitmap(producto, imageView);
+                imageView.setImageBitmap(producto.getImagen());
             }
 
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.

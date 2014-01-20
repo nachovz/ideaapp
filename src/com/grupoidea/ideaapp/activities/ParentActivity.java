@@ -203,7 +203,7 @@ public abstract class ParentActivity extends Activity {
 
                 Log.d(TAG, "loadFromCache cached result?  "+String.valueOf(query.hasCachedResult()));
                 query.setCachePolicy(getParseCachePolicy());
-                query.findInBackground(new FindCallback() {
+                query.findInBackground(new FindCallback<ParseObject>() {
                     @Override
                     public void done(List<ParseObject> parseData, ParseException e) {
                     if (e == null) {
@@ -299,7 +299,7 @@ public abstract class ParentActivity extends Activity {
 	private void loadFromParse(ParseQuery query) {
         Log.d(TAG, "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
         query.setCachePolicy(getParseCachePolicy());
-		query.findInBackground(new FindCallback() {
+		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> parseData, ParseException e) {

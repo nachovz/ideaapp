@@ -68,11 +68,12 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 		if (convertView == null) {  
 			inflater = (LayoutInflater) menuActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			view = inflater.inflate(R.layout.banner_producto_carrito_layout, null);
-            producto = (Producto) getItem(position);
 		} else {
 			view = convertView;
-            producto = (Producto) view.getTag();
 		}
+
+        producto = (Producto) getItem(position);
+
         assert view != null;
         mContext= view.getContext();
 			
@@ -81,7 +82,7 @@ public class BannerProductoCarrito extends ParentBannerProducto{
             NumberPicker np = (NumberPicker) view.findViewById(R.id.numberPicker);
             int max = producto.getExcedente()+producto.getExistencia();
             np.setMaxValue(max);
-            np.setMinValue(0);
+            np.setMinValue(1);
 
 //            Log.d(TAG, "Producto :"+producto.getCodigo()+" Cantidad: "+producto.getCantidad());
             np.setValue(producto.getCantidad());
@@ -150,10 +151,16 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 
             imageView = (ImageView) view.findViewById(R.id.banner_carrito_image_view);
 
-            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+//            if(producto.getImagenURL() == null || producto.getImagenURL().isEmpty()){
+//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+//            }else{
+//                loadBitmap(producto, imageView);
+//            }
+
+            if(producto.getImagen() == null){
                 imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
             }else{
-                loadBitmap(producto, imageView);
+                imageView.setImageBitmap(producto.getImagen());
             }
 
             //Etiqueta de Descuento Aplicado
@@ -186,6 +193,8 @@ public class BannerProductoCarrito extends ParentBannerProducto{
     protected void updateCantidadCarrito(Producto productoListener, int cant){
         productoListener.setCantidad(cant);
         carrito.recalcularMontos();
+        carritoAdapter.notifyDataSetChanged();
+        //Calcula el total del carrito
         setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
 //        if(productoListener.hasDescuentos()){
 //            Log.d(TAG, productoListener.getCodigo()+" Descuento producto : cant : "+productoListener.getCantidad()+", % : "+productoListener.getDescuentoAplicado());
@@ -196,8 +205,6 @@ public class BannerProductoCarrito extends ParentBannerProducto{
 //        if(productoListener.getGrupoCategorias() != null){
 //            Log.d(TAG, productoListener.getCodigo()+" Descuento grupo cant : "+productoListener.getGrupoCategorias().getCantItemsCarrito()+",  % : "+productoListener.getGrupoCategorias().getDescActual());
 //        }
-        //Calcula el total del carrito
-        carritoAdapter.notifyDataSetChanged();
     }
 
 	public Carrito getCarrito() {

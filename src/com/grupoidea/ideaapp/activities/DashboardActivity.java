@@ -14,8 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.grupoidea.ideaapp.GrupoIdea;
@@ -34,29 +32,21 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 public class DashboardActivity extends ParentMenuActivity {
     String TAG = this.getClass().getSimpleName();
-	/** Elemento que contiene la sesion del usuario actual*/ 
-	private ParseUser user;
 	/** ViewGroup que contiene las filas con informacion de los clientes*/
-	//private LinearLayout clienteList;
 	/** ViewGroup que contiene las filas con informacion de los pedidos */
 	private LinearLayout pedidosList;
     private List<ParseObject> pedidos;
     private Spinner pedidosSpinner;
     private ArrayAdapter<String> pedidosSpinnerAdapter;
-    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     /** Lista de metas del usuario logueado */
     private ArrayList<Meta> metas;
-
-    private TableLayout tl;
-    private TableRow tr;
 
     /** Lista de Marcas disponibles para el Spinner */
     private HashSet<String> marcas;
@@ -83,6 +73,9 @@ public class DashboardActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard_layout);
 
+        //Obtener IVA para los RowPedido
+        getIVAFromParse();
+
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
@@ -98,7 +91,6 @@ public class DashboardActivity extends ParentMenuActivity {
         estados.add("ANULADO");
         estados.add("TODOS");
 
-//        clientes = app.clientes = getClientesFromParse();
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         clienteSpinner.setEnabled(false);
         clienteSpinner.setVisibility(View.INVISIBLE);
@@ -107,9 +99,6 @@ public class DashboardActivity extends ParentMenuActivity {
         pedidosSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         pedidosSpinner = (Spinner)findViewById(R.id.pedidos_spinner);
         pedidosSpinner.setAdapter(pedidosSpinnerAdapter);
-
-        //Obtener IVA para los RowPedido
-        getIVAFromParse();
 
         //Carga de Pedidos
 		pedidosList = (LinearLayout) findViewById(R.id.client_list_linear_layout);
@@ -120,7 +109,7 @@ public class DashboardActivity extends ParentMenuActivity {
         queryPedidos.include("cliente");
         queryPedidos.orderByAscending("estado");
         queryPedidos.addDescendingOrder("createdAt");
-        queryPedidos.findInBackground(new FindCallback() {
+        queryPedidos.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
@@ -186,7 +175,7 @@ public class DashboardActivity extends ParentMenuActivity {
         query.include("asesor");
 //        ObtenerMetasTask obtenerMetas =  new ObtenerMetasTask();
 //        obtenerMetas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
-        query.findInBackground(new FindCallback() {
+        query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if(e == null){
@@ -314,14 +303,17 @@ public class DashboardActivity extends ParentMenuActivity {
         queryIva.getFirstInBackground(new GetCallback() {
             @Override
             public void done(ParseObject parseImp, ParseException e) {
-                if(e != null){
-                    if(app == null) Log.d(TAG, "app.iva = null");
+                if(e == null){
                     if(parseImp == null){
-                        Log.d(TAG, "parseImp null");
+                        Log.d(TAG, "No existe un valor especificado para el IVA en la BD");
                         app.iva = 12.0;
                     }else{
                         app.iva = parseImp.getDouble("porcentaje")/100.0;
+//                        Log.d(TAG, "IVA: " + parseImp.getDouble("porcentaje")+"%");
                     }
+                }else{
+                    Log.d(TAG, "Error en el Query para obtener el IVA");
+                    e.printStackTrace();
                 }
             }
         });
@@ -333,6 +325,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
     @Override
     public void reloadApp() {
+        //@TODO Verificar primero si hay internet
         ParseQuery.clearAllCachedResults();
         finish();
         getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -109,10 +109,16 @@ public class DetalleProductoActivity extends ParentMenuActivity {
             imageView = (ImageView) findViewById(R.id.producto_imageView);
 //            imageView.setImageBitmap(bitmap);
 
-            if(prod.getImagenURL() == null || prod.getImagenURL().isEmpty()){
+//            if(prod.getImagenURL() == null || prod.getImagenURL().isEmpty()){
+//                imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
+//            }else{
+//                loadBitmap(prod, imageView);
+//            }
+
+            if(prod.getImagen() == null){
                 imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.prod_background));
             }else{
-                loadBitmap(prod, imageView);
+                imageView.setImageBitmap(prod.getImagen());
             }
 
             //Categoria

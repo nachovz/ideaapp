@@ -363,5 +363,6 @@
                     android:layout_alignParentEnd="false"
                     android:gravity="center"
                     android:layout_alignParentBottom="false" android:layout_below="@+id/totales_pedido_table"/>
+
         </RelativeLayout>
     </ScrollView>

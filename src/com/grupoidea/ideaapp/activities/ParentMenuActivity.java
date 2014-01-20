@@ -324,7 +324,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
         ParseQuery query = new ParseQuery("Cliente");
         query.setLimit(QUERY_LIMIT);
         query.setCachePolicy(getParseCachePolicy());
-        query.findInBackground(new FindCallback() {
+        query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> listaClientes, ParseException e) {
                 Cliente cliente;
                 if (e == null) {

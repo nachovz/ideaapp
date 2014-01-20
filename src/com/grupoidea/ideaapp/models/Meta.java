@@ -46,4 +46,8 @@ public class Meta {
     public String getMarca(){
         return producto.getMarca();
     }
+
+    public String getCodigo(){
+        return producto.getCodigo();
+    }
 }
