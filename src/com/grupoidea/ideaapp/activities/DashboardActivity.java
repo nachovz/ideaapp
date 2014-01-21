@@ -41,7 +41,6 @@ public class DashboardActivity extends ParentMenuActivity {
 	/** ViewGroup que contiene las filas con informacion de los clientes*/
 	/** ViewGroup que contiene las filas con informacion de los pedidos */
 	private LinearLayout pedidosList;
-    private List<ParseObject> pedidos;
     private Spinner pedidosSpinner;
     private ArrayAdapter<String> pedidosSpinnerAdapter;
 
@@ -72,6 +71,8 @@ public class DashboardActivity extends ParentMenuActivity {
         app = (GrupoIdea) getApplication();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard_layout);
+
+        Log.d(TAG, "internet status: "+GrupoIdea.isNetworkAvailable(mContext));
 
         //Obtener IVA para los RowPedido
         getIVAFromParse();
@@ -113,9 +114,9 @@ public class DashboardActivity extends ParentMenuActivity {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {
                 if (e == null) {
-                    pedidos = parseObjects;
+                    app.pedidos = parseObjects;
                     //setear contador de pedidos
-                    pedidosCounter.setText(String.valueOf(pedidos.size()));
+                    pedidosCounter.setText(String.valueOf(app.pedidos.size()));
                     pedidosCounter.setVisibility(View.VISIBLE);
 
                     pedidosSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -132,7 +133,7 @@ public class DashboardActivity extends ParentMenuActivity {
                             pedidosList.removeViews(1, pedidosList.getChildCount()-1);
 
                             //Agregarlos al View
-                            for (ParseObject parseObject : pedidos) {
+                            for (ParseObject parseObject : app.pedidos) {
                                 if(parseObject.getInt("estado") == position || position == Pedido.ESTADO_TODOS){
                                     ParseObject cliente = parseObject.getParseObject("cliente");
                                     row = new RowPedido(mContext, parseObject);
@@ -173,8 +174,6 @@ public class DashboardActivity extends ParentMenuActivity {
         query.whereEqualTo("asesor", ParseUser.getCurrentUser());
         query.include("producto");
         query.include("asesor");
-//        ObtenerMetasTask obtenerMetas =  new ObtenerMetasTask();
-//        obtenerMetas.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, query);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> parseObjects, ParseException e) {

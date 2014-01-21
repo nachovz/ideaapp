@@ -198,16 +198,26 @@ public class RowPedido extends RelativeLayout {
                                     bundle = new Bundle();
                                     app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
                                     app.pedido = new Pedido(pedidoParse);
-                                    parent.dispatchActivity(CatalogoActivity.class, bundle, false);
+                                    if (GrupoIdea.isNetworkAvailable(context))
+                                        parent.dispatchActivity(CatalogoActivity.class, bundle, false);
+                                    else {
+                                        AlertDialog.Builder noInternetNotificationDialog = new AlertDialog.Builder(context);
+                                        noInternetNotificationDialog.setTitle("Sin Conexión a Internet")
+                                                .setMessage("Se necesita una conexión a internet para continuar.")
+                                                .setPositiveButton(R.string.dialog_continuar_button, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {}
+                                                });
+                                        noInternetNotificationDialog.create().show();
+                                    }
+
                                 }
                             })
                             .setNegativeButton(context.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                 }
                             });
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
+                    builder.create().show();
                     return true;
                 }
             });
@@ -231,7 +241,18 @@ public class RowPedido extends RelativeLayout {
                                     Bundle bundle;
                                     bundle = new Bundle();
                                     app.pedido = new Pedido(pedidoParse);
-                                    parent.dispatchActivity(CatalogoActivity.class, bundle, false);
+                                    if(GrupoIdea.isNetworkAvailable(context))
+                                        parent.dispatchActivity(CatalogoActivity.class, bundle, false);
+                                    else{
+                                        AlertDialog.Builder noInternetNotificationDialog = new AlertDialog.Builder(context);
+                                        noInternetNotificationDialog.setTitle("Sin Conexión a Internet")
+                                                .setMessage("Se necesita una conexión a internet para continuar.")
+                                                .setPositiveButton(R.string.dialog_continuar_button, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {}
+                                                });
+                                        noInternetNotificationDialog.create().show();
+                                    }
                                 }
                             })
                             .setNegativeButton(context.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {

@@ -214,7 +214,12 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         Button finalizarPedidoButton = (Button) findViewById(R.id.finalizarPedidoButton);
         finalizarPedidoButton.setEnabled(false);
         final ParseObject pedidoParse;
-        Toast.makeText(mContext, R.string.subiendoPedido, Toast.LENGTH_SHORT).show();
+
+        //Toast de mensaje de upload
+        int idToastMessage;
+        if(GrupoIdea.isNetworkAvailable(mContext)) idToastMessage = R.string.subiendoPedido;
+        else idToastMessage = R.string.no_internet_subiendoPedido;
+        Toast.makeText(mContext, idToastMessage, Toast.LENGTH_SHORT).show();
 
         EditText direccionET = (EditText) findViewById(R.id.direccion_envio_edit);
         direccion = ""+String.valueOf(direccionET.getText());
@@ -250,7 +255,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         metaToSave = new ArrayList<ParseObject>();
                         pedidoHasProductos = new ParseObject("PedidoHasProductos");
                         //Buscar por producto y asesor
-                        metaParse = findMeta(ParseUser.getCurrentUser(), prod.getCodigo());
+                        metaParse = findMetaByProductCode(ParseUser.getCurrentUser(), prod.getCodigo());
                         int dispMeta = metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
                         int cant = prod.getCantidad();
                         int cantExced = cant-dispMeta;
@@ -405,7 +410,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                     //obtener productos del pedido
                     for (ParseObject productoPedidoHasProductos : productosPedidoHasProductos) {
                         //buscar producto en metas
-                        final ParseObject meta = findMeta(ParseUser.getCurrentUser(), productoPedidoHasProductos.getParseObject("producto").getString("codigo"));
+                        final ParseObject meta = findMetaByProductCode(ParseUser.getCurrentUser(), productoPedidoHasProductos.getParseObject("producto").getString("codigo"));
                         //restaurarle la cantidad a campo pedido en metas
                         Log.d(TAG, "Restaurando metas para producto " + meta.getParseObject("producto").getObjectId());
                         int pedido = meta.getInt("pedido") - productoPedidoHasProductos.getInt("cantidad");
@@ -473,7 +478,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
      * @param codigoProducto codigo del producto de la meta
      * @return el <code>ParseObject</code> de la Meta, <code>null</code> otherwise
      */
-    public ParseObject findMeta(ParseUser usuario, String codigoProducto){
+    public ParseObject findMetaByProductCode(ParseUser usuario, String codigoProducto){
 //        Log.d(TAG, "Buscando: "+codigoProducto+" asesor:"+usuario.getUsername());
         for (ParseObject meta:app.metasParse){
             if(meta.getParseUser("asesor").getUsername().equals(usuario.getUsername()) && meta.getParseObject("producto").getString("codigo").equals(codigoProducto)){

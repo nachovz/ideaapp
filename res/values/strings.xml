@@ -3,6 +3,7 @@
     <string name="app_name">IDEA app</string>
     <string name="cargando">Cargando</string>
     <string name="end_cargando">Carga finalizada</string>
+    <string name="no_internet_message_refresh">No hay conexión a Internet para refrescar la aplicación.</string>
 
     <!--Login-->
     <string name="nombre_usuario">Usuario</string>
@@ -29,11 +30,11 @@
     <string name="dialog_continuar_button">Continuar</string>
     <string name="dialog_cancelar_button">Cancelar</string>
     <string name="rechazado_dialog_title">Editar Pedido Rechazado</string>
-    <string name="rechazado_dialog_message">Editar este pedido cambiará su estado a \"Verificando\". Continuar?</string>
+    <string name="rechazado_dialog_message">Editar este pedido cambiará su estado a \"Verificando\". Desea Continuar? Necesita de una conexión activa a Internet para realizar esta acción.</string>
     <string name="verificando_dialog_title">Editar Pedido Esperando Verificacion</string>
-    <string name="verificando_dialog_message">Esta seguro que desea editar pedido en espera de Verificación?</string>
+    <string name="verificando_dialog_message">Esta seguro que desea editar pedido en espera de Verificación? Necesita de una conexión activa a Internet para realizar esta acción.</string>
     <string name="copiar_dialog_title">Crear Nuevo Pedido</string>
-    <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado?</string>
+    <string name="copiar_dialog_message">Crear nuevo pedido copiando el contenido del pedido seleccionado? Necesita de una conexión activa a Internet para realizar esta acción. </string>
     <string name="obs_rechazo_pedido_alert_title">Observaciones por rechazo de pedido:</string>
     <string name="empty_obs_rechazo_pedido">No hay Observaciones para este Pedido</string>
     <!--Fin Row Pedido-->
@@ -96,6 +97,7 @@
 
     <string name="botonPedido">Finalizar Pedido</string>
     <string name="subiendoPedido">Subiendo Pedido a la nube. Por favor espere.</string>
+    <string name="no_internet_subiendoPedido">No se dispone de conexión a internet. Su Pedido será subido a la nube al estar disponible.</string>
     <string name="pedidoCompletado">Pedido Completado exitosamente</string>
     <string name="detalle_producto_header">Detalles del Producto</string>
     <!--Fin Gestion Pedidos-->

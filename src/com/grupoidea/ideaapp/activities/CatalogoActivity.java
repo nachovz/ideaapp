@@ -227,12 +227,12 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         }else if(getIntent().getIntExtra("status", 0)== Pedido.ESTADO_RECHAZADO || getIntent().getIntExtra("status", 0)== Pedido.ESTADO_VERIFICANDO){
             //Editar pedido rechazado
-            editarPedido(productos);
+            editarPedido();
 
         }else{
             //Clonar Pedido
             /* Pedido no está "Rechazado" ni "En Espera" */
-            clonarPedido(productos);
+            clonarPedido();
         }
 
 //        catalogo = new Catalogo(this, productos);
@@ -600,114 +600,83 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /**
      * Metodo llamado al haber seleccionado un pedido para isNuevoPedido desde el Dashboard
-     * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
      */
-    private void editarPedido(ArrayList<Producto> productos) {
+    private void editarPedido() {
         Log.d(TAG, "Modificar Pedido " + modificarPedidoId);
         carritoProgressDialog.show();
-        //TODO Ver si se puede optimizar esto
         clienteSpinner.setVisibility(View.INVISIBLE);
-        final ArrayList<Producto> prodsModPedido=productos;
-        //Pedido Id
-        final ParseQuery queryPedido = new ParseQuery("Pedido");
-        queryPedido.setCachePolicy(getParseCachePolicy());
-        queryPedido.setLimit(QUERY_LIMIT);
-        queryPedido.whereEqualTo("objectId", modificarPedidoId);
-        queryPedido.include("asesor");
-        queryPedido.include("cliente");
-        queryPedido.getFirstInBackground(new GetCallback() {
+        ParseObject parseObject = findPedidoById(modificarPedidoId);
+        app.pedido.setParseObject(parseObject);
+
+        //Productos en pedido
+        ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+        productosEnPedido.setCachePolicy(getParseCachePolicy());
+        productosEnPedido.setLimit(QUERY_LIMIT);
+        productosEnPedido.whereEqualTo("pedido", parseObject);
+        productosEnPedido.include("producto");
+        productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                app.pedido.setParseObject(parseObject);
-                //Productos en pedido
-                final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
-                productosEnPedido.setCachePolicy(getParseCachePolicy());
-                productosEnPedido.setLimit(QUERY_LIMIT);
-                productosEnPedido.whereEqualTo("pedido", parseObject);
-                productosEnPedido.include("producto");
-                productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
-                        //Recorrer los productos relacionados al pedido
-                        for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
-                            //Agregar los relacionados al pedido en el carrito
-                            ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
-                            for (Producto aProdsModPedido : prodsModPedido) {
-                                if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
-                                    aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
-//                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia()));
-                                    //Agregar cantidad a existencia temporalmente
-                                    aProdsModPedido.setExistencia(pedidoConProductoObj.getInt("cantidad") + aProdsModPedido.getExistencia());
-                                    aProdsModPedido.setIsInCarrito(true);
-                                    adapterCarrito.notifyDataSetChanged();
-//                                    Log.d(TAG, "Agregando " + pedidoConProductoObj.getInt("cantidad") + " productos " + prodAdd.get("codigo") + "(" + prodAdd.getObjectId() + ") a pedido");
-                                    adapterCarrito.getCarrito().addProducto(aProdsModPedido);
-                                    adapterCarrito.notifyDataSetChanged();
-                                    adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                                }
-                            }
+            public void done(List<ParseObject> productosPedidoHasProductos, ParseException e) {
+                for (ParseObject productoPedidoHasProductos : productosPedidoHasProductos) {
+                    //Agregar los relacionados al pedido en el carrito
+                    ParseObject productoPedidoParse = productoPedidoHasProductos.getParseObject("producto");
+                    for (Producto productoPedidoLocal : app.productos) {
+                        if (productoPedidoParse.get("codigo").equals(productoPedidoLocal.getCodigo())) {
+                            productoPedidoLocal.setCantidad(productoPedidoHasProductos.getInt("cantidad") + productoPedidoHasProductos.getInt("excedente"));
+//                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(productoPedidoHasProductos.getInt("cantidad") + productoPedidoLocal.getExistencia()));
+                            //Agregar cantidad a existencia temporalmente
+                            productoPedidoLocal.setExistencia(productoPedidoHasProductos.getInt("cantidad") + productoPedidoLocal.getExistencia());
+                            productoPedidoLocal.setIsInCarrito(true);
+//                                    Log.d(TAG, "Agregando " + productoPedidoHasProductos.getInt("cantidad") + " productos " + productoPedidoParse.get("codigo") + "(" + productoPedidoParse.getObjectId() + ") a pedido");
+                            adapterCarrito.getCarrito().addProducto(productoPedidoLocal);
                         }
-                        carritoProgressDialog.dismiss();
                     }
-                });
+                }
+                adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                adapterCarrito.notifyDataSetChanged();
+                carritoProgressDialog.dismiss();
+                listCarrito.smoothScrollToPosition(0);
+                adapterCarrito.showCarrito();
             }
         });
-        adapterCarrito.notifyDataSetChanged();
-        adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-        listCarrito.smoothScrollToPosition(0);
-        adapterCarrito.showCarrito();
     }
 
     /**
      * Metodo llamado al haber seleccionado crear un nuevo pedido a partir de uno existente desde el Dashboard
-     * @param productos <code>ArrayList</code> de <code>Producto</code> que contiene los productos del pedido
      */
-    private void clonarPedido(ArrayList<Producto> productos) {
+    private void clonarPedido() {
         Log.d(TAG, "Clonar Pedido " + modificarPedidoId);
-        final ArrayList<Producto> prodsModPedido=productos;
         carritoProgressDialog.show();
-        //Pedido Id
-        final ParseQuery queryPedido = new ParseQuery("Pedido");
-        queryPedido.setCachePolicy(getParseCachePolicy());
-        queryPedido.setLimit(QUERY_LIMIT);
-        queryPedido.whereEqualTo("objectId", modificarPedidoId);
-        queryPedido.getFirstInBackground(new GetCallback() {
+        ParseObject parseObject = findPedidoById(modificarPedidoId);
+        app.pedido.setParseObject(parseObject);
+        //Productos en pedido
+        final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
+        productosEnPedido.setCachePolicy(getParseCachePolicy());
+        productosEnPedido.setLimit(QUERY_LIMIT);
+        productosEnPedido.whereEqualTo("pedido", parseObject);
+        productosEnPedido.include("producto");
+        productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
             @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                //Productos en pedido
-                final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
-                productosEnPedido.setCachePolicy(getParseCachePolicy());
-                productosEnPedido.setLimit(QUERY_LIMIT);
-                productosEnPedido.whereEqualTo("pedido", parseObject);
-                productosEnPedido.include("producto");
-                productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
-                        //Me muevo en los productos relacionados al pedido
-                        for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
-                            //Agrego los relacionados al pedido en el carrito
-                            ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
-                            for (Producto aProdsModPedido : prodsModPedido) {
-                                if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
-                                    aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
-                                    aProdsModPedido.setIsInCarrito(true);
-                                    adapterCarrito.notifyDataSetChanged();
+            public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
+                for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
+                    //Agrego los relacionados al pedido en el carrito
+                    ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
+                    for (Producto aProdsModPedido : app.productos) {
+                        if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
+                            aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
+                            aProdsModPedido.setIsInCarrito(true);
 //                                        Log.d(TAG, "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
-                                    adapterCarrito.getCarrito().addProducto(aProdsModPedido);
-                                    adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                                }
-                            }
+                            adapterCarrito.getCarrito().addProducto(aProdsModPedido);
                         }
-                        carritoProgressDialog.dismiss();
                     }
-                });
+                }
+                adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                adapterCarrito.notifyDataSetChanged();
+                carritoProgressDialog.dismiss();
+                listCarrito.smoothScrollToPosition(0);
+                adapterCarrito.showCarrito();
             }
         });
-
-        adapterCarrito.notifyDataSetChanged();
-        adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-        listCarrito.smoothScrollToPosition(0);
-        adapterCarrito.showCarrito();
     }
 
     /**
@@ -816,16 +785,12 @@ public class CatalogoActivity extends ParentMenuActivity {
         categoriasFiltro = (ListView) findViewById(R.id.categorias_filtro_listView);
         categoriasFiltro.setAdapter(categoriasAdapter);
         categoriasAdapter.setCategoriasListView(categoriasFiltro);
-//        categoriasFiltro.setSelection(0);
-//        categoriasAdapter.notifyDataSetInvalidated();
         categoriasAdapter.notifyDataSetChanged();
 
         //Filtro Marcas
         marcasFiltro = (ListView) findViewById(R.id.marcas_filtro_listView);
         marcasFiltro.setAdapter(marcasAdapter);
         marcasAdapter.setMarcasListView(marcasFiltro);
-//        marcasFiltro.setSelection(0);
-//        marcasAdapter.notifyDataSetInvalidated();
         marcasAdapter.notifyDataSetChanged();
     }
 
@@ -1063,5 +1028,12 @@ public class CatalogoActivity extends ParentMenuActivity {
     * ---------------
     * ---*/
 
+    public ParseObject findPedidoById(String pedidoId){
+        for (ParseObject pedido:app.pedidos){
+            if(pedido.getObjectId().equals(pedidoId))
+                return pedido;
+        }
+        return null;
+    }
 
  }

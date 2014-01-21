@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
@@ -153,8 +154,12 @@ public abstract class ParentMenuActivity extends ParentActivity {
         refresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                reloadApp();
-                refresh.setClickable(false);
+                if(GrupoIdea.isNetworkAvailable(getApplicationContext())){
+                    reloadApp();
+                    refresh.setClickable(false);
+                }else{
+                    Toast.makeText(getBaseContext(), getString(R.string.no_internet_message_refresh), Toast.LENGTH_LONG).show();
+                }
             }
         });
 

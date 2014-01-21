@@ -1,6 +1,8 @@
 package com.grupoidea.ideaapp;
 
 import android.app.Application;
+import android.content.Context;
+import android.net.ConnectivityManager;
 
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
@@ -26,6 +28,7 @@ public class GrupoIdea extends Application {
     public List<ParseObject> metasParse;
 
     public Pedido pedido;
+    public List<ParseObject> pedidos;
     public Cliente clienteActual;
     public double iva;
 
@@ -36,4 +39,8 @@ public class GrupoIdea extends Application {
 		super.onCreate();
 		Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
 	}
+
+    public static boolean isNetworkAvailable(Context context){
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    }
 }
