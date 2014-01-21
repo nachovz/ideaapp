@@ -202,7 +202,7 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
 
 			//Crear comportamiento de click al articulo = despachar al activity de detalle de producto.
 			View title = view.findViewById(R.id.banner_producto_titulo_marca_linearLayout);
-			view.setOnClickListener(new OnClickListener() {
+			title.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
                 //Colocar posicion en el Bundle

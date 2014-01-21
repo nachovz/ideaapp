@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/codigo_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="3"/>
+
+    <TextView
+        android:id="@+id/cantidad_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="2"/>
+
+    <TextView
+        android:id="@+id/precio_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="3"/>
+
+    <TextView
+        android:id="@+id/precio_comercial_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="3"/>
+
+    <TextView
+        android:id="@+id/descuento_volumen_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="2"/>
+
+    <TextView
+        android:id="@+id/precio_final_lista_producto_pedido_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#262626"
+        android:padding="18dp"
+        android:layout_weight="4"/>
+
+</TableRow>

@@ -140,8 +140,6 @@ public class CatalogoActivity extends ParentMenuActivity {
         categoriasAdapter = new CategoriasAdapter(mContext);
         marcasAdapter = new MarcasAdapter(mContext, categoriasAdapter);
         categoriasAdapter.setMarcasAdapter(marcasAdapter);
-//        categoriaActual = getString(R.string.todas);
-//        marcaActual = getString(R.string.todas);
 	}
 
     @Override
@@ -325,8 +323,6 @@ public class CatalogoActivity extends ParentMenuActivity {
             for (ParseObject descuento : descuentos) {
                 tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
-        }else{
-//            Log.d(TAG, "El Producto " + productoParse.getString("codigo") + " no posee descuentos");
         }
 
         //Encender flags y actualizar progressBar

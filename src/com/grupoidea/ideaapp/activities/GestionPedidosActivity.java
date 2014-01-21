@@ -1,21 +1,20 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
+import com.grupoidea.ideaapp.components.ProductosPedidoAdapter;
 import com.grupoidea.ideaapp.io.Request;
 import com.grupoidea.ideaapp.io.Response;
 import com.grupoidea.ideaapp.models.Cliente;
@@ -76,7 +75,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
             isNuevoPedido = false;
         }
 
-        Log.d(TAG, "isNuevoPedido: "+String.valueOf(isNuevoPedido)+" numPedido: " + numPedido);
+        Log.d(TAG, "isNuevoPedido: "+String.valueOf(isNuevoPedido)+" numPedido: " + numPedido + " productos: "+productos.size());
 
         TextView text;
 
@@ -112,93 +111,16 @@ public class GestionPedidosActivity extends ParentMenuActivity {
 
         //-------------- Fin Setear Header --------------
 
-        //llenar TableRow con productos
-        TableLayout tl = (TableLayout)findViewById(R.id.listado_productos_pedido_table);
-        TableRow tr;
-        TableRow.LayoutParams params;
-        String descProd;
-        TextView nombreTextView, cantidadTextView, precioTextView, precioComercialTextView, descuentoTextView, precioFinalTextView;
-        Boolean darkBackground = true;
-
-        for (Producto prod : productos) {
-            tr = new TableRow(this);
-            tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-
-            //Nombre
-            nombreTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-            nombreTextView.setLayoutParams(params);
-            nombreTextView.setTextColor(Color.parseColor("#262626"));
-            nombreTextView.setPadding(18, 18, 18, 18);
-            nombreTextView.setText(prod.getCodigo());
-            tr.addView(nombreTextView);
-            if (darkBackground) nombreTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else nombreTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Cantidad
-            cantidadTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
-            cantidadTextView.setLayoutParams(params);
-            cantidadTextView.setTextColor(Color.parseColor("#262626"));
-            cantidadTextView.setPadding(18, 18, 18, 18);
-            cantidadTextView.setText(String.valueOf(prod.getCantidad()));
-            tr.addView(cantidadTextView);
-            if (darkBackground)
-                cantidadTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else cantidadTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Precio Lista
-            precioTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-            precioTextView.setLayoutParams(params);
-            precioTextView.setTextColor(Color.parseColor("#262626"));
-            precioTextView.setPadding(18, 18, 18, 18);
-            precioTextView.setText(prod.getStringPrecio());
-            tr.addView(precioTextView);
-            if (darkBackground) precioTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else precioTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Precio con Desc Comercial
-            precioComercialTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("3"));
-            precioComercialTextView.setLayoutParams(params);
-            precioComercialTextView.setTextColor(Color.parseColor("#262626"));
-            precioComercialTextView.setPadding(18, 18, 18, 18);
-            precioComercialTextView.setText(prod.getStringPrecioComercial());
-            tr.addView(precioComercialTextView);
-            if (darkBackground)
-                precioComercialTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else precioComercialTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Descuento por Volumen
-            descuentoTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("2"));
-            descuentoTextView.setLayoutParams(params);
-            descuentoTextView.setTextColor(Color.parseColor("#262626"));
-            descuentoTextView.setPadding(18, 18, 18, 18);
-            descProd = df.format(prod.getPrecioComercial() * prod.getDescuentoAplicado());
-            descuentoTextView.setText(descProd + " (" + prod.getDescuentoAplicadoPorcString() + ")");
-            tr.addView(descuentoTextView);
-            if (darkBackground)
-                descuentoTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else descuentoTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Precio Final
-            precioFinalTextView = new TextView(this);
-            params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, Float.parseFloat("4"));
-            precioFinalTextView.setLayoutParams(params);
-            precioFinalTextView.setTextColor(Color.parseColor("#262626"));
-            precioFinalTextView.setPadding(18, 18, 18, 18);
-            precioFinalTextView.setText(prod.getStringPrecioComercialTotal());
-            tr.addView(precioFinalTextView);
-            if (darkBackground)
-                precioFinalTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
-            else precioFinalTextView.setBackgroundColor(Color.parseColor("#E4E4E4"));
-
-            //Añadir a TableLayout de productos
-            tl.addView(tr, tl.getChildCount(), new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
-            darkBackground = !darkBackground;
-        }
+        ArrayList<Producto> test = new ArrayList<Producto>();
+        test.addAll(productos);
+        test.addAll(productos);
+        test.addAll(productos);
+        test.addAll(productos);
+//        ProductosPedidoAdapter adapter = new ProductosPedidoAdapter(mContext, productos);
+        ProductosPedidoAdapter adapter = new ProductosPedidoAdapter(mContext, test);
+        ListView productosListView = (ListView) findViewById(R.id.productos_pedido_listView);
+        productosListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -268,7 +190,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                             metaParse.put("pedido", metaParse.getInt("pedido") + dispMeta);
                             prod.getProductoParse().put("excedente", prod.getProductoParse().getInt("excedente") - cantExced);
                         }else{
-                            //Si no, no se coloca nada en exedente
+                            //Si no exedente 0
                             pedidoHasProductos.put("cantidad", cant);
                             pedidoHasProductos.put("excedente", 0);
                             metaParse.put("pedido", metaParse.getInt("pedido") + cant);
@@ -284,11 +206,8 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         pedidoHasProductos.put("producto", prod.getProductoParse());
 
                         //Indicar Descuento Manual
-                        if (prod.getDescuentoManual() != 0.0) {
-                            pedidoHasProductos.put("manual", true);
-                        } else {
-                            pedidoHasProductos.put("manual", false);
-                        }
+                        if (prod.getDescuentoManual() != 0.0) pedidoHasProductos.put("manual", true);
+                        else pedidoHasProductos.put("manual", false);
 
                         //Agregar pedidoHasProducto y Meta a sus ArrayList
                         pedidoHasProductoToSave.add(pedidoHasProductos);
@@ -298,12 +217,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                         pedidoHasProductos.saveEventually(new SaveCallback() {
                             @Override
                             public void done(ParseException e) {
-                                if (e != null) {
-                                    e.printStackTrace();
-//                                        Log.d(TAG, "Error guardando Pedido: " + pedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-                                } /*else {
-                                        Log.d(TAG, "Pedido: " + pedidoParse.getObjectId() + " y Producto: " + prod.getProductoParse().getObjectId() + " agregados a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-                                }*/
+                                if (e != null) e.printStackTrace();
                             }
                         });
 
@@ -316,8 +230,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                                     Log.d(TAG, "Error Guardando meta");
                                 } else {
                                     Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
-                                    //Ubicacion Original
-//                                        dispatchActivity(DashboardActivity.class, null, true);
                                 }
                             }
                         });
@@ -329,71 +241,6 @@ public class GestionPedidosActivity extends ParentMenuActivity {
                 }
             }
         });
-
-//        else{
-//
-//            //Obtener Productos
-//            for (final Producto prod : productos) {
-//               final ParseObject productoParse = prod.getProductoParse();
-//                Log.d(TAG, "Agregando a PedidoHasProducto");
-//                //Agregar a PedidoHasProducto
-//                final ParseObject pedidoHasProductos = new ParseObject("PedidoHasProductos");
-//                ParseQuery queryMetas = new ParseQuery("Metas");
-//                queryMetas.whereEqualTo("asesor", ParseUser.getCurrentUser());
-//                queryMetas.whereEqualTo("producto", productoParse);
-//                queryMetas.getFirstInBackground(new GetCallback() {
-//                    @Override
-//                    public void done(final ParseObject metaParse, ParseException e) {
-//                    if(e==null){
-//                        //Almacenar meta disponible para producto
-//                        int dispMeta=metaParse.getInt("meta") - (metaParse.getInt("pedido") + metaParse.getInt("facturado"));
-//                        int cant=prod.getCantidad();
-//                        int cantExced=cant-dispMeta;
-//                        if(cant>dispMeta){
-//                            pedidoHasProductos.put("cantidad", dispMeta);
-//                            pedidoHasProductos.put("excedente", cantExced);
-//                            metaParse.put("pedido", metaParse.getInt("pedido")+dispMeta);
-//                            productoParse.put("excedente", productoParse.getInt("excedente")-cantExced);
-//                        }else{
-//                            pedidoHasProductos.put("cantidad", cant);
-//                            pedidoHasProductos.put("excedente", 0);
-//                            metaParse.put("pedido", metaParse.getInt("pedido")+cant);
-//                        }
-//                        pedidoHasProductos.put("descuento", round(prod.getDescuentoAplicado() * 100.0));
-//                        pedidoHasProductos.put("precio_unitario", round(prod.getPrecioComercial()));
-//                        pedidoHasProductos.put("monto", round(prod.getPrecioComercialTotal()));
-//                        pedidoHasProductos.put("pedido", pedidoParse);
-//                        pedidoHasProductos.put("producto", productoParse);
-//                        if (prod.getDescuentoManual() != 0.0) {
-//                            pedidoHasProductos.put("manual", true);
-//                        } else {
-//                            pedidoHasProductos.put("manual", false);
-//                        }
-//                        pedidoHasProductos.saveEventually(new SaveCallback() {
-//                            @Override
-//                            public void done(ParseException e) {
-//                            if (e != null) e.printStackTrace();
-//                            Log.d(TAG, "Producto: " + productoParse.getObjectId() + " agregado a PedidoHasProductos:" + pedidoHasProductos.getObjectId());
-//                            metaParse.saveEventually(new SaveCallback() {
-//                                @Override
-//                                public void done(ParseException e) {
-//                                    if(e == null){
-//                                        Log.d(TAG, "Meta actualizada: "+metaParse.get("pedido"));
-//                                        Toast.makeText(mContext, R.string.pedidoCompletado, Toast.LENGTH_LONG).show();
-//                                        //Ubicacion Original
-////                                        dispatchActivity(DashboardActivity.class, null, true);
-//                                    } else {
-//                                        Log.d(TAG, e.getCause() + e.getMessage());
-//                                    }
-//                                }
-//                            });
-//                            }
-//                        });
-//                    }
-//                    }
-//                });
-//            }
-//        }
 
         dispatchActivity(DashboardActivity.class, null, false);
     }
@@ -457,9 +304,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
      */
     public Double getSubtotal(){
         Double sub=0.0;
-        for(Producto prod:productos){
-            sub += prod.getPrecioComercialTotal();
-        }
+        for(Producto prod:productos) sub += prod.getPrecioComercialTotal();
         return sub;
     }
 
@@ -479,14 +324,11 @@ public class GestionPedidosActivity extends ParentMenuActivity {
      * @return el <code>ParseObject</code> de la Meta, <code>null</code> otherwise
      */
     public ParseObject findMetaByProductCode(ParseUser usuario, String codigoProducto){
-//        Log.d(TAG, "Buscando: "+codigoProducto+" asesor:"+usuario.getUsername());
         for (ParseObject meta:app.metasParse){
             if(meta.getParseUser("asesor").getUsername().equals(usuario.getUsername()) && meta.getParseObject("producto").getString("codigo").equals(codigoProducto)){
-//                Log.d(TAG, "Buscando: Coincidencia ncontrada para "+codigoProducto);
                 return meta;
             }
         }
-//        Log.d(TAG, "Buscando: No se pudo encontrar una meta para el producto "+codigoProducto);
         return null;
     }
 }

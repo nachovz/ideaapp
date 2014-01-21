@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/detalle_producto_relative_layout"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true"
-        style="@style/row_light">
 
-        <RelativeLayout
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/detalle_producto_inflated"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            style="@style/row_light"
             android:padding="20dp"
             android:background="@drawable/selector_detalle_menu" android:minHeight="1280dp">
 
@@ -44,17 +40,9 @@
             <TableLayout
                 android:id="@+id/encabezado_pedido_table"
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/gestion_header_layout">
-
-                <TableRow>
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:layout_span="2"
-                            android:padding="18dip"
-                            android:layout_weight="0.3"/>
-                </TableRow>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/gestion_header_layout"
+                android:layout_marginTop="25dp">
 
                 <!--Fecha   DD/MM/YYYY-->
                 <TableRow>
@@ -170,8 +158,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/encabezado_pedido_table"
                     android:id="@+id/listado_productos_table_container"
-                    android:layout_marginTop="35dp"
-                    android:layout_marginBottom="35dp">
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="25dp">
                 <TableLayout
                         android:id="@+id/encabezado_listado_productos_pedido_table"
                         android:layout_width="match_parent"
@@ -230,18 +218,13 @@
                     </TableRow>
                 </TableLayout>
 
-                <ScrollView
-                    android:id="@+id/scrollview_listado_productos_pedido_table"
+                <ListView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/encabezado_listado_productos_pedido_table">
+                    android:layout_height="400dp"
+                    android:id="@+id/productos_pedido_listView"
+                    android:layout_below="@+id/encabezado_listado_productos_pedido_table"
+                    android:drawSelectorOnTop="false" />
 
-                    <TableLayout
-                        android:id="@+id/listado_productos_pedido_table"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-                    </TableLayout>
-                </ScrollView>
             </RelativeLayout>
 
             <!--Observaciones-->
@@ -365,4 +348,3 @@
                     android:layout_alignParentBottom="false" android:layout_below="@+id/totales_pedido_table"/>
 
         </RelativeLayout>
-    </ScrollView>

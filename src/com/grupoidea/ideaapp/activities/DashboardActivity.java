@@ -324,7 +324,6 @@ public class DashboardActivity extends ParentMenuActivity {
 
     @Override
     public void reloadApp() {
-        //@TODO Verificar primero si hay internet
         ParseQuery.clearAllCachedResults();
         finish();
         getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
