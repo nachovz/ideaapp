@@ -41,18 +41,23 @@
         android:numColumns="auto_fit"
         android:scrollbars="horizontal"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp" >
+        android:verticalSpacing="10dp"
+        android:visibility="gone">
 
     </GridView>
 
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:id="@+id/descuentosProgressBar"
+        style="@android:style/Widget.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/catalogo_progressBar"
         android:visibility="visible"
         android:layout_alignParentStart="false"
         android:layout_alignParentEnd="false"
-        android:layout_alignBottom="@+id/catalogo_grid" />
+        android:indeterminateOnly="false"
+        android:indeterminate="true"
+        android:layout_below="@+id/catalogo_grid"
+        android:layout_marginTop="200dp"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

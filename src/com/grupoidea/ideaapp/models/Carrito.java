@@ -18,7 +18,8 @@ public class Carrito {
 
     /**
      * Constructor que recibe grupos de categorias existentes
-     * @param grupos
+     * @param categorias categorias existentes
+     * @param grupos grupos de categorias existentes
      */
     public Carrito(ArrayList<Categoria> categorias, ArrayList<GrupoCategorias> grupos) {
         productos = new ArrayList<Producto>();
@@ -59,15 +60,14 @@ public class Carrito {
 	
 	/** Permite determinar el indice de un producto si se encuentra actualmente en el listado de productos
 	 *  del carrito, es necesario suministrar el identificador unico del producto.
-	 *  @param id Entero con el identificador unico del producto
+	 *  @param codigo Entero con el identificador unico del producto
 	 *  @return Entero con la posicion del producto en el listado de productos del carrito.*/
-	public int findProductoIndexById(String id) {
-		Producto productoActual = null;
+	public int findProductoIndexByCodigo(String codigo) {
+		Producto productoActual;
 		int index = -1;
-		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			if(productoActual != null && productoActual.getId().equals(id)) {
+			if(productoActual != null && productoActual.getCodigo().equals(codigo)) {
 				index = i;
 			}
 		}
@@ -76,16 +76,16 @@ public class Carrito {
 	
 	/** Permite determinar si un un producto se encuentra actualmente en el listado de productos
 	 *  del carrito, es necesario suministrar el identificador unico del producto.
-	 *  @param id Entero con el identificador unico del producto
+	 *  @param codigo Entero con el identificador unico del producto
 	 *  @return Objeto de tipo de Producto con el producto solicitado, si el producto no esta en el 
 	 *  		listado de productos del carrito retorna null.*/
-	public Producto findProductoById(String id) {
-		Producto productoActual = null;
+	public Producto findProductoByCodigo(String codigo) {
+		Producto productoActual;
 		Producto productoFinal = null;
 		
 		for(int i=0; i<productos.size(); i++) {
 			productoActual = productos.get(i);
-			if(productoActual != null && productoActual.getId().equals(id)) {
+			if(productoActual != null && productoActual.getCodigo().equals(codigo)) {
 				productoFinal = productoActual;
 				break;
 			}
@@ -95,15 +95,11 @@ public class Carrito {
 
 	/** Permite determinar si un producto existe en el carrito para agregarlo al listado 
 	 *  de productos del carrito o sumarle la cantidad del existente
-	 *  @parama producto Objeto que contiene la definicion del producto ha ser agregado al carrito.*/
-	public void addProducto(Producto productoAdd) {
-		Producto productoFinded;
-		productoFinded = findProductoById(productoAdd.getId());
-		if(productoFinded != null) {
-			productoFinded.addCantidad();
-		} else {
-			this.productos.add(productoAdd);
-		}
+	 *  @param  producto Objeto que contiene la definicion del producto ha ser agregado al carrito.*/
+	public void addProducto(Producto producto) {
+		Producto productoFinded = findProductoByCodigo(producto.getCodigo());
+		if(productoFinded != null) productoFinded.addCantidad();
+		else this.productos.add(producto);
 	}
 	/** Permite remover un producto especifico del listado de productos del carrito.
 	 *  @param indice Entero con el indice del producto que se desea eliminar.*/
@@ -118,22 +114,13 @@ public class Carrito {
 	}
 
     public void recalcularMontos(){
-        GrupoCategorias grupo;
-        Categoria categoria;
-        Producto producto;
-        //recorrer grupos categorias y actualizar descuentos
-        for(int g = 0, size = gruposCategorias.size(); g < size; g++){
+        for(int g = 0, size = gruposCategorias.size(); g < size; g++)
             gruposCategorias.get(g).calcularDescuento();
-        }
 
-        //recorrer categorias y actualizar descuentos
-        for(int c = 0, size = categorias.size(); c < size; c++){
+        for(int c = 0, size = categorias.size(); c < size; c++)
             categorias.get(c).calcularDescuento();
-        }
 
-        //recorrer productos en carrito ,actualizar y aplicar descuentos
         for(int p = 0, size = productos.size(); p < size; p++){
-            productos.get(p).calcularDescuento();
             productos.get(p).calcularDescuentoAplicado();
         }
     }

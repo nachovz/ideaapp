@@ -103,8 +103,8 @@ public class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 //            if (prod != null) {
 //                Log.d(TAG,"Imagen de producto "+prod.getCodigo()+" obtenida");
 //                prod.setImagen(bitmap);
-//                if(adapterCatalogo != null){
-//                    adapterCatalogo.notifyDataSetChanged();
+//                if(catalogoAdapter != null){
+//                    catalogoAdapter.notifyDataSetChanged();
 //                }
 //            }
 //        }

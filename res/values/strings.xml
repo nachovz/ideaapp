@@ -4,6 +4,7 @@
     <string name="cargando">Cargando</string>
     <string name="end_cargando">Carga finalizada</string>
     <string name="no_internet_message_refresh">No hay conexión a Internet para refrescar la aplicación.</string>
+    <string name="url_connection_check">www.parse.com</string>
 
     <!--Login-->
     <string name="nombre_usuario">Usuario</string>
@@ -100,6 +101,10 @@
     <string name="no_internet_subiendoPedido">No se dispone de conexión a internet. Su Pedido será subido a la nube al estar disponible.</string>
     <string name="pedidoCompletado">Pedido Completado exitosamente</string>
     <string name="detalle_producto_header">Detalles del Producto</string>
+    <string name="producto_already_in_carrito">El producto ya se encuentra en el Carrito</string>
+    <string name="producto_not_available">No hay disponibilidad del producto</string>
+    <string name="productos_cargados">Finalizada carga de productos</string>
+    <string name="sd_card_unavailable">Tarjeta SD no disponible</string>
     <!--Fin Gestion Pedidos-->
 
 </resources>

@@ -63,28 +63,37 @@
                     android:layout_height="50dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:textSize="18sp"
+                    android:textStyle="bold|italic"
                     android:layout_alignParentTop="false"
-                        />
-                <TextView android:layout_height="0.5dp"
-                          android:background="#ffffff"
-                          android:id="@+id/textView2" android:layout_width="match_parent"
-                          android:layout_below="@+id/metas_actual_textView"/>
+                    android:textColor="#FFF" />
+
+                <TextView
+                    android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/separator_metas_textView"
+                    android:layout_width="match_parent" android:layout_below="@+id/metas_actual_textView"/>
+
                 <TextView
                     android:id="@+id/metas_total_textView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:textSize="18sp"
+                    android:textStyle="bold|italic"
+                    android:textColor="#FFF"
                     android:layout_below="@+id/metas_actual_textView"/>
-                <TextView android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/textView3"
-                          android:layout_width="match_parent" android:layout_below="@+id/metas_total_textView"/>
+
+                <TextView
+                    android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/separator_metas_textView2"
+                    android:layout_width="match_parent" android:layout_below="@+id/metas_total_textView"/>
                 <TextView
                     android:id="@+id/metas_restante_textView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:textSize="18sp"
+                    android:textStyle="bold|italic"
+                    android:textColor="#FFF"
                     android:layout_below="@+id/metas_total_textView"/>
+
                 <ProgressBar
                         android:id="@+id/metas_gauge_progressbar"
                         android:layout_width="match_parent"
@@ -212,7 +221,7 @@
             android:onClick="createNewPedido" android:layout_marginTop="5dp"/>
 
         <TextView android:layout_width="match_parent" android:layout_height="3dp" android:background="#3A70B9"
-                  android:id="@+id/separator_textView"
+                  android:id="@+id/separator_metas_textView"
                   android:layout_below="@+id/cliente_nuevo_pedido_boton" android:layout_marginTop="20dp"
                   android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
             android:layout_marginBottom="20dp" />
@@ -220,7 +229,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
                 android:id="@+id/pedidos_spinner"
-                android:layout_below="@+id/separator_textView" android:layout_marginTop="5dp"
+                android:layout_below="@+id/separator_metas_textView" android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"/>
         <ScrollView
             android:id="@+id/cliente_scroll_view"

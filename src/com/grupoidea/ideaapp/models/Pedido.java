@@ -12,6 +12,7 @@ public class Pedido {
     public static final int ESTADO_RECHAZADO = 2;
     public static final int ESTADO_ANULADO = 3;
     public static final int ESTADO_TODOS = 4;
+    public static final int ESTADO_NUEVO = 5;
 
 	/** Objeto de tipo Cliente asociado al pedido */
 	private Cliente cliente;

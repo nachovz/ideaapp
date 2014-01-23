@@ -163,8 +163,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/numberPicker"
                 android:layout_gravity="center"
+                android:descendantFocusability="blocksDescendants"
+                android:focusableInTouchMode="false"
                 android:focusable="false"
-                android:focusableInTouchMode="false" />
+                android:clickable="false"
+                android:longClickable="false"/>
         </LinearLayout>
     </RelativeLayout>
 

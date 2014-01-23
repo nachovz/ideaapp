@@ -220,7 +220,7 @@
 
                 <ListView
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="350dp"
                     android:id="@+id/productos_pedido_listView"
                     android:layout_below="@+id/encabezado_listado_productos_pedido_table"
                     android:drawSelectorOnTop="false" />

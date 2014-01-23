@@ -344,6 +344,7 @@ public class Producto {
     }
 	
 	public double calcularDescuentoAplicado(){
+        calcularDescuento();
         if(descuentoManual == 0.0){
             double descCat, descGrupo;
             if(categoria != null){

@@ -39,14 +39,13 @@ import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Categoria;
 import com.grupoidea.ideaapp.models.GrupoCategorias;
 import com.grupoidea.ideaapp.models.Marca;
+import com.grupoidea.ideaapp.models.Meta;
 import com.grupoidea.ideaapp.models.Pedido;
 import com.grupoidea.ideaapp.models.Producto;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,30 +58,31 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected String TAG = this.getClass().getSimpleName();
     /** Cadena de texto que contiene el nombre del cliente*/
 	private String clienteNombre;
-	/** ArrayList que contiene los productos que se mostraran en el grid del catalogo*/
+	/** ArrayList que contiene los productos que se mostraran en el gridCatalogo del catalogo*/
 	private static ArrayList<Producto> catalogoProductos;
     /** Objeto que representa al catalogo.*/
     public static Catalogo catalogo;
 	/** Objeto que representa al carrito de compras del catalogo.*/
 	private Carrito carrito;
-    private ListView listCarrito;
+    private ListView carritoListView;
 	/** Adapter utilizado como puente entre el ArrayList de productos del carrito y el layout de cada producto*/
-	protected static BannerProductoCarrito adapterCarrito;
+	protected static BannerProductoCarrito carritoAdapter;
 	/** Adapter utilizado como puente entre el ArrayList de productos del catalogo y el layout de cada producto*/
-	public static BannerProductoCatalogo adapterCatalogo;
+	public static BannerProductoCatalogo catalogoAdapter;
     public String modificarPedidoId, modificarPedidoNum;
     /** Minimo y maximo valor para descuentos manueales*/
     public final static Double MIN_DESC_MAN = 0.0, MAX_DESC_MAN = 100.0;
     protected ArrayList<GrupoCategorias> gruposCategorias;
     protected ArrayList<Categoria> categorias;
-//    protected String categoriaActual="Todas", marcaActual="Todas";
     protected static ArrayList<String> marcas;
     protected static MarcasAdapter marcasAdapter;
     protected static CategoriasAdapter categoriasAdapter;
     public ListView categoriasFiltro;
     public ListView marcasFiltro;
+    public GridView gridCatalogo;
+    private RelativeLayout carritoLayout, filtroLayout;
     protected static  Context mContext;
-    protected ProgressBar descuentosProgressBar;
+    protected ProgressBar catalogoProgressBar;
     public List<ParseObject> descuentosParse;
     protected static GrupoIdea app;
 
@@ -92,22 +92,17 @@ public class CatalogoActivity extends ParentMenuActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
         mContext = getBaseContext();
         super.instanceContext = mContext;
         app = (GrupoIdea) getApplication();
         app.clientes = getClientesFromParse();
+        app.productos = new ArrayList<Producto>();
         catalogo = new Catalogo(mContext);
+        gruposCategorias = new ArrayList<GrupoCategorias>();
+        categorias = new ArrayList<Categoria>();
 
-        //Dialogo de carga carrito
-        carritoProgressDialog = new ProgressDialog(this);
-        carritoProgressDialog.setTitle("Cargando...");
-        carritoProgressDialog.setMessage("Cargando Carrito, por favor espere...");
-        carritoProgressDialog.setIndeterminate(true);
-        carritoProgressDialog.setCancelable(false);
-
-        //Obtener datos de pedido (en caso de que se esté modificando o clonando uno
+        //Obtener datos de pedido (en caso de que se esté modificando o clonando uno)
         if(app.pedido != null){
             modificarPedidoId = app.pedido.getObjectId();
             modificarPedidoNum = app.pedido.getNumPedido();
@@ -117,45 +112,44 @@ public class CatalogoActivity extends ParentMenuActivity {
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.activity_catalogo_layout);
 
-        //Poblar Spinner de Clientes e inflar
         clienteSpinner.setAdapter(adapter);
         clienteSpinner.setEnabled(true);
         clienteSpinner.setVisibility(View.VISIBLE);
         clienteSpinner.setSelection(0);
         clienteSelected = 0;
-//        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                clienteSelected = i;
-////                Log.d(TAG, "Cliente seleccionado: " + i);
-//                updatePreciosComerciales();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//            }
-//        });
+
+        filtroLayout = (RelativeLayout) getMenuLeft();
+        categoriasFiltro = (ListView) findViewById(R.id.categorias_filtro_listView);
+        marcasFiltro = (ListView) findViewById(R.id.marcas_filtro_listView);
+
+        carritoLayout = (RelativeLayout) getMenuRight();
 
         marcas = new ArrayList<String>();
         categoriasAdapter = new CategoriasAdapter(mContext);
         marcasAdapter = new MarcasAdapter(mContext, categoriasAdapter);
         categoriasAdapter.setMarcasAdapter(marcasAdapter);
+        gridCatalogo = (GridView) this.findViewById(R.id.catalogo_grid);
+//        gridCatalogo.setVisibility(View.GONE);
+
+        catalogoProgressBar = (ProgressBar) findViewById(R.id.catalogo_progressBar);
+        catalogoProgressBar.setVisibility(View.VISIBLE);
+//        catalogoProgressBar.setVisibility(View.GONE);
 	}
 
     @Override
     public void onBackPressed(){
+        super.onBackPressed();
 //        Log.d(TAG, "accionando onBackPressed");
         //Correr Thread para cancelar queries en proceso
-        new Thread(new Runnable() {
-            public void run(){
-                for(ParseQuery query: queries){
-                    if(null != query) query.cancel();
-                }
-            }
-        }).start();
-
-//        this.dispatchActivity(DashboardActivity.class, null, true);
-        this.finish();
+//        new Thread(new Runnable() {
+//            public void run(){
+//                for(ParseQuery query: queries){
+//                    if(null != query) query.cancel();
+//                }
+//            }
+//        }).start();
+        this.dispatchActivity(DashboardActivity.class, null, false);
+//        this.finish();
     }
 
     @Override
@@ -179,69 +173,24 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         @SuppressWarnings("unchecked")
         List<ParseObject> productosParse = (List<ParseObject>) response.getResponse();
-        ArrayList<Producto> productos = new ArrayList<Producto>();
-        gruposCategorias = new ArrayList<GrupoCategorias>();
-        categorias = new ArrayList<Categoria>();
-        descuentosProgressBar = (ProgressBar) findViewById(R.id.descuentosProgressBar);
-        descuentosProgressBar.setVisibility(View.VISIBLE);
-        descuentosProgressBar.setMax(productosParse.size()*3);
-        descuentosProgressBar.setProgress(1);
-//        Toast.makeText(mContext, "Cargando Descuentos, por favor espere.", Toast.LENGTH_SHORT).show();
-
-        GrupoIdea app = (GrupoIdea) getApplication();
-        app.productos = productos;
         app.productosParse = productosParse;
-//        Log.d("NUMBER", "Numero de Productos en Query: "+productosParse.size());
+        catalogo.setProductos(app.productos);
 
-        Producto producto;
-        RelativeLayout menuRight, menuLeft;
-        listCarrito = null;
+        if(filtroLayout != null) initFiltroLayout();
 
-        //Cargar productos desde Parse
-        for (int i=0, size=productosParse.size(); i<size; i++) {
-            ParseObject parseObject = productosParse.get(i);
-            producto = retrieveProducto(parseObject, i, size);
-            productos.add(producto);
-        }
-
-        //Inicializar menu izquierdo (Filtro de Marcas y Categorias)
-        menuLeft = (RelativeLayout) getMenuLeft();
-        if(menuLeft != null){
-            initMenuLeft();
-        }
-
-        //Inicializar menu derecho (Carrito)
         carrito = new Carrito(categorias, gruposCategorias);
-        adapterCarrito = new BannerProductoCarrito(this, carrito);
-        menuRight = (RelativeLayout) getMenuRight();
-        if(menuRight != null) {
-            listCarrito = initMenuRight(menuRight);
-        }
+        carritoAdapter = new BannerProductoCarrito(this, carrito);
+        if(carritoLayout != null) carritoListView = initCarritoLayout();
 
-        if(modificarPedidoId == null && getIntent().getIntExtra("status", 0)!= Pedido.ESTADO_RECHAZADO){
-            //Pedido Nuevo
-            //Pedido no está rechazado ni tiene identificador de pedido a ser modificado/clonado
-            Log.d(TAG, "Pedido Nuevo "+getIntent().getIntExtra("status", 0));
-
-        }else if(getIntent().getIntExtra("status", 0)== Pedido.ESTADO_RECHAZADO || getIntent().getIntExtra("status", 0)== Pedido.ESTADO_VERIFICANDO){
-            //Editar pedido rechazado
-            editarPedido();
-
-        }else{
-            //Clonar Pedido
-            /* Pedido no está "Rechazado" ni "En Espera" */
-            clonarPedido();
-        }
-
-//        catalogo = new Catalogo(this, productos);
-        catalogo.setProductos(productos);
+//        catalogo.setProductos(app.productos);
         marcasAdapter.setCatalogo(catalogo);
+
+        if(carritoListView != null) initCatalogoLayout();
 
         clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 clienteSelected = i;
-//                Log.d(TAG, "Cliente seleccionado: " + i);
                 updatePreciosComerciales();
             }
 
@@ -250,16 +199,27 @@ public class CatalogoActivity extends ParentMenuActivity {
             }
         });
 
-        if(listCarrito != null) {
-            initCatalogoLayout();
+        int statusPedido = getIntent().getIntExtra("status", Pedido.ESTADO_NUEVO);
+        switch(statusPedido){
+            case Pedido.ESTADO_RECHAZADO:
+            case Pedido.ESTADO_VERIFICANDO:
+                //Dialogo de carga carrito
+                initCarritoProgressDialog();
+                editarPedido();
+                break;
+            case Pedido.ESTADO_APROBADO:
+                initCarritoProgressDialog();
+                clonarPedido();
+                break;
+            default:
+                break;
+        }
+
+        for (int i=0, size=productosParse.size(); i<size; i++) {
+            ParseObject parseObject = productosParse.get(i);
+            new ProductoDownloadTask(parseObject, i, size).execute();
         }
     }
-
-    /*---
-    * ---------------
-    * FUNCIONES Y PROCEDURES PARA OBTENER PRODUCTOS
-    * ---------------
-    * ---*/
 
     /**
      * Instanciar nuevo producto en base a un ParseObject
@@ -267,15 +227,17 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @return Instancia de {@link Producto}
      */
 	private Producto retrieveProducto(final ParseObject productoParse, final int pos, final int size){
-        final boolean[] prodDone = {false}, catDone={false}, groupDone = {false};
-		String codigo = productoParse.getString("codigo");
+        ArrayList<ParseObject> descuentos;
+        Meta meta;
+        Marca marca;
+        String codigo = productoParse.getString("codigo");
 		String nombre = productoParse.getString("nombre");
 		double precio = productoParse.getDouble("costo");
 		final String objectId = productoParse.getObjectId();
 		final Producto producto = new Producto(objectId, nombre, codigo, precio);
         producto.setProductoParse(productoParse);
-
-        //Obtener Descripcion
+        producto.setIva(app.iva);
+        producto.setExcedente(productoParse.getInt("excedente"));
         producto.setDescripcion(productoParse.getString("descripcion"));
 
         //Obtener Imagen
@@ -288,197 +250,77 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
 
         //Obtener existencia
-        ParseQuery queryExistencia = new ParseQuery("Metas");
-        queryExistencia.setLimit(QUERY_LIMIT);
-        queryExistencia.setCachePolicy(getParseCachePolicy());
-        queries.add(queryExistencia);
-        queryExistencia.whereEqualTo("asesor", ParseUser.getCurrentUser());
-        queryExistencia.whereEqualTo("producto", productoParse);
-        queryExistencia.getFirstInBackground(new GetCallback() {
-            @Override
-            public void done(ParseObject parseObject, ParseException e) {
-                if (e == null){
-                    int existencia = parseObject.getInt("meta") - parseObject.getInt("pedido")-parseObject.getInt("facturado");
-                    if(existencia >0){ producto.setExistencia(existencia);
-                    }else{ producto.setExistencia(0);}
-                }
-//                else Log.d(TAG, "No existe registro del producto "+objectId+" en la tabla Metas");
-            }
-        });
+        meta = app.findMetaByProductCode(producto.getCodigo());
+        if(meta != null) producto.setExistencia(meta.getExistencia());
+        else producto.setExistencia(0);
 
-        //asignar IVA
-        producto.setIva(productoParse.getParseObject("iva").getDouble("porcentaje"));
-        //Asignar Excedente
-        producto.setExcedente(productoParse.getInt("excedente"));
-        //Asignar marca
         producto.setMarca(productoParse.getString("marca"));
-        //agregar marca a filtro de catalogo
-        Marca marca = marcasAdapter.addMarca(productoParse.getString("marca"));
+        marca = marcasAdapter.addMarca(productoParse.getString("marca"));
 
-        /*-------------- PRODUCTOS -------------- */
         //Obtener descuentos por producto
         SparseArray<Double> tablaDescuentosProducto = new SparseArray<Double>();
-        ArrayList<ParseObject> descuentos = findDescuentosByRelatedObjectId(productoParse.getObjectId());
+        descuentos = findDescuentosByRelatedObjectId(productoParse.getObjectId());
         if(descuentos!= null){
-            for (ParseObject descuento : descuentos) {
-                tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
-            }
+            for (ParseObject descuento : descuentos) tablaDescuentosProducto.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
         }
-
-        //Encender flags y actualizar progressBar
-        prodDone[0] =true;
-        descuentosProgressBar.incrementProgressBy(1);
-
-        //Verificar y Notificar Carga Completa de Productos
-        if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-            descuentosProgressBar.setVisibility(View.GONE);
-//            Log.d(TAG, "Finalizada carga de productos");
-            Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_SHORT).show();
-            refresh.setClickable(true);
-        }
-
         producto.setTablaDescuentos(tablaDescuentosProducto);
-        /* -------------- FIN PRODUCTOS -------------- */
 
-        /* -------------- CATEGORIA -------------- */
-        //Obtener categoria
+
+        //Obtener Categoria
         ParseObject categoriaParse = productoParse.getParseObject("categoria");
-
-        //Obtener nombre y descuentos de categoria
         if(null != categoriaParse){
-            //Revisar si categoria ya existe y agregarla al producto
             Categoria categoria = findCategoriaByName(categoriaParse.getString("nombre"));
-
-            //Si no existe crear una nueva y agregarla a categorias y al producto
-            if( categoria == null){
-                categoria = new Categoria(categoriaParse.getString("nombre"));
+            if( categoria == null) categoria = new Categoria(categoriaParse.getString("nombre"));
+            if(!marca.findCategoria(categoria.getNombre())) marca.addCategoria(categoria);
+            //Agregar Categoria a Todas
+            if(!marcasAdapter.todas.findCategoria(categoria.getNombre())){
+                marcasAdapter.todas.addCategoria(categoria);
             }
 
-            //Agregar Categoria a Marca
-            if(!marca.findCategoria(categoria.getNombre()))
-                marca.addCategoria(categoria);
-            //Agregar Categoria a Todas
-            if(!marcasAdapter.todas.findCategoria(categoria.getNombre()))
-                marcasAdapter.todas.addCategoria(categoria);
-                marcasAdapter.notifyDataSetChanged();
-
-            //Obtener descuentos por categoria
             final SparseArray<Double> tablaDescuentosCategoria= new SparseArray<Double>();
             descuentos = findDescuentosByRelatedObjectId(categoriaParse.getObjectId());
             if (descuentos != null) {
-                for (ParseObject descuento : descuentos) {
-                    tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
-                }
-            }else{
-//                Log.d(TAG, "La Categoria " + categoria.getNombre() + " no posee descuentos");
+                for (ParseObject descuento : descuentos) tablaDescuentosCategoria.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
-
-            //Encender flags y actualizar progressBar
-            catDone[0]=true;
-            descuentosProgressBar.incrementProgressBy(1);
-
-            //Verificar y Notificar Carga Completa de Productos
-            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                descuentosProgressBar.setVisibility(View.GONE);
-                Log.d(TAG, "Finalizada carga de productos");
-                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
-                refresh.setClickable(true);
-            }
-
-            //Establecer descuentos en Categoria
             categoria.setTablaDescuentos(tablaDescuentosCategoria);
-            //Agregar Categoria a Producto
             producto.setCategoria(categoria);
-
-        }else{
-            //Encender flags y actualizar progressBar
-            catDone[0]=true;
-            descuentosProgressBar.incrementProgressBy(1);
         }
-        /* -------------- FIN CATEGORIA -------------- */
 
-        /* -------------- GRUPO CATEGORIAS -------------- */
-        //Obtener nombre y descuentos de grupo de categorias
-        //Obtener categoria
+        //Obtener Grupo de Categorias
         ParseObject grupoParse = productoParse.getParseObject("grupo_categorias");
         if(null != productoParse.getParseObject("grupo_categorias") && null != productoParse.getParseObject("grupo_categorias").getJSONArray("relacionadas")){
-            //Revisar si grupo categorias ya existe y agregarlo al producto
             GrupoCategorias grupo = findGrupoCategoriasByName(grupoParse.getString("nombre"));
-            //Si no existe crear uno nuevo y agregarlo a gruposCategorias y al producto
             if( grupo == null){
                 grupo = new GrupoCategorias(grupoParse.getString("nombre"), grupoParse.getJSONArray("relacionadas"));
                 gruposCategorias.add(grupo);
             }
 
-            //obtener descuentos por grupo de categoria
             final SparseArray<Double> tablaDescuentosGrupo = new SparseArray<Double>();
-
             descuentos = findDescuentosByRelatedObjectId(grupoParse.getObjectId());
             if (descuentos != null) {
-                for (int i = 0, sizeDesc = descuentos.size(); i<sizeDesc; i++) {
-                    ParseObject descuento = descuentos.get(i);
-                    tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
-
-                    //Verificar y Notificar Carga Completa de Productos
-                    if(i == sizeDesc-1 && pos == size -1){
-                        Log.d(TAG, "Finalizada carga de productos");
-                        Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_LONG).show();
-                        refresh.setClickable(true);
-                        marcasAdapter.notifyDataSetChanged();
-                        categoriasAdapter.notifyDataSetChanged();
-                    }
-                }
-            }else{
-//                Log.d(TAG, "El Grupo " + grupo.getNombre() + " no posee descuentos");
+                for (ParseObject descuento : descuentos) tablaDescuentosGrupo.append(descuento.getInt("cantidad"), descuento.getDouble("porcentaje"));
             }
 
-            //Encender flags y actualizar progressBar
-            groupDone[0]=true;
-            descuentosProgressBar.incrementProgressBy(1);
-
-            //Verificar y Notificar Carga Completa de Productos
-            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                descuentosProgressBar.setVisibility(View.GONE);
-                Log.d(TAG, "Finalizada carga de productos");
-                Toast.makeText(mContext, "Finalizada carga de descuentos", Toast.LENGTH_LONG).show();
-                refresh.setClickable(true);
-                marcasAdapter.notifyDataSetChanged();
-                categoriasAdapter.notifyDataSetChanged();
-            }
-
-            //Verificar y Notificar Carga Completa de Productos
-            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                descuentosProgressBar.setVisibility(View.GONE);
-            }else{
-//                Log.d(TAG,"pasando por producto "+producto.getCodigo());
-            }
-
-            //Establecer descuentos de Grupo
             grupo.setTablaDescuentos(tablaDescuentosGrupo);
-            //Agregar Grupo a Producto
             producto.setGrupoCategorias(grupo);
-
-        }else{
-            //Encender flags y actualizar progressBar
-            groupDone[0]=true;
-            descuentosProgressBar.incrementProgressBy(1);
-
-            //Verificar y Notificar Carga Completa de Productos
-            if(pos == size -1 && prodDone[0] && catDone[0] && groupDone[0]){
-                descuentosProgressBar.setVisibility(View.GONE);
-                Log.d(TAG, "Finalizada carga de productos");
-                Toast.makeText(mContext, "Finalizada carga de productos", Toast.LENGTH_LONG).show();
-                refresh.setClickable(true);
-                marcasAdapter.notifyDataSetChanged();
-                categoriasAdapter.notifyDataSetChanged();
-            }else{
-//                Log.d(TAG,"pasando por producto "+producto.getCodigo());
-            }
         }
-        /* -------------- FIN GRUPO CATEGORIAS -------------- */
+
+//        //Verificar y Notificar Carga Completa de Productos
+//        if(pos == size -1) onProductosCargados();
 
         return producto;
 	}
+
+    private void onProductosCargados() {
+        marcasAdapter.notifyDataSetChanged();
+        categoriasAdapter.notifyDataSetChanged();
+        catalogoAdapter.notifyDataSetChanged();
+        catalogoProgressBar.setVisibility(View.GONE);
+        gridCatalogo.setVisibility(View.VISIBLE);
+        menuFilterIcon.setEnabled(true);
+        Toast.makeText(mContext, getString(R.string.productos_cargados), Toast.LENGTH_SHORT).show();
+        refresh.setClickable(true);
+    }
 
     /**
      * Metodo invocado para obtener las imágenes de los productos desde el servidor de IDEA
@@ -486,10 +328,41 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @param productoParse {@link ParseObject} del producto obtenido desde Parse
      */
     public void retrieveImage(Producto producto, ParseObject productoParse){
-        //Obtener imagen
         if(productoParse.getString("picture")!= null && !productoParse.getString("picture").isEmpty()){
             ImageDownloadTask imgDownloader = new ImageDownloadTask(producto);
             imgDownloader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,productoParse.getString("picture"));
+        }
+    }
+
+    public class ProductoDownloadTask extends AsyncTask<Void, Integer, Producto>{
+
+        public WeakReference<ParseObject> productoParseWeak;
+        public int pos, size;
+
+        ProductoDownloadTask(ParseObject productoParse, int pos, int size){
+            this.productoParseWeak = new WeakReference<ParseObject>(productoParse);
+            this.pos = pos;
+            this.size = size;
+        }
+
+
+        @Override
+        protected Producto doInBackground(Void... voids) {
+            return retrieveProducto(productoParseWeak.get(), pos, size);
+        }
+
+
+        @Override
+        protected void onPostExecute(Producto producto){
+            app.productos.add(producto);
+            catalogo.setProductos(app.productos);
+            catalogoAdapter.notifyDataSetChanged();
+            Log.d(TAG, "Notificando producto "+producto.getCodigo()+" cargado");
+            Log.d(TAG,"app.productos: "+app.productos.size()+" adapter: "+catalogoAdapter.getCount());
+
+            //Verificar y Notificar Carga Completa de Productos
+            if(pos == size -1) onProductosCargados();
+
         }
     }
 
@@ -556,7 +429,7 @@ public class CatalogoActivity extends ParentMenuActivity {
                     }
                 }else{
 //                    Log.d(TAG, "Tarjeta SD no disponible ");
-                    Toast.makeText(mContext, "Tarjeta SD no disponible ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, getString(R.string.sd_card_unavailable), Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
 //                Log.e("ImageDownload Exception: ", e.getMessage());
@@ -566,33 +439,15 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-            if (productoWeakReference != null) {
-                Producto prod = productoWeakReference.get();
-                if (prod != null) {
-//                    Log.d(TAG,"Imagen de producto "+prod.getCodigo()+" obtenida");
-                    prod.setImagen(bitmap);
-                    if(adapterCatalogo != null){
-                        adapterCatalogo.notifyDataSetChanged();
-                    }
-                }
+            if (isCancelled()) bitmap = null;
+
+            Producto prod = productoWeakReference.get();
+            if (null != prod) {
+                prod.setImagen(bitmap);
+                if(catalogoAdapter != null) catalogoAdapter.notifyDataSetChanged();
             }
         }
     }
-
-    /*---
-    * ---------------
-    * FIN FUNCIONES Y PROCEDURES PARA OBTENER PRODUCTOS
-    * ---------------
-    * ---*/
-
-    /*---
-    * ---------------
-    * FUNCIONES PARA GENERAR PEDIDOS
-    * ---------------
-    * ---*/
 
     /**
      * Metodo llamado al haber seleccionado un pedido para isNuevoPedido desde el Dashboard
@@ -624,15 +479,15 @@ public class CatalogoActivity extends ParentMenuActivity {
                             productoPedidoLocal.setExistencia(productoPedidoHasProductos.getInt("cantidad") + productoPedidoLocal.getExistencia());
                             productoPedidoLocal.setIsInCarrito(true);
 //                                    Log.d(TAG, "Agregando " + productoPedidoHasProductos.getInt("cantidad") + " productos " + productoPedidoParse.get("codigo") + "(" + productoPedidoParse.getObjectId() + ") a pedido");
-                            adapterCarrito.getCarrito().addProducto(productoPedidoLocal);
+                            carritoAdapter.getCarrito().addProducto(productoPedidoLocal);
                         }
                     }
                 }
-                adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                adapterCarrito.notifyDataSetChanged();
+                carritoAdapter.setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                carritoAdapter.notifyDataSetChanged();
                 carritoProgressDialog.dismiss();
-                listCarrito.smoothScrollToPosition(0);
-                adapterCarrito.showCarrito();
+                carritoListView.smoothScrollToPosition(0);
+                carritoAdapter.showCarrito();
             }
         });
     }
@@ -662,15 +517,15 @@ public class CatalogoActivity extends ParentMenuActivity {
                             aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
                             aProdsModPedido.setIsInCarrito(true);
 //                                        Log.d(TAG, "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
-                            adapterCarrito.getCarrito().addProducto(aProdsModPedido);
+                            carritoAdapter.getCarrito().addProducto(aProdsModPedido);
                         }
                     }
                 }
-                adapterCarrito.setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
-                adapterCarrito.notifyDataSetChanged();
+                carritoAdapter.setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+                carritoAdapter.notifyDataSetChanged();
                 carritoProgressDialog.dismiss();
-                listCarrito.smoothScrollToPosition(0);
-                adapterCarrito.showCarrito();
+                carritoListView.smoothScrollToPosition(0);
+                carritoAdapter.showCarrito();
             }
         });
     }
@@ -681,6 +536,7 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected void generarFactura() {
         GrupoIdea app = (GrupoIdea) getApplication();
         if(app.pedido == null)  app.pedido = new Pedido();
+
         app.pedido.setProductos(carrito.getProductos());
 
         if(carrito.getProductos().size()>0){
@@ -708,30 +564,16 @@ public class CatalogoActivity extends ParentMenuActivity {
         }
     }
 
-    /*---
-    * ---------------
-    * FUNCIONES PARA GENERAR PEDIDOS
-    * ---------------
-    * ---*/
-
-    /*---
-    * ---------------
-    * LAYOUT
-    * ---------------
-    * ---*/
-
     /**
      * Metodo que inicializa el layout del catalogo de productos
      */
     private void initCatalogoLayout(){
-        adapterCatalogo = new BannerProductoCatalogo(this, catalogo, listCarrito);
-        marcasAdapter.setAdapterCatalogo(adapterCatalogo);
-        /* Elemento que permite mostrar Views en forma de grid.*/
-        GridView grid = (GridView) this.findViewById(R.id.catalogo_grid);
+        catalogoAdapter = new BannerProductoCatalogo(this, catalogo, carritoListView);
+        marcasAdapter.setAdapterCatalogo(catalogoAdapter);
 
-        if(grid != null) {
-            grid.setAdapter(adapterCatalogo);
-            grid.setOnTouchListener(new OnTouchListener() {
+        if(gridCatalogo != null) {
+            gridCatalogo.setAdapter(catalogoAdapter);
+            gridCatalogo.setOnTouchListener(new OnTouchListener() {
                 private int xDown, xUp, xDiff, yDiff, yDown, yUp;
 
                 @Override
@@ -753,17 +595,11 @@ public class CatalogoActivity extends ParentMenuActivity {
                         yDiff = yDown - yUp;
                         if (Math.abs(yDiff) < 200 && Math.abs(xDiff) > 200) {
                             if (xDiff > 0) {
-                                if (!isMenuRightShowed() && !isMenuLeftShowed()) {
-                                    showRightMenu();
-                                } else if (isMenuLeftShowed()) {
-                                    hideMenuLeft();
-                                }
+                                if (!isMenuRightShowed() && !isMenuLeftShowed()) showRightMenu();
+                                else if (isMenuLeftShowed()) hideMenuLeft();
                             } else {
-                                if (!isMenuRightShowed() && !isMenuLeftShowed()) {
-                                    showLeftMenu();
-                                } else if (isMenuRightShowed()) {
-                                    hideMenuRight();
-                                }
+                                if (!isMenuRightShowed() && !isMenuLeftShowed()) showLeftMenu();
+                                else if (isMenuRightShowed()) hideMenuRight();
                             }
                         }
                     }
@@ -776,15 +612,11 @@ public class CatalogoActivity extends ParentMenuActivity {
     /**
      * Metodo que inicializa el layout para el menú izquierdo o filtro de categorias
      */
-    private void initMenuLeft() {
-        //Filtro Categorias
-        categoriasFiltro = (ListView) findViewById(R.id.categorias_filtro_listView);
+    private void initFiltroLayout() {
         categoriasFiltro.setAdapter(categoriasAdapter);
         categoriasAdapter.setCategoriasListView(categoriasFiltro);
         categoriasAdapter.notifyDataSetChanged();
 
-        //Filtro Marcas
-        marcasFiltro = (ListView) findViewById(R.id.marcas_filtro_listView);
         marcasFiltro.setAdapter(marcasAdapter);
         marcasAdapter.setMarcasListView(marcasFiltro);
         marcasAdapter.notifyDataSetChanged();
@@ -792,26 +624,31 @@ public class CatalogoActivity extends ParentMenuActivity {
 
     /**
      * Metodo que inicializa el layout del menú izquierdo, o carrito
-     * @param menuRight {@link android.widget.RelativeLayout} del Menu Derecho
      */
-    private ListView initMenuRight(RelativeLayout menuRight){
-        listCarrito = (ListView) menuRight.findViewById(R.id.carrito_list_view);
-        RelativeLayout relativeLayout = (RelativeLayout) menuRight.findViewById(R.id.carrito_total_layout);
-        if(relativeLayout != null) {
-            //Agregar onClick MarcasListener para cuando se haga tap sobre el total del carrito
-            relativeLayout.setOnClickListener(new OnClickListener(){
+    private ListView initCarritoLayout(){
+        carritoListView = (ListView) carritoLayout.findViewById(R.id.carrito_list_view);
+        RelativeLayout totalCarritoLayout = (RelativeLayout) carritoLayout.findViewById(R.id.carrito_total_layout);
+        if(totalCarritoLayout != null) {
+            totalCarritoLayout.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
                     generarFactura();
                 }
             });
         }
-        if(listCarrito != null) {
-            listCarrito.setAdapter(adapterCarrito);
-            listCarrito.setSelection(listCarrito.getAdapter().getCount() - 1);
+        if(carritoListView != null) {
+            carritoListView.setAdapter(carritoAdapter);
+            carritoListView.setSelection(carritoListView.getAdapter().getCount() - 1);
         }
+        return carritoListView;
+    }
 
-        return listCarrito;
+    private void initCarritoProgressDialog() {
+        carritoProgressDialog = new ProgressDialog(this);
+        carritoProgressDialog.setTitle("Cargando...");
+        carritoProgressDialog.setMessage("Cargando Carrito, por favor espere...");
+        carritoProgressDialog.setIndeterminate(true);
+        carritoProgressDialog.setCancelable(false);
     }
 
     /**
@@ -826,8 +663,8 @@ public class CatalogoActivity extends ParentMenuActivity {
             precio = prod.getPrecio();
             prod.setPrecioComercial(precio - (precio * descCliente));
         }
-        adapterCarrito.notifyDataSetChanged();
-        adapterCatalogo.notifyDataSetChanged();
+        carritoAdapter.notifyDataSetChanged();
+        catalogoAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -842,9 +679,7 @@ public class CatalogoActivity extends ParentMenuActivity {
             layout = (RelativeLayout) layout.findViewById(R.id.carrito_total_layout);
             if(layout != null) {
                 textView = (TextView) layout.findViewById(R.id.carrito_total_precio_text_view);
-                if(textView != null) {
-                    textView.setText(total);
-                }
+                if(textView != null) textView.setText(total);
             }
         }
     }
@@ -873,54 +708,37 @@ public class CatalogoActivity extends ParentMenuActivity {
                 if (input.getText() != null && !input.getText().toString().isEmpty()) {
                     Double valor = Double.parseDouble(input.getText().toString());
                     if (valor >= MIN_DESC_MAN && valor <= MAX_DESC_MAN) {
-//                        Log.d(TAG, valor.toString());
                         if(valor == 0.0){
                             producto.setDescuentoManual(0.0);
-                            adapterCarrito.notifyDataSetChanged();
-                            adapterCarrito.getCarrito().recalcularMontos();
-                            setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                             Toast.makeText(oThis, "Descuento manual eliminado", Toast.LENGTH_LONG).show();
                         }else{
                             producto.setDescuentoManual(valor);
-                            adapterCarrito.notifyDataSetChanged();
-                            adapterCarrito.getCarrito().recalcularMontos();
-                            setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
                             Toast.makeText(oThis, "Porcentaje de descuento manual asignado", Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        Toast.makeText(oThis, "Porcentaje de descuento manual no valido", Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "porcentaje no valido");
-                    }
+
+                        carritoAdapter.notifyDataSetChanged();
+                        carritoAdapter.getCarrito().recalcularMontos();
+                        setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
+
+                    } else Toast.makeText(oThis, "Porcentaje de descuento manual no valido", Toast.LENGTH_LONG).show();
                 } else {
                     producto.setDescuentoManual(0.0);
-                    adapterCarrito.notifyDataSetChanged();
-                    adapterCarrito.getCarrito().recalcularMontos();
-                    setTotalCarrito(adapterCarrito.getCarrito().calcularTotalString());
+                    carritoAdapter.notifyDataSetChanged();
+                    carritoAdapter.getCarrito().recalcularMontos();
+                    setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
                     Toast.makeText(oThis, "Descuento manual eliminado", Toast.LENGTH_LONG).show();
                 }
             }
         })
-                .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // Dialogo cancelado
-                        Toast.makeText(oThis, "Descuento manual no establecido", Toast.LENGTH_LONG).show();
-                    }
-                });
+        .setNegativeButton(R.string.cancelar, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // Dialogo cancelado
+                Toast.makeText(oThis, "Descuento manual no establecido", Toast.LENGTH_LONG).show();
+            }
+        });
         builder.create();
         builder.show();
     }
-
-    /*---
-    * ---------------
-    * FIN LAYOUT
-    * ---------------
-    * ---*/
-
-     /*---
-    * ---------------
-    * CATEGORIAS
-    * ---------------
-    * ---*/
 
     /**
      * Busca una Categoria por nombre, devuelve <code>null</code> de no existir
@@ -928,30 +746,11 @@ public class CatalogoActivity extends ParentMenuActivity {
      * @return <code>Categoria</code> o <code>null</code> de no existir categoria asociada
      */
     protected Categoria findCategoriaByName(String name) {
-        Categoria categoriaActual, categoriaFinal = null;
         for (Categoria categoria : categorias) {
-            categoriaActual = categoria;
-            if (categoriaActual != null) {
-                if (name.equalsIgnoreCase(categoriaActual.getNombre())) {
-                    categoriaFinal = categoriaActual;
-                    break;
-                }
-            }
+            if ( categoria != null && name.equalsIgnoreCase(categoria.getNombre())) return categoria;
         }
-        return categoriaFinal;
+        return null;
     }
-
-    /*---
-    * ---------------
-    * FIN CATEGORIAS
-    * ---------------
-    * ---*/
-
-    /*---
-    * ---------------
-    * GRUPOS DE CATEGORIAS
-    * ---------------
-    * ---*/
 
     /**
      * Busca un GrupoCategorias por nombre, devuelve <code>null</code> de no existir
@@ -960,35 +759,20 @@ public class CatalogoActivity extends ParentMenuActivity {
      */
     public GrupoCategorias findGrupoCategoriasByName(String name) {
         for (GrupoCategorias gruposCategoria : gruposCategorias) {
-            if (gruposCategoria != null) {
-                if (name.equalsIgnoreCase(gruposCategoria.getNombre())) {
-                    return gruposCategoria;
-                }
-            }
+            if (gruposCategoria != null && name.equalsIgnoreCase(gruposCategoria.getNombre())) return gruposCategoria;
         }
         return null;
     }
-
-    /*---
-    * ---------------
-    * FIN GRUPOS DE CATEGORIAS
-    * ---------------
-    * ---*/
-
-    /*---
-    * ---------------
-    * DESCUENTOS
-    * ---------------
-    * ---*/
 
     /**
      * Procedimiento que obtiene todos los descuentos de Parse y los almacena en <code>descuentosParse</code>
      */
     private void getDescuentosFromParse(){
-        ParseQuery query = new ParseQuery("Descuento");
-        query.setLimit(QUERY_LIMIT);
         if(null == queries) queries = new ArrayList<ParseQuery>();
+
+        ParseQuery query = new ParseQuery("Descuento");
         queries.add(query);
+        query.setLimit(QUERY_LIMIT);
         query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -1009,25 +793,16 @@ public class CatalogoActivity extends ParentMenuActivity {
         ArrayList<ParseObject> descuentos = new ArrayList<ParseObject>();
         if(descuentosParse != null){
             for(ParseObject descuento:descuentosParse){
-                if(descuento.getString("perteneceAObjectId").equals(relatedObjectId)){
-                    descuentos.add(descuento);
-                }
+                if(descuento.getString("perteneceAObjectId").equals(relatedObjectId)) descuentos.add(descuento);
             }
             if(descuentos.size() != 0) return descuentos;
         }
         return null;
     }
 
-    /*---
-    * ---------------
-    * FIN DESCUENTOS
-    * ---------------
-    * ---*/
-
     public ParseObject findPedidoById(String pedidoId){
         for (ParseObject pedido:app.pedidos){
-            if(pedido.getObjectId().equals(pedidoId))
-                return pedido;
+            if(pedido.getObjectId().equals(pedidoId)) return pedido;
         }
         return null;
     }

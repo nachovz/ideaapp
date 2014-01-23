@@ -50,6 +50,7 @@
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"
             android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
             android:label="@string/app_name" >
         </activity>
     </application>

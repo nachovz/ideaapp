@@ -1,8 +1,6 @@
 package com.grupoidea.ideaapp;
 
 import android.app.Application;
-import android.content.Context;
-import android.net.ConnectivityManager;
 
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Meta;
@@ -31,6 +29,7 @@ public class GrupoIdea extends Application {
     public List<ParseObject> pedidos;
     public Cliente clienteActual;
     public double iva;
+    public static boolean hasInternet = false;
 
     public ArrayList<Cliente> clientes;
 
@@ -40,7 +39,18 @@ public class GrupoIdea extends Application {
 		Parse.initialize(this, PARSE_APP_ID, PARSE_CLIENT_KEY);
 	}
 
-    public static boolean isNetworkAvailable(Context context){
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+    /**
+     * Funcion que busca la meta que coincida con el producto y usuario indicado en las metas almacenadas en <code>Application</code>
+     *
+     * @param codigoProducto codigo del producto de la meta
+     * @return el <code>ParseObject</code> de la Meta, <code>null</code> otherwise
+     */
+    public Meta findMetaByProductCode(String codigoProducto){
+        for (Meta meta:metas){
+            if(meta.getCodigo().equals(codigoProducto)){
+                return meta;
+            }
+        }
+        return null;
     }
 }

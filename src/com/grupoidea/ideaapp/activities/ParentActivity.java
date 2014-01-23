@@ -265,7 +265,7 @@ public abstract class ParentActivity extends Activity {
                 e.printStackTrace();
             }
         }else{
-            Toast.makeText(mContext, "Error: No se puede guardar la cache, no se encuentra tarjeta SD", 5000).show();
+            Toast.makeText(mContext, "Error: No se puede guardar la cache, no se encuentra tarjeta SD", Toast.LENGTH_LONG).show();
         }
 	}
 
@@ -300,7 +300,6 @@ public abstract class ParentActivity extends Activity {
         Log.d(TAG, "loadFromParse cached result?  "+String.valueOf(query.hasCachedResult()));
         query.setCachePolicy(getParseCachePolicy());
 		query.findInBackground(new FindCallback<ParseObject>() {
-
 			@Override
 			public void done(List<ParseObject> parseData, ParseException e) {
 				if (e == null) {

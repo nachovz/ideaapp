@@ -1,12 +1,8 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,8 +67,6 @@ public class DashboardActivity extends ParentMenuActivity {
         app = (GrupoIdea) getApplication();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard_layout);
-
-        Log.d(TAG, "internet status: "+GrupoIdea.isNetworkAvailable(mContext));
 
         //Obtener IVA para los RowPedido
         getIVAFromParse();
@@ -185,11 +179,7 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     //Instanciar Metas
                     for (ParseObject parseObject: parseObjects){
-                        meta = new Meta();
-                        meta.setCantMeta(parseObject.getInt("meta"));
-                        meta.setCantFacturado(parseObject.getInt("facturado"));
-                        meta.setCantPedido(parseObject.getInt("pedido"));
-                        meta.setValorBs(parseObject.getDouble("meta_bs"));
+                        meta = new Meta(parseObject);
                         String producto1 = parseObject.getParseObject("producto").getObjectId();
                         String codigo = parseObject.getParseObject("producto").getString("codigo");
 
@@ -211,26 +201,14 @@ public class DashboardActivity extends ParentMenuActivity {
 
                     //Setear Vista de Meta Actual
                     TextView metasTextView=(TextView)findViewById(R.id.metas_actual_textView);
-                    metasTextView.setTextSize(18);
-                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                    metasTextView.setTextColor(Color.WHITE);
-                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
                     metasTextView.setText("Actual: " + facturadoMetas);
 
                     //Setear Vista de Meta Total
                     metasTextView=(TextView)findViewById(R.id.metas_total_textView);
-                    metasTextView.setTextSize(18);
-                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                    metasTextView.setTextColor(Color.WHITE);
-                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
                     metasTextView.setText("Meta: " + totalMetas);
 
                     //Setear Vista de Meta Restante
                     metasTextView=(TextView)findViewById(R.id.metas_restante_textView);
-                    metasTextView.setTextSize(18);
-                    metasTextView.setTypeface(null, Typeface.BOLD_ITALIC);
-                    metasTextView.setTextColor(Color.WHITE);
-                    metasTextView.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
                     metasTextView.setText("Resta: " + (totalMetas-facturadoMetas));
 
                     ProgressBar metasProgress = (ProgressBar) findViewById(R.id.metas_gauge_progressbar);
@@ -252,9 +230,6 @@ public class DashboardActivity extends ParentMenuActivity {
                     marcasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                            TextView codigoMetaTextView, metaMetaTextView, pedidoMetaTextView, facturadoMetaTextView, montoMetaTextView;
-//                            Boolean darkBackground = true;
-
                             assert marcasSpinner != null && marcasSpinner.getSelectedItem() != null;
                             MetasAdapter metasAdapter = new MetasAdapter(metas, mContext);
                             ListView metasListView = (ListView) findViewById(R.id.metas_listView);
@@ -267,8 +242,6 @@ public class DashboardActivity extends ParentMenuActivity {
 
                         }
                     });
-
-
                     Log.d(TAG,"Metas cargadas");
                 }else{
                     Log.d(TAG,e.toString());
@@ -299,7 +272,7 @@ public class DashboardActivity extends ParentMenuActivity {
         queryIva.setLimit(QUERY_LIMIT);
         queryIva.setCachePolicy(getParseCachePolicy());
         queryIva.whereEqualTo("nombre","IVA");
-        queryIva.getFirstInBackground(new GetCallback() {
+        queryIva.getFirstInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject parseImp, ParseException e) {
                 if(e == null){
@@ -308,7 +281,6 @@ public class DashboardActivity extends ParentMenuActivity {
                         app.iva = 12.0;
                     }else{
                         app.iva = parseImp.getDouble("porcentaje")/100.0;
-//                        Log.d(TAG, "IVA: " + parseImp.getDouble("porcentaje")+"%");
                     }
                 }else{
                     Log.d(TAG, "Error en el Query para obtener el IVA");
@@ -322,11 +294,10 @@ public class DashboardActivity extends ParentMenuActivity {
         return app.iva;
     }
 
-    @Override
-    public void reloadApp() {
-        ParseQuery.clearAllCachedResults();
-        finish();
-        getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(getIntent());
-    }
+//    @Override
+//    public void reloadApp() {
+//       super.reloadApp();
+//       getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//       startActivity(getIntent());
+//    }
 }

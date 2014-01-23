@@ -1,6 +1,11 @@
 package com.grupoidea.ideaapp.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +27,15 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +45,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	private TextView menuTituloTextView; 
 	private ImageView logOff;
     protected ImageView refresh;
-	private ImageView menuIcon;
+	protected ImageView menuFilterIcon;
 	private ImageView carrito;
     protected ProgressDialog catalogoProgressDialog;
     protected ProgressDialog carritoProgressDialog;
@@ -92,38 +106,24 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		menuRightShowed = false;
 		menuLeftShowed = false;
         app = (GrupoIdea) getApplication();
-//        app.clientes = getClientesFromParse();
 		
 		menuTituloTextView = (TextView) findViewById(R.id.menu_titulo_text_view);
         refresh = (ImageView) findViewById(R.id.menu_refresh_image_view);
 		logOff = (ImageView) findViewById(R.id.menu_logoff_image_view);
-		menuIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
+		menuFilterIcon = (ImageView) findViewById(R.id.menu_icon_image_view);
+        menuFilterIcon.setEnabled(false);
 		carrito = (ImageView) findViewById(R.id.menu_carrito_image_view);
 
-//        //Poblar Spinner de Clientes e inflar
 		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
         clienteSpinner.setEnabled(false);
         clienteSpinner.setVisibility(View.INVISIBLE);
-//        clienteSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                clienteSelected=i;
-//                Log.d(TAG, "Cliente seleccionado: "+i);
-//                CatalogoActivity.updatePreciosComerciales();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {}
-//        });
 
         frontLayout = (RelativeLayout) findViewById(R.id.parent_menu_front_layout);
 
-        //Mostrar imagen del carrito si el activity tiene menu lateral derecho
 		if(hasMenuRight) {
 			carrito.setVisibility(View.VISIBLE);
 			createRightMenu();
 		}
-        //crear listener para tap sobre icono del carrito
         carrito.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -131,35 +131,20 @@ public abstract class ParentMenuActivity extends ParentActivity {
             }
         });
 
-        //Mostrar icono de menu de categorias y suscribir un listener si el activity tiene menu lateral izquierdo
-        // si no crear un listener para cuando se presiona el boton de atrás
 		if(hasMenuLeft) {
 			createLeftMenu();
-			menuIcon.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					toggleLeftMenu();
-				}
-			});
-		} else {
-			menuIcon.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					onBackPressed();
-				}
-			});
+			menuFilterIcon.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(menuFilterIcon.isEnabled()) toggleLeftMenu();
+                }
+            });
 		}
 
-        //Crear listener para el boton de refresh
         refresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(GrupoIdea.isNetworkAvailable(getApplicationContext())){
-                    reloadApp();
-                    refresh.setClickable(false);
-                }else{
-                    Toast.makeText(getBaseContext(), getString(R.string.no_internet_message_refresh), Toast.LENGTH_LONG).show();
-                }
+                isNetworkAvailable(v.getContext());
             }
         });
 
@@ -174,9 +159,13 @@ public abstract class ParentMenuActivity extends ParentActivity {
 	}
 
     public void reloadApp() {
-        ParseQuery.clearAllCachedResults();
-        finish();
-        startActivity(getIntent());
+        if(GrupoIdea.hasInternet){
+            ParseQuery.clearAllCachedResults();
+            finish();
+            startActivity(getIntent());
+            if(this instanceof DashboardActivity) getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            refresh.setClickable(false);
+        }
     }
 
     @Override
@@ -187,9 +176,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		inflateView = getLayoutInflater().inflate(layoutResId, null);
 		if(inflateView != null) {
 			parentInflater = (RelativeLayout) findViewById(R.id.parent_menu_inflate_layout);
-			if(parentInflater != null) {
-				parentInflater.addView(inflateView);
-			}
+			if(parentInflater != null) parentInflater.addView(inflateView);
 		}
 	}
 	
@@ -358,5 +345,61 @@ public abstract class ParentMenuActivity extends ParentActivity {
 
     public void setMenuLeft(ViewGroup menuLeft) {
         this.menuLeft = menuLeft;
+    }
+
+    public void isNetworkAvailable(Context context){
+        GrupoIdea.hasInternet = false;
+        boolean tempInfo = false;
+        ConnectivityManager connManag = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] info = connManag.getAllNetworkInfo();
+        if (info != null)
+            for (NetworkInfo anInfo : info)
+                if (anInfo.getState() == NetworkInfo.State.CONNECTED){
+                    tempInfo = true;
+                }
+
+        if(tempInfo){
+            InternetCheckTask task = new InternetCheckTask();
+            task.execute();
+        }else{
+            Toast.makeText(getBaseContext(), getString(R.string.no_internet_message_refresh), Toast.LENGTH_LONG).show();
+            Log.d("ConnectionResult", "NetworkInfo false");
+        }
+    }
+
+    public class InternetCheckTask extends AsyncTask<Void, Void, Boolean> {
+        Exception bla;
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            boolean result = false;
+            try{
+                HttpGet request = new HttpGet("http://www.parse.com");
+                HttpParams httpParameters = new BasicHttpParams();
+                HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
+                HttpClient httpClient = new DefaultHttpClient(httpParameters);
+                HttpResponse response = httpClient.execute(request);
+
+                int status = response.getStatusLine().getStatusCode();
+
+                if (status == HttpStatus.SC_OK) result = true;
+
+            }catch (Exception e){
+                bla = e;
+                result = false;
+            }
+
+            return result;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean result){
+            GrupoIdea.hasInternet = result;
+            Log.d("ConnectionResult", "Resultado de conex: "+result.toString());
+            if(bla != null) bla.printStackTrace();
+            if(result) reloadApp();
+            else Toast.makeText(getBaseContext(), getString(R.string.no_internet_message_refresh), Toast.LENGTH_LONG).show();
+        }
     }
 }

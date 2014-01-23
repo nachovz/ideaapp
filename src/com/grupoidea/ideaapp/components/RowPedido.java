@@ -198,7 +198,7 @@ public class RowPedido extends RelativeLayout {
                                     bundle = new Bundle();
                                     app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
                                     app.pedido = new Pedido(pedidoParse);
-                                    if (GrupoIdea.isNetworkAvailable(context))
+                                    if (GrupoIdea.hasInternet)
                                         parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                     else {
                                         AlertDialog.Builder noInternetNotificationDialog = new AlertDialog.Builder(context);
@@ -241,7 +241,7 @@ public class RowPedido extends RelativeLayout {
                                     Bundle bundle;
                                     bundle = new Bundle();
                                     app.pedido = new Pedido(pedidoParse);
-                                    if(GrupoIdea.isNetworkAvailable(context))
+                                    if(GrupoIdea.hasInternet)
                                         parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                     else{
                                         AlertDialog.Builder noInternetNotificationDialog = new AlertDialog.Builder(context);
