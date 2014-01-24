@@ -10,163 +10,157 @@
         android:layout_height="fill_parent" >
 
         <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="58dp"
-                android:background="#3A70B9"
-                android:id="@+id/header_metas"
-                android:layout_alignParentTop="true">
+            android:id="@+id/header_metas"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_alignParentTop="true"
+            android:background="#3A70B9">
             <TextView
-                    android:id="@+id/metasTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/metas"
-                    android:textSize="25dp"
-                    android:textColor="#ffffff"
-                    android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="12dp"/>
+                android:id="@+id/metasTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:text="@string/metas"
+                android:textColor="#ffffff"
+                android:textSize="25dp"
+                android:textStyle="bold"/>
             <Spinner
-                    android:id="@+id/metas_spinner"
-                    android:textColor="#2B2B2B"
-                    android:textStyle="bold|italic"
-                    android:layout_width="200dp"
-                    android:layout_height="fill_parent"
-                    android:layout_gravity="right"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="false"
-                    android:layout_toRightOf="@+id/metasTextView" android:layout_marginLeft="120dp"/>
+                android:id="@+id/metas_spinner"
+                android:layout_width="200dp"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="false"
+                android:layout_centerVertical="true"
+                android:layout_gravity="right"
+                android:layout_marginLeft="120dp"
+                android:layout_toRightOf="@+id/metasTextView"
+                android:textColor="#2B2B2B" android:textStyle="bold|italic"/>
         </RelativeLayout>
 
         <LinearLayout
-                android:orientation="horizontal"
-                android:id="@+id/metas_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="450dp"
+            android:id="@+id/metas_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="450dp"
             android:layout_below="@+id/header_metas"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <!--HEADER de Metas y Spinner-->
 
             <RelativeLayout
-                    android:id="@+id/metas_gauge"
-                    android:layout_height="wrap_content"
-                    android:layout_width="150dp"
+                android:id="@+id/metas_gauge"
+                style="@style/encabezado_blue"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                    style="@style/encabezado_blue"
-                    android:background="@drawable/metas_gauge_background"
                 android:layout_weight="1"
+                android:background="@drawable/metas_gauge_background"
                 android:gravity="center_horizontal">
                 <TextView
                     android:id="@+id/metas_actual_textView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic"
                     android:layout_alignParentTop="false"
-                    android:textColor="#FFF" />
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textColor="#FFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic" />
 
                 <TextView
-                    android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/separator_metas_textView"
-                    android:layout_width="match_parent" android:layout_below="@+id/metas_actual_textView"/>
+                    android:id="@+id/separator_metas_textView" android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:layout_below="@+id/metas_actual_textView" android:background="#ffffff"/>
 
                 <TextView
                     android:id="@+id/metas_total_textView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_below="@+id/metas_actual_textView"
                     android:gravity="center_vertical|center_horizontal"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic"
                     android:textColor="#FFF"
-                    android:layout_below="@+id/metas_actual_textView"/>
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic"/>
 
                 <TextView
-                    android:layout_height="0.5dp" android:background="#ffffff" android:id="@+id/separator_metas_textView2"
-                    android:layout_width="match_parent" android:layout_below="@+id/metas_total_textView"/>
+                    android:id="@+id/separator_metas_textView2" android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:layout_below="@+id/metas_total_textView" android:background="#ffffff"/>
                 <TextView
                     android:id="@+id/metas_restante_textView"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_below="@+id/metas_total_textView"
                     android:gravity="center_vertical|center_horizontal"
-                    android:textSize="18sp"
-                    android:textStyle="bold|italic"
                     android:textColor="#FFF"
-                    android:layout_below="@+id/metas_total_textView"/>
+                    android:textSize="18sp"
+                    android:textStyle="bold|italic"/>
 
                 <ProgressBar
-                        android:id="@+id/metas_gauge_progressbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:max="100"
-                        android:progress="50"
-                        android:layout_below="@+id/metas_restante_textView"/>
+                    android:id="@+id/metas_gauge_progressbar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/metas_restante_textView"
+                    android:max="100"
+                    android:progress="50"/>
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/metas_table"
                 android:layout_width="650dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/metas_table"
-                android:layout_marginTop="25dp"
                 android:layout_marginRight="25dp"
+                android:layout_marginTop="25dp"
                 android:layout_weight="3">
 
                 <TableLayout
+                    android:id="@+id/meta_list_header"
                     android:layout_width="650dp"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/meta_list_header">
+                    android:layout_height="wrap_content">
 
                     <TableRow android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/codigo"
-
-                                android:padding="18dip"
-                                android:layout_weight="4"
-                                style="@style/encabezado"/>
+                            style="@style/encabezado"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="@dimen/list_item_padding"
+                            android:text="@string/codigo"/>
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/meta"
-
-                                android:padding="18dip"
-                                android:layout_weight="1"
-                                style="@style/encabezado"/>
+                            style="@style/encabezado"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="@dimen/list_item_padding"
+                            android:text="@string/meta"/>
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/pedidos"
-
-                                android:padding="18dip"
-                                android:layout_weight="1"
-                                style="@style/encabezado"/>
+                            style="@style/encabezado"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="@dimen/list_item_padding"
+                            android:text="@string/pedidos"/>
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/facturado"
-
-                                android:padding="18dip"
-                                android:layout_weight="1"
-                                style="@style/encabezado"/>
-                        <TextView style="@style/encabezado"
-                                  android:layout_width="wrap_content"
-                                  android:layout_height="wrap_content"
-                                  android:text="@string/Bs"
-
-                                  android:padding="18dip"
-                                  android:layout_weight="1"
-                                  android:id="@+id/textView"/>
+                            style="@style/encabezado"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:padding="@dimen/list_item_padding"
+                            android:text="@string/facturado" />
+                        <TextView android:id="@+id/textView"
+                            style="@style/encabezado"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/list_item_padding"
+                            android:text="@string/Bs"/>
                     </TableRow>
 
                 </TableLayout>
 
                 <ListView
-                    android:layout_width="wrap_content"
-                    android:layout_height="350dp"
                     android:id="@+id/metas_listView"
+                    android:layout_width="650dp"
+                    android:layout_height="350dp"
                     android:layout_below="@+id/meta_list_header" />
 
             </RelativeLayout>
@@ -177,8 +171,8 @@
             android:id="@+id/cliente_relative_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/dash_bkg_banner_inferior"
-            android:layout_below="@+id/metas_layout">
+            android:layout_below="@+id/metas_layout"
+            android:background="@drawable/dash_bkg_banner_inferior">
 
             <TextView
                 android:id="@+id/cliente_tag_text_view"
@@ -200,14 +194,14 @@
                 android:layout_marginTop="10dp"
                 android:src="@drawable/dash_img_icono_inferior" />
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/counterPedidos"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginTop="55dp"
-                    android:textStyle="bold" android:textColor="#FFFFFF" android:textSize="30sp"
-                    android:layout_marginLeft="40dp" android:background="@drawable/pastilla_counter_pedido"
-                    android:padding="4dp" android:visibility="invisible"/>
+                android:id="@+id/counterPedidos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="55dp" android:background="@drawable/pastilla_counter_pedido" android:padding="4dp"
+                android:textColor="#FFFFFF" android:textSize="30sp"
+                android:textStyle="bold" android:visibility="invisible"/>
         </RelativeLayout>
 
         <Button
@@ -216,21 +210,21 @@
             android:layout_height="65dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/cliente_relative_layout"
+            android:layout_marginTop="4dp"
+            android:onClick="createNewPedido"
             android:text="@string/nuevo_pedido_button_text"
-            android:textSize="20dp"
-            android:onClick="createNewPedido" android:layout_marginTop="5dp"/>
+            android:textSize="20dp" />
 
-        <TextView android:layout_width="match_parent" android:layout_height="3dp" android:background="#3A70B9"
-                  android:id="@+id/separator_metas_textView"
-                  android:layout_below="@+id/cliente_nuevo_pedido_boton" android:layout_marginTop="20dp"
-                  android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
-            android:layout_marginBottom="20dp" />
+        <TextView android:id="@+id/separator_metas_textView" android:layout_width="match_parent" android:layout_height="40dp"
+            android:layout_below="@+id/cliente_nuevo_pedido_boton"
+            android:background="#3A70B9" />
         <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:id="@+id/pedidos_spinner"
-                android:layout_below="@+id/separator_metas_textView" android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"/>
+            android:id="@+id/pedidos_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_below="@+id/separator_metas_textView"
+            android:layout_marginBottom="40dp"
+            android:layout_marginTop="4dp" />
         <ScrollView
             android:id="@+id/cliente_scroll_view"
             android:layout_width="fill_parent"
@@ -244,10 +238,10 @@
                 android:orientation="vertical" >
 
                 <ProgressBar
+                    android:id="@+id/pedidos_progressBar"
                     style="?android:attr/progressBarStyleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/pedidos_progressBar"
                     android:layout_gravity="center"
                     android:indeterminate="false" />
             </LinearLayout>

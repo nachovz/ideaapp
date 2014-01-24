@@ -5,56 +5,62 @@
 
     <TextView
         android:id="@+id/codigo_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="3"/>
+        android:padding="@dimen/list_item_padding"
+        android:layout_gravity="left"
+        android:textAlignment="gravity" />
 
     <TextView
         android:id="@+id/cantidad_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="2"/>
+        android:padding="@dimen/list_item_padding"
+        android:textAlignment="gravity"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/precio_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="3"/>
+        android:padding="@dimen/list_item_padding"
+        android:textAlignment="gravity"
+        android:layout_gravity="right" />
 
     <TextView
         android:id="@+id/precio_comercial_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="3"/>
+        android:padding="@dimen/list_item_padding"
+        android:textAlignment="gravity"
+        android:layout_gravity="right" />
 
     <TextView
         android:id="@+id/descuento_volumen_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="2"/>
+        android:padding="@dimen/list_item_padding"
+        android:textAlignment="gravity"
+        android:layout_gravity="center_horizontal" />
 
     <TextView
         android:id="@+id/precio_final_lista_producto_pedido_textView"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#262626"
-        android:padding="18dp"
-        android:layout_weight="4"/>
+        android:padding="@dimen/list_item_padding"
+        android:textAlignment="gravity"
+        android:layout_gravity="right" />
 
 </TableRow>

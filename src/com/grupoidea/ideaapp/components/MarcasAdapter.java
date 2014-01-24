@@ -66,7 +66,6 @@ public class MarcasAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View convertView, ViewGroup viewGroup) {
 
-        //Inflar el View si no existe
         if(convertView == null)
             convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_filtro_menu_layout, null);
 
@@ -79,7 +78,6 @@ public class MarcasAdapter extends BaseAdapter {
         }
 
         if(marcaActual.equals(todas) && marcas.get(i).equals(todas)){
-            //aplicar estilo de item seleccionado
             tv.setBackgroundResource(R.drawable.pastilla_item_selected_filtro);
             tv.setTextColor(Color.parseColor("#3A70B9"));
         }
@@ -101,13 +99,12 @@ public class MarcasAdapter extends BaseAdapter {
 
             Marca marca = (Marca)v.getTag();
             marcaActual = marca;
-            //Asignar las categorias de la marca al adapter de categorias
             Log.d(TAG, "getTag() Marca: " + marca.toString());
             categoriasAdapter.setCategorias(marca.getCategorias());
 
+            //Reset views
             TextView item; ListView marcasFiltro = (ListView) v.getParent();
             assert marcasFiltro != null;
-            //poner todos los views en default
             for(int i = 0, size = marcasFiltro.getChildCount(); i <size; i++){
                 item = (TextView) marcasFiltro.getChildAt(i);
                 if (item != null) {
@@ -135,12 +132,9 @@ public class MarcasAdapter extends BaseAdapter {
      */
     public Marca addMarca(String nombreMarca){
         for(Marca marca : marcas){
-            //Si la Marca existe devolverla
-            if(nombreMarca.equalsIgnoreCase(marca.toString())){
-                return marca;
-            }
+            if(nombreMarca.equalsIgnoreCase(marca.toString())) return marca;
         }
-        //Si la Marca no existe
+
         Marca newMarca = new Marca(nombreMarca);
         marcas.add(newMarca);
         return newMarca;
@@ -152,6 +146,7 @@ public class MarcasAdapter extends BaseAdapter {
      */
     public Marca getMarcaActual(){
         if(null == marcaActual) return todas;
+
         return marcaActual;
     }
 

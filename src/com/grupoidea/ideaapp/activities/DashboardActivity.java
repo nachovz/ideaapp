@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -57,6 +58,12 @@ public class DashboardActivity extends ParentMenuActivity {
 	public DashboardActivity() {
 		super(true, false);
 	}
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Button newPedido = (Button) findViewById(R.id.cliente_nuevo_pedido_boton);
+        newPedido.setEnabled(true);
+    }
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +75,11 @@ public class DashboardActivity extends ParentMenuActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dashboard_layout);
 
-        //Obtener IVA para los RowPedido
         getIVAFromParse();
 
         //mostrar nombre de usuario
         setMenuTittle(ParseUser.getCurrentUser().getUsername());
 
-        //Contador de pedidos
         final TextView pedidosCounter;
         pedidosCounter = (TextView) findViewById(R.id.counterPedidos);
 
@@ -85,10 +90,6 @@ public class DashboardActivity extends ParentMenuActivity {
         estados.add("RECHAZADO");
         estados.add("ANULADO");
         estados.add("TODOS");
-
-		clienteSpinner = (Spinner) findViewById(R.id.menu_cliente_select_spinner);
-        clienteSpinner.setEnabled(false);
-        clienteSpinner.setVisibility(View.INVISIBLE);
 
         pedidosSpinnerAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, estados);
         pedidosSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,7 +121,7 @@ public class DashboardActivity extends ParentMenuActivity {
                             ProgressBar loading = (ProgressBar) pedidosList.findViewById(R.id.pedidos_progressBar);
                             loading.setVisibility(View.VISIBLE);
 
-                            Log.d(TAG,"Estado seleccionado en Spinner "+estados.get(position));
+//                            Log.d(TAG,"Estado seleccionado en Spinner "+estados.get(position));
                             RowPedido row;
 
                             //eliminar todos menos el primero
@@ -261,6 +262,7 @@ public class DashboardActivity extends ParentMenuActivity {
 	}
 	
 	public void createNewPedido(View view){
+        view.setEnabled(false);
 		Bundle bundle = new Bundle();
         app.pedido = null;
 		this.dispatchActivity(CatalogoActivity.class, bundle, false);
@@ -278,9 +280,9 @@ public class DashboardActivity extends ParentMenuActivity {
                 if(e == null){
                     if(parseImp == null){
                         Log.d(TAG, "No existe un valor especificado para el IVA en la BD");
-                        app.iva = 12.0;
+                        app.iva = 1.2;
                     }else{
-                        app.iva = parseImp.getDouble("porcentaje")/100.0;
+                        app.iva = parseImp.getDouble("porcentaje");
                     }
                 }else{
                     Log.d(TAG, "Error en el Query para obtener el IVA");

@@ -22,7 +22,7 @@ public class MetasAdapter extends BaseAdapter {
     ArrayList<Meta> metas;
     ArrayList<Meta> metaMarca;
     String marca;
-    protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
+    protected DecimalFormat df = new DecimalFormat("###,###,###,##0.##");
     private String TAG = this.getClass().getSimpleName();
 
     public MetasAdapter(ArrayList<Meta> metas, Context mContext){

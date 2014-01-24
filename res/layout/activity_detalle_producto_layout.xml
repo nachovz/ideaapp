@@ -123,8 +123,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.light"
-                    android:layout_marginLeft="8dp">
+                    style="@style/detalle_producto.row.light">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -134,7 +133,8 @@
                         android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label"
                         android:textStyle="bold|italic"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:paddingLeft="@dimen/detalle_producto_row_padding"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -146,8 +146,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.dark"
-                    android:layout_marginLeft="8dp">
+                    style="@style/detalle_producto.row.dark">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -157,7 +156,8 @@
                         android:id="@+id/grupo_categorias_label_textView"
                         android:layout_weight="3"
                         android:textStyle="bold|italic"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:paddingLeft="@dimen/detalle_producto_row_padding" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,8 +171,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.light"
-                    android:layout_marginLeft="8dp">
+                    style="@style/detalle_producto.row.light">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -182,6 +181,7 @@
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
                         android:layout_weight="3"
+                        android:paddingLeft="@dimen/detalle_producto_row_padding"
                         android:textAppearance="@style/detalle_producto.label" />
 
                     <TextView
@@ -196,8 +196,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.dark"
-                    android:layout_marginLeft="8dp">
+                    style="@style/detalle_producto.row.dark">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -206,6 +205,7 @@
                         android:id="@+id/excedente_label_textView"
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
+                        android:paddingLeft="@dimen/detalle_producto_row_padding"
                         android:layout_weight="3"
                         android:textAppearance="@style/detalle_producto.label" />
 
@@ -220,8 +220,7 @@
                 <TableRow
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    style="@style/detalle_producto.row.light"
-                    android:layout_marginLeft="8dp">
+                    style="@style/detalle_producto.row.light">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -231,6 +230,7 @@
                         android:textStyle="bold|italic"
                         android:textSize="18sp"
                         android:layout_weight="3"
+                        android:paddingLeft="@dimen/detalle_producto_row_padding"
                         android:textAppearance="@style/detalle_producto.label" />
 
                 </TableRow>
@@ -247,13 +247,14 @@
                     android:layout_height="fill_parent">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/descripcion_textView"
                         style="@style/detalle_producto.desc"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:layout_weight="2" />
+                        android:layout_weight="2"
+                        android:padding="@dimen/detalle_producto_row_padding" />
 
                 </TableRow>
             </TableLayout>

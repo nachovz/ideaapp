@@ -5,6 +5,8 @@
     <string name="end_cargando">Carga finalizada</string>
     <string name="no_internet_message_refresh">No hay conexión a Internet para refrescar la aplicación.</string>
     <string name="url_connection_check">www.parse.com</string>
+    <string name="log_off_confirmation">Está seguro que desea cerrar sesión en la aplicación?</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
 
     <!--Login-->
     <string name="nombre_usuario">Usuario</string>

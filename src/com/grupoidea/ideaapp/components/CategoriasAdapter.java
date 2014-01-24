@@ -86,7 +86,7 @@ public class CategoriasAdapter extends BaseAdapter {
 
             Categoria categoria = (Categoria)v.getTag();
             categoriaActual = categoria;
-            //Asignar las categorias de la marca al adapter de categorias
+            //Asignar las categorias de la marca al clientesAdapter de categorias
             Log.d(TAG, "getTag() Categoria: " + categoria.toString());
 
             TextView item; ListView categoriasFiltro = (ListView) v.getParent();

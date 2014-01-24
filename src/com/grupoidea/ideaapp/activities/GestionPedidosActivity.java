@@ -87,7 +87,7 @@ public class GestionPedidosActivity extends ParentMenuActivity {
         //Fecha
             text = (TextView) findViewById(R.id.fecha_edit);
             Time now = new Time(); now.setToNow();
-            text.setText(now.monthDay + "/" + now.month + "/" + now.year);
+            text.setText(now.monthDay + "/" + (now.month+1) + "/" + now.year);
         //ID Cliente
             text = (TextView) findViewById(R.id.id_cliente_edit);
             text.setText(cliente.getCodigo());

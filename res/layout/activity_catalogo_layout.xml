@@ -7,7 +7,8 @@
     <RelativeLayout
         android:id="@+id/catalogo_header_layout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
 
         <TextView
             android:id="@+id/catalogo_header_text_view"
@@ -48,8 +49,8 @@
 
     <ProgressBar
         style="@android:style/Widget.ProgressBar.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/catalogo_progressBar"
         android:visibility="visible"
         android:layout_alignParentStart="false"
@@ -57,7 +58,7 @@
         android:indeterminateOnly="false"
         android:indeterminate="true"
         android:layout_below="@+id/catalogo_grid"
-        android:layout_marginTop="200dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerInParent="true"
+        android:layout_marginTop="400dp" />
 
 </RelativeLayout>

@@ -1,7 +1,9 @@
 package com.grupoidea.ideaapp.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -51,7 +53,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
     protected ProgressDialog carritoProgressDialog;
 	protected Spinner clienteSpinner;
     public static int clienteSelected;
-    protected ArrayAdapter<String> adapter;
+    protected ArrayAdapter<String> clientesAdapter;
     public static ArrayList<Cliente> clientes;
 	private RelativeLayout frontLayout;
 	
@@ -152,11 +154,28 @@ public abstract class ParentMenuActivity extends ParentActivity {
 		logOff.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ParseUser.logOut();
-				dispatchActivity(LoginActivity.class, null, true);
+                logOff(v.getContext());
 			}
 		});
 	}
+
+    protected void logOff(Context mContext) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(mContext.getString(R.string.log_off_confirmation))
+                .setTitle(mContext.getString(R.string.cerrar_sesion))
+                .setPositiveButton(mContext.getString(R.string.dialog_continuar_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ParseUser.logOut();
+                        dispatchActivity(LoginActivity.class, null, true);
+                    }
+                })
+                .setNegativeButton(mContext.getString(R.string.dialog_cancelar_button), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     public void reloadApp() {
         if(GrupoIdea.hasInternet){
@@ -312,7 +331,7 @@ public abstract class ParentMenuActivity extends ParentActivity {
      */
     public ArrayList<Cliente> getClientesFromParse(){
         clientes = new ArrayList<Cliente>();
-        adapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item);
+        clientesAdapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_item);
         ParseQuery query = new ParseQuery("Cliente");
         query.setLimit(QUERY_LIMIT);
         query.setCachePolicy(getParseCachePolicy());
@@ -327,9 +346,9 @@ public abstract class ParentMenuActivity extends ParentActivity {
                         cliente.setDescuento(parseObj.getDouble("descuentoComercial"));
                         cliente.setParseId(parseObj.getObjectId());
                         cliente.setClienteParse(parseObj);
-                        //Almacenar clientes directamente en el adapter
+                        //Almacenar clientes directamente en el clientesAdapter
                         clientes.add(cliente);
-                        adapter.add(cliente.getNombre());
+                        clientesAdapter.add(cliente.getNombre());
                     }
                 } else {
                     Log.d(TAG, "Error: " + e.getMessage());

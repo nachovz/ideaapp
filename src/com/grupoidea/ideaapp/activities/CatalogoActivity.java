@@ -112,7 +112,8 @@ public class CatalogoActivity extends ParentMenuActivity {
 		setParentLayoutVisibility(View.GONE);
 		setContentView(R.layout.activity_catalogo_layout);
 
-        clienteSpinner.setAdapter(adapter);
+        clientesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        clienteSpinner.setAdapter(clientesAdapter);
         clienteSpinner.setEnabled(true);
         clienteSpinner.setVisibility(View.VISIBLE);
         clienteSpinner.setSelection(0);
@@ -356,11 +357,9 @@ public class CatalogoActivity extends ParentMenuActivity {
         protected void onPostExecute(Producto producto){
             app.productos.add(producto);
             catalogo.setProductos(app.productos);
-            catalogoAdapter.notifyDataSetChanged();
-            Log.d(TAG, "Notificando producto "+producto.getCodigo()+" cargado");
-            Log.d(TAG,"app.productos: "+app.productos.size()+" adapter: "+catalogoAdapter.getCount());
+//            Log.d(TAG, "Notificando producto "+producto.getCodigo()+" cargado");
+//            Log.d(TAG,"app.productos: "+app.productos.size()+" clientesAdapter: "+catalogoAdapter.getCount());
 
-            //Verificar y Notificar Carga Completa de Productos
             if(pos == size -1) onProductosCargados();
 
         }
