@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -33,7 +34,6 @@ import com.parse.ParseQuery;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,11 +55,8 @@ public class RowPedido extends RelativeLayout {
 
 	private DashboardActivity parent;
 	public final Context context;
-	public String idPedido;
-    public String numPedido;
-    public Date createdAt, updatedAt;
-    public String nombreCliente;
-    public String observacionesRechazoPedido;
+    public Pedido pedido;
+    public Cliente cliente;
     protected DecimalFormat df = new DecimalFormat("###,###,##0.##");
 
     /*Estado del pedido*/
@@ -83,35 +80,31 @@ public class RowPedido extends RelativeLayout {
 
         this.context = contextParam;
 		LayoutInflater inflater;
-        previewExists = false;
-        numPedido = pedidoParse.getString("num_pedido");
-        idPedido = pedidoParse.getObjectId();
-        createdAt = pedidoParse.getCreatedAt();
-        updatedAt = pedidoParse.getUpdatedAt();
-
-        nombreCliente = pedidoParse.getParseObject("cliente").getString("nombre");
-
         parent = (DashboardActivity) context;
         app = (GrupoIdea) parent.getApplication();
 
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		rowPedidoLayout = (RelativeLayout) inflater.inflate(R.layout.row_pedido_layout, this);
 
+        previewExists = false;
+        pedido = new Pedido(pedidoParse);
+        GrupoIdea.clienteActual = cliente = new Cliente(pedidoParse.getParseObject("cliente"));
+
         assert rowPedidoLayout != null;
         rowPedidoLayout.setBackgroundResource(R.drawable.selector_row_pedido);
 
 		rowClienteTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_nombre_pedido_textview);
-		rowClienteTextView.setText(nombreCliente);
+		rowClienteTextView.setText(cliente.getNombre());
 
         rowCodPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_num_pedido_textview);
-        rowCodPedidoTextView.setText("   #" + numPedido);
+        rowCodPedidoTextView.setText("   #" + pedido.getNumPedido());
 
         //Mostrar fechas de creacion y de actualizacion del pedido
         rowFechaPedidoTextView = (TextView) rowPedidoLayout.findViewById(R.id.cliente_pedido_date_textview);
-        if(createdAt.equals(updatedAt)){
-            rowFechaPedidoTextView.setText(DateFormat.getDateInstance().format(createdAt));
+        if(pedido.getCreatedAt().equals(pedido.getUpdatedAt())){
+            rowFechaPedidoTextView.setText(DateFormat.getDateInstance().format(pedido.getCreatedAt()));
         }else{
-            rowFechaPedidoTextView.setText(DateFormat.getDateInstance().format(createdAt) + "   (Editado: " + DateFormat.getDateInstance().format(updatedAt) + ")");
+            rowFechaPedidoTextView.setText(DateFormat.getDateInstance().format(pedido.getCreatedAt()) + "   (Editado: " + DateFormat.getDateInstance().format(pedido.getUpdatedAt()) + ")");
         }
 
         //Status de Pedido
@@ -145,8 +138,8 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //Relanzar pedido como "nuevo" pedido
                                     Bundle bundle = new Bundle();
-                                    app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
-                                    app.pedido = new Pedido(pedidoParse);
+                                    bundle.putInt("status", Pedido.ESTADO_RECHAZADO);
+                                    app.pedido = pedido;
                                     parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                                 }
                             })
@@ -170,7 +163,8 @@ public class RowPedido extends RelativeLayout {
                 @Override
                 public void onClick(View v) {
                     v.setEnabled(false);
-                    new AlertDialog.Builder(context).setMessage(observacionesRechazoPedido).setTitle(context.getString(R.string.obs_rechazo_pedido_alert_title)).show();
+                    String obs = pedido.getObservaciones() != null? pedido.getObservaciones() : context.getString(R.string.empty_obs_rechazo_pedido);
+                    new AlertDialog.Builder(context).setMessage(obs).setTitle(context.getString(R.string.obs_rechazo_pedido_alert_title)).show();
                     v.setEnabled(true);
                 }
             });
@@ -196,7 +190,7 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
-                                    app.clienteActual = new Cliente(pedidoParse.getParseObject("cliente"));
+                                    bundle.putInt("status", Pedido.ESTADO_VERIFICANDO);
                                     app.pedido = new Pedido(pedidoParse);
                                     if (GrupoIdea.hasInternet)
                                         parent.dispatchActivity(CatalogoActivity.class, bundle, false);
@@ -240,6 +234,7 @@ public class RowPedido extends RelativeLayout {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Bundle bundle;
                                     bundle = new Bundle();
+                                    bundle.putInt("status", Pedido.ESTADO_APROBADO);
                                     app.pedido = new Pedido(pedidoParse);
                                     if(GrupoIdea.hasInternet)
                                         parent.dispatchActivity(CatalogoActivity.class, bundle, false);
@@ -296,7 +291,7 @@ public class RowPedido extends RelativeLayout {
                     //Obtener ParseObject de Pedido
                     ParseQuery queryPedido = new ParseQuery("Pedido");
                     queryPedido.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
-                    queryPedido.getInBackground(idPedido, new GetCallback() {
+                    queryPedido.getInBackground(pedido.getObjectId(), new GetCallback() {
                         @Override
                         public void done(ParseObject pedidoParse, ParseException e) {
 
@@ -314,7 +309,7 @@ public class RowPedido extends RelativeLayout {
                                     productosPedidoView = inflater.inflate(R.layout.component_pedido_aprobado_preview_layout, null, false);
                                     builder.setView(productosPedidoView);
                                     final AlertDialog alert = builder.create();
-                                    setPreview(productosPedido, numPedido);
+                                    setPreview(productosPedido, pedido.getNumPedido());
                                     alertProgress.dismiss();
                                     alert.show();
                                 }
@@ -341,6 +336,7 @@ public class RowPedido extends RelativeLayout {
                             public void onClick(DialogInterface dialog, int id) {
                                 Bundle bundle;
                                 bundle = new Bundle();
+                                bundle.putInt("status", Pedido.ESTADO_ANULADO);
                                 app.pedido = new Pedido(pedidoParse);
                                 parent.dispatchActivity(CatalogoActivity.class, bundle, false);
                             }
@@ -443,6 +439,7 @@ public class RowPedido extends RelativeLayout {
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(18,5,18,5);
                 tv.setText(productoPedido.getParseObject("producto").getString("codigo"));
@@ -451,14 +448,31 @@ public class RowPedido extends RelativeLayout {
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(18,5,18,5);
-                tv.setText(productoPedido.get("cantidad").toString());
+                if(null != productoPedido.get("cantidad"))
+                    tv.setText(String.valueOf(productoPedido.getInt("cantidad")));
+                else
+                    tv.setText("0");
+                tr.addView(tv);
+
+                tv = new TextView(context);
+                params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 2);
+                tv.setLayoutParams(params);
+                tv.setTextSize(10);
+                tv.setTextColor(Color.parseColor("#FFFFFF"));
+                tv.setPadding(18,5,18,5);
+                if(null != productoPedido.get("excedente"))
+                    tv.setText(String.valueOf(productoPedido.getInt("excedente")));
+                else
+                    tv.setText("0");
                 tr.addView(tv);
 
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(18,5,18,5);
                 if(productoPedido.get("precio_unitario")!= null){
@@ -471,6 +485,7 @@ public class RowPedido extends RelativeLayout {
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(18,5,0,5);
                 tv.setText(productoPedido.get("descuento").toString());
@@ -479,6 +494,7 @@ public class RowPedido extends RelativeLayout {
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(0,5,18,5);
                 if(productoPedido.getBoolean("manual")){
@@ -491,6 +507,7 @@ public class RowPedido extends RelativeLayout {
                 tv = new TextView(context);
                 params = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 3);
                 tv.setLayoutParams(params);
+                tv.setTextSize(10);
                 tv.setTextColor(Color.parseColor("#FFFFFF"));
                 tv.setPadding(18, 5, 18, 5);
                 tv.setText(df.format(productoPedido.get("monto")));
@@ -503,11 +520,11 @@ public class RowPedido extends RelativeLayout {
 
 
             //Setear subtotal sin IVA
-            tv = (TextView) productosPedidoView.findViewById(R.id.subtotal_edit_aprobado);
+            tv = (TextView) productosPedidoView.findViewById(R.id.preview_subtotal_textView);
             tv.setText(df.format(subtotal));
 
             //Setear Impuesto
-            tv = (TextView) productosPedidoView.findViewById(R.id.impuesto_edit_aprobado);
+            tv = (TextView) productosPedidoView.findViewById(R.id.preview_impuesto_textView);
             Double imp = subtotal * (((DashboardActivity)parent).getIva());
             tv.setText(df.format(imp));
 

@@ -86,6 +86,7 @@
 
     <string name="producto">Producto</string>
     <string name="cantidad">Cant.</string>
+    <string name="exced">Exced.</string>
     <string name="precioUnitario">P. Unitario</string>
     <string name="precioDescComercial">P. Comercial</string>
     <string name="descuentoVolumen">Desc.</string>

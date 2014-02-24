@@ -27,7 +27,7 @@ public class GrupoIdea extends Application {
 
     public Pedido pedido;
     public List<ParseObject> pedidos;
-    public Cliente clienteActual;
+    public static Cliente clienteActual;
     public double iva;
     public static boolean hasInternet = false;
 

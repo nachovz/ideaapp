@@ -75,4 +75,32 @@
     <style name="detalle_producto.row.dark">
         <item name="android:background">@color/dark_background</item>
     </style>
+
+    <style name="Pedido">
+
+    </style>
+
+    <style name="Pedido.Preview">
+
+    </style>
+
+    <style name="Pedido.Preview.Encabezado" parent="Pedido.Preview">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#808080</item>
+    </style>
+
+    <style name="Pedido.Preview.Item" parent="Pedido.Preview">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:background">#808080</item>
+    </style>
+
+    <style name="Pedido.Preview.Totales" parent="Pedido.Preview.Encabezado">
+        <item name="android:padding">18dp</item>
+        <item name="android:gravity">right</item>
+    </style>
+
 </resources>

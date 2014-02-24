@@ -3,23 +3,24 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.4'
+        classpath 'com.android.tools.build:gradle:0.8.+'
     }
 }
 apply plugin: 'android'
 
 dependencies {
-    compile files('../../../../../IDEAApp/lib/Parse-1.1.9.jar')
+    compile files('lib/Parse-1.4.0.jar')
 }
 
 android {
     compileSdkVersion 17
-    buildToolsVersion "17"
+    buildToolsVersion "19.0.0"
 
     defaultConfig {
         minSdkVersion 13
         targetSdkVersion 17
     }
+
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'

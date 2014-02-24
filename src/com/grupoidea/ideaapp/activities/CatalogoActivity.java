@@ -85,8 +85,9 @@ public class CatalogoActivity extends ParentMenuActivity {
     protected ProgressBar catalogoProgressBar;
     public List<ParseObject> descuentosParse;
     protected static GrupoIdea app;
+    private int statusPedido;
 
-	public CatalogoActivity() {
+    public CatalogoActivity() {
 		super(true, false, true, true); //hasCache (segundo param) :true!
 	}
 
@@ -106,7 +107,7 @@ public class CatalogoActivity extends ParentMenuActivity {
         if(app.pedido != null){
             modificarPedidoId = app.pedido.getObjectId();
             modificarPedidoNum = app.pedido.getNumPedido();
-            clienteNombre = app.clienteActual.getNombre();
+            clienteNombre = GrupoIdea.clienteActual.getNombre();
         }
 
 		setParentLayoutVisibility(View.GONE);
@@ -174,9 +175,15 @@ public class CatalogoActivity extends ParentMenuActivity {
 
         @SuppressWarnings("unchecked")
         List<ParseObject> productosParse = (List<ParseObject>) response.getResponse();
+        statusPedido = getIntent().getIntExtra("status", Pedido.ESTADO_NUEVO);
         app.productosParse = productosParse;
-        catalogo.setProductos(app.productos);
 
+        for (int i=0, size=productosParse.size(); i<size; i++) {
+            ParseObject parseObject = productosParse.get(i);
+            new ProductoDownloadTask(parseObject, i, size).execute();
+        }
+
+        catalogo.setProductos(app.productos);
         if(filtroLayout != null) initFiltroLayout();
 
         carrito = new Carrito(categorias, gruposCategorias);
@@ -199,27 +206,6 @@ public class CatalogoActivity extends ParentMenuActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-
-        int statusPedido = getIntent().getIntExtra("status", Pedido.ESTADO_NUEVO);
-        switch(statusPedido){
-            case Pedido.ESTADO_RECHAZADO:
-            case Pedido.ESTADO_VERIFICANDO:
-                //Dialogo de carga carrito
-                initCarritoProgressDialog();
-                editarPedido();
-                break;
-            case Pedido.ESTADO_APROBADO:
-                initCarritoProgressDialog();
-                clonarPedido();
-                break;
-            default:
-                break;
-        }
-
-        for (int i=0, size=productosParse.size(); i<size; i++) {
-            ParseObject parseObject = productosParse.get(i);
-            new ProductoDownloadTask(parseObject, i, size).execute();
-        }
     }
 
     /**
@@ -313,6 +299,7 @@ public class CatalogoActivity extends ParentMenuActivity {
 	}
 
     private void onProductosCargados() {
+
         marcasAdapter.notifyDataSetChanged();
         categoriasAdapter.notifyDataSetChanged();
         catalogoAdapter.notifyDataSetChanged();
@@ -321,6 +308,22 @@ public class CatalogoActivity extends ParentMenuActivity {
         menuFilterIcon.setEnabled(true);
         Toast.makeText(mContext, getString(R.string.productos_cargados), Toast.LENGTH_SHORT).show();
         refresh.setClickable(true);
+
+        switch(statusPedido){
+            case Pedido.ESTADO_RECHAZADO:
+            case Pedido.ESTADO_VERIFICANDO:
+                //Dialogo de carga carrito
+                initCarritoProgressDialog();
+                editarPedido(false);
+                break;
+            case Pedido.ESTADO_APROBADO:
+                initCarritoProgressDialog();
+                Log.d(TAG, "Entrando en switch APROBADO");
+                editarPedido(true);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -451,74 +454,35 @@ public class CatalogoActivity extends ParentMenuActivity {
     /**
      * Metodo llamado al haber seleccionado un pedido para isNuevoPedido desde el Dashboard
      */
-    private void editarPedido() {
+    private void editarPedido(Boolean clone) {
         Log.d(TAG, "Modificar Pedido " + modificarPedidoId);
         carritoProgressDialog.show();
-        clienteSpinner.setVisibility(View.INVISIBLE);
-        ParseObject parseObject = findPedidoById(modificarPedidoId);
-        app.pedido.setParseObject(parseObject);
 
-        //Productos en pedido
+        if(!clone) clienteSpinner.setVisibility(View.INVISIBLE);
+
         ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
         productosEnPedido.setCachePolicy(getParseCachePolicy());
         productosEnPedido.setLimit(QUERY_LIMIT);
-        productosEnPedido.whereEqualTo("pedido", parseObject);
+        productosEnPedido.whereEqualTo("pedido", app.pedido.getParseObject());
         productosEnPedido.include("producto");
         productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> productosPedidoHasProductos, ParseException e) {
                 for (ParseObject productoPedidoHasProductos : productosPedidoHasProductos) {
-                    //Agregar los relacionados al pedido en el carrito
+
                     ParseObject productoPedidoParse = productoPedidoHasProductos.getParseObject("producto");
+                    Log.d(TAG, "Buscando producto: "+productoPedidoParse.getString("codigo"));
                     for (Producto productoPedidoLocal : app.productos) {
+
                         if (productoPedidoParse.get("codigo").equals(productoPedidoLocal.getCodigo())) {
+                            Log.d(TAG, "Producto "+productoPedidoParse.get("codigo")+" encontrado localmente");
                             productoPedidoLocal.setCantidad(productoPedidoHasProductos.getInt("cantidad") + productoPedidoHasProductos.getInt("excedente"));
-//                                    Log.d(TAG, "Meta en rechazo para prod: " + String.valueOf(productoPedidoHasProductos.getInt("cantidad") + productoPedidoLocal.getExistencia()));
-                            //Agregar cantidad a existencia temporalmente
                             productoPedidoLocal.setExistencia(productoPedidoHasProductos.getInt("cantidad") + productoPedidoLocal.getExistencia());
                             productoPedidoLocal.setIsInCarrito(true);
-//                                    Log.d(TAG, "Agregando " + productoPedidoHasProductos.getInt("cantidad") + " productos " + productoPedidoParse.get("codigo") + "(" + productoPedidoParse.getObjectId() + ") a pedido");
                             carritoAdapter.getCarrito().addProducto(productoPedidoLocal);
                         }
                     }
-                }
-                carritoAdapter.setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
-                carritoAdapter.notifyDataSetChanged();
-                carritoProgressDialog.dismiss();
-                carritoListView.smoothScrollToPosition(0);
-                carritoAdapter.showCarrito();
-            }
-        });
-    }
-
-    /**
-     * Metodo llamado al haber seleccionado crear un nuevo pedido a partir de uno existente desde el Dashboard
-     */
-    private void clonarPedido() {
-        Log.d(TAG, "Clonar Pedido " + modificarPedidoId);
-        carritoProgressDialog.show();
-        ParseObject parseObject = findPedidoById(modificarPedidoId);
-        app.pedido.setParseObject(parseObject);
-        //Productos en pedido
-        final ParseQuery productosEnPedido = new ParseQuery("PedidoHasProductos");
-        productosEnPedido.setCachePolicy(getParseCachePolicy());
-        productosEnPedido.setLimit(QUERY_LIMIT);
-        productosEnPedido.whereEqualTo("pedido", parseObject);
-        productosEnPedido.include("producto");
-        productosEnPedido.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> pedidoConProductoObjects, ParseException e) {
-                for (ParseObject pedidoConProductoObj : pedidoConProductoObjects) {
-                    //Agrego los relacionados al pedido en el carrito
-                    ParseObject prodAdd = pedidoConProductoObj.getParseObject("producto");
-                    for (Producto aProdsModPedido : app.productos) {
-                        if (prodAdd.get("codigo").equals(aProdsModPedido.getCodigo())) {
-                            aProdsModPedido.setCantidad(pedidoConProductoObj.getInt("cantidad") + pedidoConProductoObj.getInt("excedente"));
-                            aProdsModPedido.setIsInCarrito(true);
-//                                        Log.d(TAG, "Agregando "+pedidoConProductoObj.getInt("cantidad")+" productos "+prodAdd.get("codigo")+"("+prodAdd.getObjectId()+") a pedido");
-                            carritoAdapter.getCarrito().addProducto(aProdsModPedido);
-                        }
-                    }
+                    Log.d(TAG, "Fin busqueda de producto "+productoPedidoParse.get("codigo"));
                 }
                 carritoAdapter.setTotalCarrito(carritoAdapter.getCarrito().calcularTotalString());
                 carritoAdapter.notifyDataSetChanged();

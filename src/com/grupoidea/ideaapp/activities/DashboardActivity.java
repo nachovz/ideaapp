@@ -132,14 +132,6 @@ public class DashboardActivity extends ParentMenuActivity {
                                 if(parseObject.getInt("estado") == position || position == Pedido.ESTADO_TODOS){
                                     ParseObject cliente = parseObject.getParseObject("cliente");
                                     row = new RowPedido(mContext, parseObject);
-
-                                    if(position == Pedido.ESTADO_RECHAZADO){
-                                        if(null != parseObject.getString("comentario_cambio_status") && !parseObject.getString("comentario_cambio_status").isEmpty()){
-                                            row.observacionesRechazoPedido = parseObject.getString("comentario_cambio_status");
-                                        }else{
-                                            row.observacionesRechazoPedido = getString(R.string.empty_obs_rechazo_pedido);
-                                        }
-                                    }
                                     pedidosList.addView(row);
                                 }
                             }
@@ -192,10 +184,13 @@ public class DashboardActivity extends ParentMenuActivity {
                         meta.setProducto(producto);
                         metas.add(meta);
 
-                        //Acumular metas y cosas
                         facturadoMetas += meta.getCantFacturado();
                         totalMetas += meta.getCantMeta();
+
+                        Log.d(TAG, "Producto: "+codigo+" Marca: "+marca);
                     }
+
+                    Log.d(TAG, "Productos Count: "+parseObjects.size());
 
                     //Almacenar metas en application
                     app.metas = metas;

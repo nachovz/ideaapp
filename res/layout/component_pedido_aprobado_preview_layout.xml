@@ -39,7 +39,7 @@
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="3"
-                        style="@style/encabezado"/>
+                        style="@style/Pedido.Preview.Encabezado"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -47,7 +47,15 @@
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="2"
-                        style="@style/encabezado"/>
+                        style="@style/Pedido.Preview.Encabezado"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/exced"
+                        android:layout_span="1"
+                        android:padding="18dip"
+                        android:layout_weight="2"
+                        style="@style/Pedido.Preview.Encabezado"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -55,7 +63,7 @@
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="3"
-                        style="@style/encabezado"/>
+                        style="@style/Pedido.Preview.Encabezado"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -63,7 +71,7 @@
                         android:layout_column="2"
                         android:padding="18dip"
                         android:layout_weight="2"
-                        style="@style/encabezado"/>
+                        style="@style/Pedido.Preview.Encabezado"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -71,7 +79,7 @@
                         android:layout_span="1"
                         android:padding="18dip"
                         android:layout_weight="3"
-                        style="@style/encabezado"/>
+                        style="@style/Pedido.Preview.Encabezado"/>
             </TableRow>
         </TableLayout>
 
@@ -83,88 +91,74 @@
             android:weightSum="13">
         </TableLayout>
 
-        <TableLayout
+        <RelativeLayout
             android:id="@+id/totales_tableLayout"
             android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="54dp"
             android:layout_marginBottom="35dp"
             android:layout_below="@+id/productos_pedido_aprobado"
             android:background="#808080"
             >
-            <TableRow android:layout_height="wrap_content">
-                <TextView
-                    style="@style/titulo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/subtotal"
-                    android:layout_span="1"
-                    android:padding="18dp"/>
-                <TextView
-                    android:id="@+id/subtotal_edit_aprobado"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="1"
-                    android:padding="18dip"
-                    android:textColor="#FFFFFF"/>
-            </TableRow>
-            <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-                <TextView
-                    android:layout_height="0.5dp"
-                    android:background="#ffffff"
-                    android:layout_width="wrap_content"
-                    android:layout_span="2" />
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
+            <TextView
+                style="@style/Pedido.Preview.Totales"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-                <TextView style="@style/titulo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/impuesto"
-                    android:layout_span="1"
-                    android:padding="18dip"/>
-                <TextView
-                    android:id="@+id/impuesto_edit_aprobado"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="1"
-                    android:padding="18dip"
-                    android:textColor="#FFFFFF"/>
-            </TableRow>
-            <TableRow
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent">
-                <TextView
-                    android:layout_height="2dp"
-                    android:background="#ffffff"
-                    android:layout_width="wrap_content"
-                    android:layout_span="2" />
-            </TableRow>
-            <TableRow
+                android:text="@string/subtotal"
+                android:id="@+id/preview_subtotal_label_textView"
+                android:layout_toLeftOf="@+id/preview_subtotal_textView"/>
+            <TextView
+                android:id="@+id/preview_subtotal_textView"
+                android:layout_width="200dp"
+                style="@style/Pedido.Preview.Totales"
+                android:layout_alignParentRight="true" android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_height="0.5dp"
                 android:layout_width="match_parent"
+                style="@style/Pedido.Preview.Encabezado"
+                android:layout_below="@+id/preview_subtotal_textView"
+                android:id="@+id/preview_subtotal_divider"/>
+
+            <TextView
+                style="@style/Pedido.Preview.Totales"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
-                <TextView
-                    style="@style/titulo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/total"
-                    android:layout_span="1"
-                    android:padding="18dip"/>
-                <TextView
-                    android:id="@+id/total_edit_aprobado"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_span="1"
-                    android:padding="18dip"
-                    android:textColor="#FFFFFF"/>
-            </TableRow>
-        </TableLayout>
+                android:text="@string/impuesto"
+                android:id="@+id/preview_impuesto_label_textView"
+                android:layout_below="@+id/preview_subtotal_divider"
+                android:layout_toLeftOf="@+id/preview_impuesto_textView"
+                    />
+            <TextView
+                android:id="@+id/preview_impuesto_textView"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:padding="18dp"
+                style="@style/Pedido.Preview.Totales"
+                android:layout_below="@+id/preview_subtotal_divider"
+                android:layout_alignParentRight="true"/>
+            <TextView
+                android:layout_height="2dp"
+                android:background="#ffffff"
+                android:layout_width="match_parent"
+                android:id="@+id/preview_impuesto_divider" android:layout_below="@+id/preview_impuesto_textView"/>
+
+            <TextView
+                style="@style/Pedido.Preview.Totales"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total"
+                android:padding="18dip" android:id="@+id/preview_total_label_textView"
+                android:layout_below="@+id/preview_impuesto_divider"
+                android:layout_toLeftOf="@+id/total_edit_aprobado"/>
+            <TextView
+                android:id="@+id/total_edit_aprobado"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:padding="18dip"
+                android:textColor="#FFFFFF" style="@style/Pedido.Preview.Totales"
+                android:layout_below="@+id/preview_impuesto_divider" android:layout_alignParentRight="true"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 </ScrollView>

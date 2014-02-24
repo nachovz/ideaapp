@@ -19,7 +19,8 @@ public class Pedido {
 	/** Direccion de envio del pedido */
 	private String direccion;
 	/** Fecha de creacion del pedido */
-	private Date fechaCreado;
+	private Date createdAt;
+    private Date updatedAt;
 	/** Variable para verificar el estado del pedido */
 	private int estado;
 	/** Listado de productos que se encuentran en el pedido */
@@ -27,13 +28,20 @@ public class Pedido {
     private String objectId;
     private String numPedido;
     private ParseObject parseObject;
+    private String observaciones;
 
     public Pedido(ParseObject parse){
-        direccion = parse.getString("direccion");
-        fechaCreado = parse.getCreatedAt();
-        estado = parse.getInt("estado");
         objectId = parse.getObjectId();
         numPedido = parse.getString("num_pedido");
+        direccion = parse.getString("direccion");
+        createdAt = parse.getCreatedAt();
+        updatedAt = parse.getUpdatedAt();
+        estado = parse.getInt("estado");
+
+        if(null != parse.getString("comentario_cambio_status") && !parse.getString("comentario_cambio_status").isEmpty()){
+            setObservaciones(parse.getString("comentario_cambio_status"));
+        }
+
         parseObject = parse;
     }
 
@@ -53,11 +61,11 @@ public class Pedido {
 	public void setDireccion(String direccion) {
 		this.direccion = direccion;
 	}
-	public Date getFechaCreado() {
-		return fechaCreado;
+	public Date getCreatedAt() {
+		return createdAt;
 	}
-	public void setFechaCreado(Date fechaCreado) {
-		this.fechaCreado = fechaCreado;
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 	public int getEstado() {
 		return estado;
@@ -94,5 +102,21 @@ public class Pedido {
 
     public void setParseObject(ParseObject parseObject) {
         this.parseObject = parseObject;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }
