@@ -1,7 +1,6 @@
 package com.grupoidea.ideaapp.models;
 
 import android.content.Context;
-
 import com.grupoidea.ideaapp.R;
 
 import java.util.ArrayList;
@@ -53,6 +52,19 @@ public class Catalogo {
 		}
 		return index;
 	}
+
+    public int findDetalleProductoIndexById(String id) {
+        Producto productoActual = null;
+        int index = -1;
+
+        for(int i=0; i<productos.size(); i++) {
+            productoActual = productos.get(i);
+            if(productoActual != null && productoActual.getId().equals(id)) {
+                index = i;
+            }
+        }
+        return index;
+    }
 
     public ArrayList<Producto> filter(String marcaActual, String categoriaActual){
 //        Log.d("DEBUG","Catalogo.filter("+marcaActual+", "+categoriaActual+")");

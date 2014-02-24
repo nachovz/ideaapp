@@ -3,19 +3,9 @@ package com.grupoidea.ideaapp.components;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DetalleProductoActivity;
@@ -132,11 +122,14 @@ public class BannerProductoCatalogo extends ParentBannerProducto {
                 else productoImageView.setImageBitmap(producto.getImagen());
 
                 View productTitleTextView = convertView.findViewById(R.id.banner_producto_titulo_marca_linearLayout);
+                productTitleTextView.setTag(producto);
                 productTitleTextView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Bundle extras = new Bundle();
-                        extras.putInt("position", position);
+
+                        int indexCatalogo = catalogo.findDetalleProductoIndexById(((Producto) v.getTag()).getId());
+                        extras.putInt("position", indexCatalogo);
                         menuActivity.dispatchActivity(DetalleProductoActivity.class, extras, false);
                     }
                 });
