@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -14,23 +13,14 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
+import android.widget.*;
 import com.grupoidea.ideaapp.GrupoIdea;
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.activities.CatalogoActivity;
 import com.grupoidea.ideaapp.activities.DashboardActivity;
 import com.grupoidea.ideaapp.models.Cliente;
 import com.grupoidea.ideaapp.models.Pedido;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -525,7 +515,7 @@ public class RowPedido extends RelativeLayout {
 
             //Setear Impuesto
             tv = (TextView) productosPedidoView.findViewById(R.id.preview_impuesto_textView);
-            Double imp = subtotal * (((DashboardActivity)parent).getIva());
+            Double imp = subtotal * (parent.getIva()/100.0);
             tv.setText(df.format(imp));
 
             //Setear Total
