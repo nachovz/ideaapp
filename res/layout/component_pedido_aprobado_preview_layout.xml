@@ -94,7 +94,7 @@
         <RelativeLayout
             android:id="@+id/totales_tableLayout"
             android:layout_alignParentRight="true"
-            android:layout_width="300dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="54dp"
             android:layout_marginBottom="35dp"
@@ -107,18 +107,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/subtotal"
                 android:id="@+id/preview_subtotal_label_textView"
-                android:layout_toLeftOf="@+id/preview_subtotal_textView"/>
+                android:layout_alignParentLeft="true" android:textStyle="bold"/>
             <TextView
                 android:id="@+id/preview_subtotal_textView"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
                 style="@style/Pedido.Preview.Totales"
-                android:layout_alignParentRight="true" android:layout_height="wrap_content"/>
+                android:layout_alignParentRight="true" android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/preview_subtotal_label_textView"/>
             <TextView
-                android:layout_height="0.5dp"
+                android:layout_height="1dp"
                 android:layout_width="match_parent"
-                style="@style/Pedido.Preview.Encabezado"
                 android:layout_below="@+id/preview_subtotal_textView"
-                android:id="@+id/preview_subtotal_divider"/>
+                android:id="@+id/preview_subtotal_divider" android:layout_alignParentEnd="false"
+                android:background="#FFF"/>
 
             <TextView
                 style="@style/Pedido.Preview.Totales"
@@ -127,16 +128,15 @@
                 android:text="@string/impuesto"
                 android:id="@+id/preview_impuesto_label_textView"
                 android:layout_below="@+id/preview_subtotal_divider"
-                android:layout_toLeftOf="@+id/preview_impuesto_textView"
-                    />
+                android:layout_alignParentLeft="true" android:textStyle="bold"/>
             <TextView
                 android:id="@+id/preview_impuesto_textView"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:padding="18dp"
                 style="@style/Pedido.Preview.Totales"
                 android:layout_below="@+id/preview_subtotal_divider"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true" android:layout_toRightOf="@+id/preview_impuesto_label_textView"/>
             <TextView
                 android:layout_height="2dp"
                 android:background="#ffffff"
@@ -150,14 +150,15 @@
                 android:text="@string/total"
                 android:padding="18dip" android:id="@+id/preview_total_label_textView"
                 android:layout_below="@+id/preview_impuesto_divider"
-                android:layout_toLeftOf="@+id/total_edit_aprobado"/>
+                android:layout_alignParentLeft="true" android:textStyle="bold"/>
             <TextView
                 android:id="@+id/total_edit_aprobado"
-                android:layout_width="200dp"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:padding="18dip"
                 android:textColor="#FFFFFF" style="@style/Pedido.Preview.Totales"
-                android:layout_below="@+id/preview_impuesto_divider" android:layout_alignParentRight="true"/>
+                android:layout_below="@+id/preview_impuesto_divider" android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/preview_total_label_textView"/>
         </RelativeLayout>
 
     </RelativeLayout>

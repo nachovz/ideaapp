@@ -104,7 +104,11 @@ public class Carrito {
 	/** Permite remover un producto especifico del listado de productos del carrito.
 	 *  @param indice Entero con el indice del producto que se desea eliminar.*/
 	public void removeProducto(int indice) {
+        productos.get(indice).setIsInCarrito(false);
+        productos.get(indice).setCantidad(0);
 		this.productos.remove(indice);
+
+        recalcularMontos();
 	}
 
 	/** Retorna el numero de elementos en el carrito.

@@ -2,14 +2,12 @@ package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Categoria;
 
@@ -87,7 +85,7 @@ public class CategoriasAdapter extends BaseAdapter {
             Categoria categoria = (Categoria)v.getTag();
             categoriaActual = categoria;
             //Asignar las categorias de la marca al clientesAdapter de categorias
-            Log.d(TAG, "getTag() Categoria: " + categoria.toString());
+//            Log.d(TAG, "getTag() Categoria: " + categoria.toString());
 
             TextView item; ListView categoriasFiltro = (ListView) v.getParent();
             assert categoriasFiltro != null;
@@ -131,7 +129,7 @@ public class CategoriasAdapter extends BaseAdapter {
         categorias.add(todas);
         categorias.addAll(categoriasParam);
         categoriaActual = todas;
-        Log.d(TAG,"setCategorias Resultado: "+categorias.toString());
+//        Log.d(TAG,"setCategorias Resultado: "+categorias.toString());
         this.notifyDataSetChanged();
     }
 

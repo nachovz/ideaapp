@@ -2,14 +2,12 @@ package com.grupoidea.ideaapp.components;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.grupoidea.ideaapp.R;
 import com.grupoidea.ideaapp.models.Catalogo;
 import com.grupoidea.ideaapp.models.Marca;
@@ -99,7 +97,7 @@ public class MarcasAdapter extends BaseAdapter {
 
             Marca marca = (Marca)v.getTag();
             marcaActual = marca;
-            Log.d(TAG, "getTag() Marca: " + marca.toString());
+//            Log.d(TAG, "getTag() Marca: " + marca.toString());
             categoriasAdapter.setCategorias(marca.getCategorias());
 
             //Reset views
